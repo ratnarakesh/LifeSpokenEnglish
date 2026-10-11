@@ -24,15 +24,15 @@ export function Promises() {
               <Reveal delay={(i % 5) * 0.06} className="h-full">
                 <GlowCard className="group flex h-full flex-col p-6">
                   <div className="flex items-start justify-between">
-                    <span className="grid size-12 place-items-center rounded-2xl bg-linear-to-br from-emerald-500/20 to-cyan-500/10 text-emerald-300 ring-1 ring-emerald-500/30 transition duration-300 group-hover:scale-110 group-hover:rotate-[-4deg]">
+                    <span className="grid size-12 place-items-center rounded-2xl bg-linear-to-br from-ember-500/20 to-sun-500/10 text-ember-300 ring-1 ring-ember-500/30 transition duration-300 group-hover:scale-110 group-hover:rotate-[-4deg]">
                       <Icon className="size-6" />
                     </span>
-                    <span className="font-mono text-sm font-bold text-slate-600 transition group-hover:text-emerald-400">
+                    <span className="font-mono text-sm font-bold text-stone-600 transition group-hover:text-ember-400">
                       {String(i + 1).padStart(2, "0")}
                     </span>
                   </div>
                   <h3 className="mt-5 text-base leading-snug font-bold text-white">{title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-400">{description}</p>
+                  <p className="mt-2 text-sm leading-relaxed text-stone-400">{description}</p>
                 </GlowCard>
               </Reveal>
             </li>

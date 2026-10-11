@@ -24,7 +24,7 @@ export function YouTubeLite({ videoId, title }: YouTubeLiteProps) {
         <button
           type="button"
           onClick={() => setPlaying(true)}
-          className="group absolute inset-0 size-full cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400"
+          className="group absolute inset-0 size-full cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ember-400"
           aria-label={`Play video: ${title}`}
         >
           <Image
@@ -35,11 +35,11 @@ export function YouTubeLite({ videoId, title }: YouTubeLiteProps) {
             className="object-cover opacity-80 transition duration-500 group-hover:scale-105 group-hover:opacity-100"
           />
           <span className="absolute inset-0 bg-linear-to-t from-obsidian-950/90 via-obsidian-950/20 to-transparent" />
-          <span className="absolute top-1/2 left-1/2 grid size-20 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-linear-to-br from-emerald-400 to-cyan-500 text-obsidian-950 shadow-[0_0_60px_rgb(16_185_129/0.6)] transition duration-300 group-hover:scale-110">
-            <Play className="ml-1 size-8 fill-current" />
+          <span className="absolute top-1/2 left-1/2 grid size-14 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-linear-to-br from-ember-400 to-sun-500 text-obsidian-950 shadow-[0_0_60px_rgb(234_138_42/0.6)] transition duration-300 group-hover:scale-110 sm:size-20">
+            <Play className="ml-1 size-6 fill-current sm:size-8" />
           </span>
-          <span className="absolute bottom-5 left-5 text-left">
-            <span className="block text-xs font-semibold tracking-wider text-emerald-300 uppercase">
+          <span className="absolute bottom-5 left-5 hidden pr-5 text-left sm:block">
+            <span className="block text-xs font-semibold tracking-wider text-ember-300 uppercase">
               Official Orientation
             </span>
             <span className="mt-1 block text-lg font-bold text-white sm:text-xl">{title}</span>

@@ -34,10 +34,10 @@ function buildMessage(name: string, phone: string, category: Category, mode: Mod
 }
 
 const inputClass =
-  "w-full rounded-xl border border-slate-700/80 bg-obsidian-950/60 py-3 pr-4 pl-11 text-white placeholder:text-slate-500 transition outline-none focus:border-emerald-500/70 focus:ring-4 focus:ring-emerald-500/15 aria-invalid:border-rose-500/70";
+  "w-full rounded-xl border border-stone-700/80 bg-obsidian-950/60 py-3 pr-4 pl-11 text-white placeholder:text-stone-500 transition outline-none focus:border-ember-500/70 focus:ring-4 focus:ring-ember-500/15 aria-invalid:border-rose-500/70";
 
 const chipClass =
-  "flex cursor-pointer items-center justify-center rounded-xl border border-slate-700/80 bg-obsidian-950/40 px-3 py-2.5 text-center text-sm font-medium text-slate-300 transition hover:border-slate-500 has-checked:border-emerald-500/70 has-checked:bg-emerald-500/10 has-checked:text-emerald-200 has-focus-visible:ring-2 has-focus-visible:ring-emerald-400";
+  "flex cursor-pointer items-center justify-center rounded-xl border border-stone-700/80 bg-obsidian-950/40 px-3 py-2.5 text-center text-sm font-medium text-stone-300 transition hover:border-stone-500 has-checked:border-ember-500/70 has-checked:bg-ember-500/10 has-checked:text-ember-200 has-focus-visible:ring-2 has-focus-visible:ring-ember-400";
 
 export function EnrollmentForm() {
   const id = useId();
@@ -68,11 +68,11 @@ export function EnrollmentForm() {
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-5">
       <div>
-        <label htmlFor={`${id}-name`} className="mb-1.5 block text-sm font-medium text-slate-200">
+        <label htmlFor={`${id}-name`} className="mb-1.5 block text-sm font-medium text-stone-200">
           Full Name
         </label>
         <div className="relative">
-          <User className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-slate-500" />
+          <User className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-stone-500" />
           <input
             id={`${id}-name`}
             name="name"
@@ -93,11 +93,11 @@ export function EnrollmentForm() {
       </div>
 
       <div>
-        <label htmlFor={`${id}-phone`} className="mb-1.5 block text-sm font-medium text-slate-200">
+        <label htmlFor={`${id}-phone`} className="mb-1.5 block text-sm font-medium text-stone-200">
           Phone Number
         </label>
         <div className="relative">
-          <Phone className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-slate-500" />
+          <Phone className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-stone-500" />
           <input
             id={`${id}-phone`}
             name="phone"
@@ -120,7 +120,7 @@ export function EnrollmentForm() {
       </div>
 
       <fieldset>
-        <legend className="mb-1.5 text-sm font-medium text-slate-200">I am a</legend>
+        <legend className="mb-1.5 text-sm font-medium text-stone-200">I am a</legend>
         <div className="grid grid-cols-2 gap-2">
           {LEARNER_CATEGORIES.map((option) => (
             <label key={option} className={chipClass}>
@@ -139,7 +139,7 @@ export function EnrollmentForm() {
       </fieldset>
 
       <fieldset>
-        <legend className="mb-1.5 text-sm font-medium text-slate-200">Preferred Mode</legend>
+        <legend className="mb-1.5 text-sm font-medium text-stone-200">Preferred Mode</legend>
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           {LEARNING_MODES.map((option) => (
             <label key={option} className={chipClass}>
@@ -166,7 +166,7 @@ export function EnrollmentForm() {
         role="status"
         className={cn(
           "flex items-center justify-center gap-2 text-center text-xs",
-          sent ? "text-emerald-300" : "text-slate-500",
+          sent ? "text-ember-300" : "text-stone-500",
         )}
       >
         {sent ? (

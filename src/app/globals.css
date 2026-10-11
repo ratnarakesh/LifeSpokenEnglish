@@ -1,9 +1,46 @@
 @import "tailwindcss";
 
 @theme {
-  --color-obsidian-950: #06080f;
-  --color-obsidian-900: #0b0f19;
-  --color-obsidian-800: #111827;
+  --color-obsidian-950: #0b0806;
+  --color-obsidian-900: #120d0a;
+  --color-obsidian-800: #1b1410;
+
+  /* Sunset orange from the LIFE logo */
+  --color-ember-50: #fff7ec;
+  --color-ember-100: #ffecd2;
+  --color-ember-200: #fed5a4;
+  --color-ember-300: #fbbf7a;
+  --color-ember-400: #f5a04a;
+  --color-ember-500: #ea8a2a;
+  --color-ember-600: #da6c25;
+  --color-ember-700: #b5501c;
+  --color-ember-800: #8f3f1a;
+  --color-ember-900: #6f3217;
+  --color-ember-950: #3c180a;
+
+  /* Sun gold from the LIFE logo */
+  --color-sun-50: #fffbea;
+  --color-sun-100: #fff5c5;
+  --color-sun-200: #fef3b4;
+  --color-sun-300: #fde872;
+  --color-sun-400: #fbd83a;
+  --color-sun-500: #f9ba49;
+  --color-sun-600: #e39a1c;
+  --color-sun-700: #b87412;
+  --color-sun-800: #8a5410;
+  --color-sun-900: #5c380c;
+  --color-sun-950: #2e1c06;
+
+  /* Eagle brown from the LIFE logo */
+  --color-bark-300: #c9a07a;
+  --color-bark-400: #a77a52;
+  --color-bark-500: #7d5532;
+  --color-bark-600: #5e3d20;
+  --color-bark-700: #4f3219;
+  --color-bark-800: #452b14;
+  --color-bark-900: #2d1c0d;
+  --color-bark-950: #1a0f07;
+
   --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
 }
 
@@ -21,32 +58,32 @@ html {
 
 body {
   background-color: var(--color-obsidian-950);
-  color: var(--color-slate-300);
+  color: var(--color-stone-300);
 }
 
 ::selection {
-  background: rgb(16 185 129 / 0.35);
+  background: rgb(234 138 42 / 0.35);
   color: #fff;
 }
 
 @utility glass {
-  background-color: rgb(15 23 42 / 0.6);
+  background-color: rgb(28 22 18 / 0.6);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgb(30 41 59 / 0.8);
+  border: 1px solid rgb(58 45 36 / 0.8);
 }
 
 @utility bg-mesh {
   background:
-    radial-gradient(60rem 40rem at 10% -10%, rgb(16 185 129 / 0.16), transparent 60%),
-    radial-gradient(50rem 35rem at 95% 0%, rgb(6 182 212 / 0.14), transparent 60%),
+    radial-gradient(60rem 40rem at 10% -10%, rgb(234 138 42 / 0.16), transparent 60%),
+    radial-gradient(50rem 35rem at 95% 0%, rgb(251 216 58 / 0.14), transparent 60%),
     radial-gradient(40rem 30rem at 50% 110%, rgb(245 158 11 / 0.07), transparent 60%);
 }
 
 @utility bg-grid {
   background-image:
-    linear-gradient(rgb(148 163 184 / 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(148 163 184 / 0.06) 1px, transparent 1px);
+    linear-gradient(rgb(168 140 112 / 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(168 140 112 / 0.06) 1px, transparent 1px);
   background-size: 48px 48px;
   mask-image: radial-gradient(ellipse at center, black 20%, transparent 70%);
 }
@@ -65,7 +102,7 @@ body {
   pointer-events: none;
   background: radial-gradient(
     420px circle at var(--glow-x, 50%) var(--glow-y, 50%),
-    rgb(16 185 129 / 0.14),
+    rgb(234 138 42 / 0.14),
     transparent 45%
   );
   opacity: 0;

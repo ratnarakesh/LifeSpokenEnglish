@@ -34,21 +34,21 @@ export function Modal({
         <Dialog.Content
           {...(!description && { "aria-describedby": undefined })}
           className={cn(
-            "dialog-content fixed top-1/2 left-1/2 z-[70] max-h-[92dvh] w-[calc(100vw-1.5rem)] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-3xl border border-slate-800 bg-obsidian-900/95 shadow-2xl shadow-black/60 focus:outline-none",
+            "dialog-content fixed top-1/2 left-1/2 z-[70] max-h-[92dvh] w-[calc(100vw-1.5rem)] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-3xl border border-stone-800 bg-obsidian-900/95 shadow-2xl shadow-black/60 focus:outline-none",
             className,
           )}
         >
           <div className={cn(hideHeader ? "sr-only" : "px-6 pt-6 pr-14 sm:px-8 sm:pt-8")}>
             <Dialog.Title className="text-xl font-bold text-white sm:text-2xl">{title}</Dialog.Title>
             {description && (
-              <Dialog.Description className="mt-1.5 text-sm text-slate-400">
+              <Dialog.Description className="mt-1.5 text-sm text-stone-400">
                 {description}
               </Dialog.Description>
             )}
           </div>
           {children}
           <Dialog.Close
-            className="absolute top-3 right-3 z-10 grid size-10 place-items-center rounded-full bg-slate-900/80 text-slate-300 ring-1 ring-slate-700 transition hover:bg-slate-800 hover:text-white focus-visible:outline-2 focus-visible:outline-emerald-400"
+            className="absolute top-3 right-3 z-10 grid size-10 place-items-center rounded-full bg-stone-900/80 text-stone-300 ring-1 ring-stone-700 transition hover:bg-stone-800 hover:text-white focus-visible:outline-2 focus-visible:outline-ember-400"
             aria-label="Close"
           >
             <X className="size-5" />

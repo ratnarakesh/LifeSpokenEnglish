@@ -28,8 +28,8 @@ export function Enrollment() {
           <Reveal delay={0.1}>
             <ul className="mt-8 space-y-3">
               {BENEFITS.map((b) => (
-                <li key={b} className="flex items-center gap-3 text-slate-200">
-                  <CheckCircle2 className="size-5 shrink-0 text-emerald-400" />
+                <li key={b} className="flex items-center gap-3 text-stone-200">
+                  <CheckCircle2 className="size-5 shrink-0 text-ember-400" />
                   {b}
                 </li>
               ))}
@@ -40,12 +40,12 @@ export function Enrollment() {
         <Reveal delay={0.1}>
           <div className="relative">
             <div
-              className="pointer-events-none absolute -inset-4 -z-10 rounded-[2rem] bg-linear-to-br from-emerald-500/25 via-cyan-500/10 to-transparent blur-2xl"
+              className="pointer-events-none absolute -inset-4 -z-10 rounded-[2rem] bg-linear-to-br from-ember-500/25 via-sun-500/10 to-transparent blur-2xl"
               aria-hidden="true"
             />
             <div className="glass rounded-3xl p-6 sm:p-8">
               <h3 className="text-xl font-bold text-white">Register for 10 Free Classes</h3>
-              <p className="mt-1 mb-6 text-sm text-slate-400">New batches starting soon. Limited seats per batch.</p>
+              <p className="mt-1 mb-6 text-sm text-stone-400">New batches starting soon. Limited seats per batch.</p>
               <EnrollmentForm />
             </div>
           </div>

@@ -1,4 +1,5 @@
 import { ArrowRight, CalendarCheck, Mic, PlayCircle, Star, Wallet } from "lucide-react";
+import { FullLogo } from "@/components/layout/Brand";
 import { TrialButton, VideoButton } from "@/components/modals/ModalTriggers";
 import { GlowCard } from "@/components/ui/GlowCard";
 import { Reveal } from "@/components/ui/Reveal";
@@ -29,18 +30,26 @@ const HIGHLIGHTS = [
 
 export function Hero() {
   return (
-    <section id="top" className="relative overflow-hidden pt-14 pb-20 sm:pt-20 lg:pt-24 lg:pb-28">
+    <section id="top" className="relative overflow-hidden pt-10 pb-20 sm:pt-14 lg:pt-16 lg:pb-28">
       <div className="pointer-events-none absolute inset-0 -z-10 bg-grid" aria-hidden="true" />
       <div
-        className="animate-float pointer-events-none absolute top-10 -left-32 -z-10 size-[28rem] rounded-full bg-emerald-500/20 blur-[120px]"
+        className="animate-float pointer-events-none absolute top-10 -left-32 -z-10 size-[28rem] rounded-full bg-ember-500/20 blur-[120px]"
         aria-hidden="true"
       />
       <div
-        className="animate-float pointer-events-none absolute top-40 -right-32 -z-10 size-[26rem] rounded-full bg-cyan-500/20 blur-[120px] [animation-delay:-4s]"
+        className="animate-float pointer-events-none absolute top-40 -right-32 -z-10 size-[26rem] rounded-full bg-sun-500/20 blur-[120px] [animation-delay:-4s]"
         aria-hidden="true"
       />
 
       <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
+        <div className="relative mx-auto mb-7 w-32 sm:w-40 lg:w-44">
+          <div
+            className="pointer-events-none absolute inset-[12%] -z-10 rounded-full bg-ember-500/35 blur-3xl"
+            aria-hidden="true"
+          />
+          <FullLogo priority className="h-auto w-full drop-shadow-[0_10px_40px_rgb(234_138_42/0.35)]" />
+        </div>
+
         <Reveal y={12}>
           <a
             href="#contact"
@@ -60,9 +69,9 @@ export function Hero() {
         </h1>
 
         <Reveal delay={0.1}>
-          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-pretty text-slate-400 sm:text-lg">
+          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-pretty text-stone-400 sm:text-lg">
             Practical, interactive Spoken English & Soft Skills training led personally by{" "}
-            <strong className="font-semibold text-slate-200">{SITE.founderAlias}</strong>. Learn without
+            <strong className="font-semibold text-stone-200">{SITE.founderAlias}</strong>. Learn without
             fear or grammar intimidation in Visakhapatnam or via Live Online classes.
           </p>
         </Reveal>
@@ -73,24 +82,24 @@ export function Hero() {
             <ArrowRight className="size-5" />
           </TrialButton>
           <VideoButton className={button("secondary", "lg", "w-full sm:w-auto")}>
-            <PlayCircle className="size-5 text-emerald-400" />
+            <PlayCircle className="size-5 text-ember-400" />
             Watch Mani Sir&apos;s Video Intro
           </VideoButton>
         </Reveal>
 
-        <div className="mx-auto mt-16 grid max-w-5xl gap-4 text-left sm:grid-cols-3">
+        <div className="mx-auto mt-14 grid max-w-xl gap-4 text-left md:max-w-5xl md:grid-cols-3">
           {HIGHLIGHTS.map(({ icon: Icon, metric, title, description }, i) => (
             <Reveal key={title} delay={0.25 + i * 0.08}>
               <GlowCard className="h-full p-6">
                 <div className="flex items-center gap-3">
-                  <span className="grid size-11 place-items-center rounded-xl bg-emerald-500/10 text-emerald-300 ring-1 ring-emerald-500/30">
+                  <span className="grid size-11 place-items-center rounded-xl bg-ember-500/10 text-ember-300 ring-1 ring-ember-500/30">
                     <Icon className="size-5" />
                   </span>
                   <p className="text-2xl font-extrabold text-white">
-                    {metric} <span className="text-base font-semibold text-slate-300">{title}</span>
+                    {metric} <span className="text-base font-semibold text-stone-300">{title}</span>
                   </p>
                 </div>
-                <p className="mt-3 text-sm leading-relaxed text-slate-400">{description}</p>
+                <p className="mt-3 text-sm leading-relaxed text-stone-400">{description}</p>
               </GlowCard>
             </Reveal>
           ))}

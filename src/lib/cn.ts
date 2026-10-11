@@ -3,11 +3,11 @@ export function cn(...classes: Array<string | false | null | undefined>) {
 }
 
 export const buttonStyles = {
-  base: "inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400 disabled:opacity-60",
+  base: "inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ember-400 disabled:opacity-60",
   primary:
-    "bg-linear-to-r from-emerald-500 to-cyan-500 text-obsidian-950 shadow-[0_10px_40px_-10px_rgb(16_185_129/0.6)] hover:shadow-[0_14px_50px_-10px_rgb(6_182_212/0.7)] hover:brightness-110",
+    "bg-linear-to-r from-ember-500 to-sun-500 text-obsidian-950 shadow-[0_10px_40px_-10px_rgb(234_138_42/0.6)] hover:shadow-[0_14px_50px_-10px_rgb(251_216_58/0.7)] hover:brightness-110",
   secondary:
-    "glass text-white hover:border-emerald-500/50 hover:bg-slate-800/60",
+    "glass text-white hover:border-ember-500/50 hover:bg-stone-800/60",
   whatsapp: "bg-[#25D366] text-obsidian-950 hover:brightness-110",
   size: {
     sm: "px-4 py-2 text-sm",

@@ -1,15 +1,35 @@
+import Image from "next/image";
 import { SITE } from "@/lib/site";
 
 export function Brand() {
   return (
-    <a href="#top" className="group flex items-center gap-3" aria-label={`${SITE.brand} – back to top`}>
-      <span className="grid size-10 place-items-center rounded-xl bg-linear-to-br from-emerald-400 to-cyan-500 text-lg font-black text-obsidian-950 shadow-[0_0_30px_-5px_rgb(16_185_129/0.7)] transition group-hover:rotate-[-6deg]">
-        L
-      </span>
-      <span className="leading-tight">
-        <span className="block text-lg font-extrabold tracking-[0.2em] text-white">{SITE.brand}</span>
-        <span className="block text-[11px] font-medium text-slate-400">{SITE.tagline}</span>
+    <a href="#top" className="group flex shrink-0 items-center gap-2.5 sm:gap-3" aria-label={`${SITE.brand} – back to top`}>
+      <Image
+        src="/brand/life-emblem.png"
+        alt=""
+        width={256}
+        height={256}
+        priority
+        className="size-11 shrink-0 drop-shadow-[0_0_14px_rgb(234_138_42/0.45)] transition duration-300 group-hover:scale-105 sm:size-12"
+      />
+      <span className="leading-tight whitespace-nowrap">
+        <span className="block font-serif text-xl font-black tracking-[0.18em] text-white">{SITE.brand}</span>
+        <span className="block text-[10px] font-medium text-stone-400 sm:text-[11px]">{SITE.tagline}</span>
       </span>
     </a>
+  );
+}
+
+export function FullLogo({ className, priority }: { className?: string; priority?: boolean }) {
+  return (
+    <Image
+      src="/brand/life-logo.png"
+      alt={`${SITE.brand} – Live It For Eternity logo`}
+      width={520}
+      height={537}
+      priority={priority}
+      sizes="(min-width: 1024px) 224px, 176px"
+      className={className}
+    />
   );
 }

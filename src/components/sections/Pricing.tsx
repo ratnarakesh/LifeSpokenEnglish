@@ -113,12 +113,12 @@ export function Pricing() {
           <ol className="glass grid gap-6 rounded-3xl p-6 sm:grid-cols-3 sm:p-8">
             {STEPS.map((step, i) => (
               <li key={step.title} className="flex gap-4">
-                <span className="grid size-10 shrink-0 place-items-center rounded-full bg-emerald-500/15 font-bold text-emerald-300 ring-1 ring-emerald-500/40">
+                <span className="grid size-10 shrink-0 place-items-center rounded-full bg-ember-500/15 font-bold text-ember-300 ring-1 ring-ember-500/40">
                   {i + 1}
                 </span>
                 <div>
                   <p className="font-semibold text-white">{step.title}</p>
-                  <p className="mt-1 text-sm text-slate-400">{step.description}</p>
+                  <p className="mt-1 text-sm text-stone-400">{step.description}</p>
                 </div>
               </li>
             ))}
@@ -148,17 +148,17 @@ function PriceCard({ icon, badge, name, subtitle, price, priceNote, features, ct
       className={cn(
         "relative flex h-full flex-col rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1",
         featured
-          ? "bg-linear-to-b from-emerald-500/15 to-slate-900/80 shadow-[0_30px_80px_-30px_rgb(16_185_129/0.5)] ring-1 ring-emerald-500/50 backdrop-blur-xl"
+          ? "bg-linear-to-b from-ember-500/15 to-stone-900/80 shadow-[0_30px_80px_-30px_rgb(234_138_42/0.5)] ring-1 ring-ember-500/50 backdrop-blur-xl"
           : gold
             ? "glass hover:border-amber-500/50!"
-            : "glass hover:border-emerald-500/50!",
+            : "glass hover:border-ember-500/50!",
       )}
     >
       <div className="flex items-center justify-between">
         <span
           className={cn(
             "grid size-12 place-items-center rounded-2xl ring-1",
-            gold ? "bg-amber-500/10 text-amber-300 ring-amber-500/30" : "bg-emerald-500/10 text-emerald-300 ring-emerald-500/30",
+            gold ? "bg-amber-500/10 text-amber-300 ring-amber-500/30" : "bg-ember-500/10 text-ember-300 ring-ember-500/30",
           )}
         >
           {icon}
@@ -167,10 +167,10 @@ function PriceCard({ icon, badge, name, subtitle, price, priceNote, features, ct
           className={cn(
             "rounded-full px-3 py-1 text-xs font-bold tracking-wide uppercase",
             featured
-              ? "bg-linear-to-r from-emerald-400 to-cyan-400 text-obsidian-950"
+              ? "bg-linear-to-r from-ember-400 to-sun-400 text-obsidian-950"
               : gold
                 ? "bg-amber-500/15 text-amber-300 ring-1 ring-amber-500/30"
-                : "bg-slate-800 text-slate-300",
+                : "bg-stone-800 text-stone-300",
           )}
         >
           {badge}
@@ -178,19 +178,19 @@ function PriceCard({ icon, badge, name, subtitle, price, priceNote, features, ct
       </div>
 
       <h3 className="mt-6 text-xl font-bold text-white">{name}</h3>
-      {subtitle && <p className="text-sm text-slate-400">{subtitle}</p>}
+      {subtitle && <p className="text-sm text-stone-400">{subtitle}</p>}
 
       <p className="mt-5 flex items-baseline gap-2">
         <span className={cn("text-5xl font-extrabold tracking-tight", gold ? "text-amber-300" : "text-white")}>
           {price}
         </span>
       </p>
-      <p className="mt-1 text-sm text-slate-400">{priceNote}</p>
+      <p className="mt-1 text-sm text-stone-400">{priceNote}</p>
 
-      <ul className="mt-6 flex-1 space-y-3 border-t border-slate-800 pt-6">
+      <ul className="mt-6 flex-1 space-y-3 border-t border-stone-800 pt-6">
         {features.map((f) => (
-          <li key={f} className="flex items-start gap-3 text-sm text-slate-300">
-            <Check className={cn("mt-0.5 size-4 shrink-0", gold ? "text-amber-400" : "text-emerald-400")} />
+          <li key={f} className="flex items-start gap-3 text-sm text-stone-300">
+            <Check className={cn("mt-0.5 size-4 shrink-0", gold ? "text-amber-400" : "text-ember-400")} />
             {f}
           </li>
         ))}

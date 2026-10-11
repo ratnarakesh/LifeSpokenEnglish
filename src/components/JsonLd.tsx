@@ -11,7 +11,12 @@ export function JsonLd() {
     alternateName: ["LIFE Spoken English", "English by Mani Sir"],
     description:
       "Spoken English & Soft Skills training institute in Madhurawada, Visakhapatnam offering live offline and online batches with 10 free trial classes.",
-    ...(SITE.url && { url: SITE.url }),
+    ...(SITE.url && {
+      url: SITE.url,
+      logo: `${SITE.url}/brand/life-logo.png`,
+      image: `${SITE.url}/brand/og-image.png`,
+    }),
+    slogan: "Live It For Eternity",
     telephone: PHONES.primary.e164,
     priceRange: "₹2,000 – ₹10,000 per month",
     address: {

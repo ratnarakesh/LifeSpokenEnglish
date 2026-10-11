@@ -19,7 +19,7 @@ export function GlowCard({ children, className }: GlowCardProps) {
     <div
       onPointerMove={trackGlow}
       className={cn(
-        "glow-card glass rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:border-emerald-500/50 hover:shadow-[0_20px_60px_-20px_rgb(16_185_129/0.35)]",
+        "glow-card glass rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:border-ember-500/50 hover:shadow-[0_20px_60px_-20px_rgb(234_138_42/0.35)]",
         className,
       )}
     >

@@ -14,7 +14,10 @@ export function Navbar() {
   const [activeId, setActiveId] = useState<string | null>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 24);
+      if (window.scrollY < 120) setActiveId(null);
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -47,27 +50,30 @@ export function Navbar() {
       className={cn(
         "sticky top-0 z-40 transition-all duration-300",
         scrolled || menuOpen
-          ? "border-b border-slate-800/80 bg-obsidian-950/75 backdrop-blur-xl"
+          ? "border-b border-stone-800/80 bg-obsidian-950/75 backdrop-blur-xl"
           : "border-b border-transparent",
       )}
     >
-      <nav className="mx-auto flex h-18 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8" aria-label="Main">
+      <nav
+        className="mx-auto flex h-18 max-w-[96rem] items-center justify-between gap-3 px-4 sm:h-20 sm:px-6 lg:px-8"
+        aria-label="Main"
+      >
         <Brand />
 
-        <ul className="hidden items-center gap-1 xl:flex">
+        <ul className="hidden items-center gap-0.5 xl:flex">
           {NAV_LINKS.map((link) => (
             <li key={link.href}>
               <a
                 href={link.href}
                 className={cn(
-                  "relative isolate rounded-full px-3 py-2 text-sm font-medium transition-colors",
-                  activeId === link.href ? "text-white" : "text-slate-400 hover:text-white",
+                  "relative isolate block rounded-full px-2.5 py-2 text-[13px] font-medium whitespace-nowrap transition-colors 2xl:px-3.5 2xl:text-sm",
+                  activeId === link.href ? "text-white" : "text-stone-400 hover:text-white",
                 )}
               >
                 {activeId === link.href && (
                   <motion.span
                     layoutId="nav-active"
-                    className="absolute inset-0 -z-10 rounded-full bg-slate-800/80 ring-1 ring-slate-700"
+                    className="absolute inset-0 -z-10 rounded-full bg-stone-800/80 ring-1 ring-stone-700"
                     transition={{ type: "spring", stiffness: 400, damping: 32 }}
                   />
                 )}
@@ -77,21 +83,32 @@ export function Navbar() {
           ))}
         </ul>
 
-        <div className="hidden items-center gap-2 lg:flex">
-          <a href={telLink()} className={button("secondary", "sm")}>
-            <Phone className="size-4 text-emerald-400" />
-            Call: {PHONES.primary.display}
+        <div className="ml-auto hidden shrink-0 items-center gap-2 lg:flex xl:ml-0">
+          <a
+            href={telLink()}
+            aria-label={`Call ${PHONES.primary.display}`}
+            title={`Call ${PHONES.primary.display}`}
+            className={button("secondary", "sm", "whitespace-nowrap xl:size-10 xl:px-0 2xl:size-auto 2xl:px-4")}
+          >
+            <Phone className="size-4 shrink-0 text-ember-400" />
+            <span className="xl:hidden 2xl:inline">Call: {PHONES.primary.display}</span>
           </a>
-          <a href={whatsappLink()} target="_blank" rel="noopener noreferrer" className={button("whatsapp", "sm")}>
-            <WhatsAppIcon className="size-4" />
-            Chat on WhatsApp
+          <a
+            href={whatsappLink()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={button("whatsapp", "sm", "whitespace-nowrap")}
+          >
+            <WhatsAppIcon className="size-4 shrink-0" />
+            <span className="xl:hidden 2xl:inline">Chat on WhatsApp</span>
+            <span className="hidden xl:inline 2xl:hidden">WhatsApp</span>
           </a>
         </div>
 
         <button
           type="button"
           onClick={() => setMenuOpen((o) => !o)}
-          className="grid size-11 place-items-center rounded-xl text-slate-200 ring-1 ring-slate-800 transition hover:bg-slate-800/60 xl:hidden"
+          className="grid size-11 shrink-0 place-items-center rounded-xl text-stone-200 ring-1 ring-stone-800 transition hover:bg-stone-800/60 xl:hidden"
           aria-expanded={menuOpen}
           aria-controls="mobile-menu"
           aria-label={menuOpen ? "Close menu" : "Open menu"}
@@ -108,7 +125,7 @@ export function Navbar() {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
-            className="overflow-hidden border-t border-slate-800/80 xl:hidden"
+            className="overflow-hidden border-t border-stone-800/80 xl:hidden"
           >
             <ul className="mx-auto grid max-w-7xl gap-1 px-4 py-4 sm:px-6">
               {NAV_LINKS.map((link) => (
@@ -116,7 +133,7 @@ export function Navbar() {
                   <a
                     href={link.href}
                     onClick={() => setMenuOpen(false)}
-                    className="block rounded-xl px-4 py-3 text-base font-medium text-slate-200 transition hover:bg-slate-800/60"
+                    className="block rounded-xl px-4 py-3 text-base font-medium text-stone-200 transition hover:bg-stone-800/60"
                   >
                     {link.label}
                   </a>
@@ -124,7 +141,7 @@ export function Navbar() {
               ))}
               <li className="mt-2 grid gap-2 sm:grid-cols-2 lg:hidden">
                 <a href={telLink()} className={button("secondary", "md")}>
-                  <Phone className="size-4 text-emerald-400" /> Call: {PHONES.primary.display}
+                  <Phone className="size-4 text-ember-400" /> Call: {PHONES.primary.display}
                 </a>
                 <a href={whatsappLink()} target="_blank" rel="noopener noreferrer" className={button("whatsapp", "md")}>
                   <WhatsAppIcon className="size-4" /> Chat on WhatsApp

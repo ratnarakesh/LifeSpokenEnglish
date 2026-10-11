@@ -62,14 +62,14 @@ export function VideoShowcase() {
                   rel="noopener noreferrer"
                   className={`glass group flex h-full items-center gap-4 rounded-2xl p-5 transition-all duration-300 hover:-translate-y-0.5 ${s.accent}`}
                 >
-                  <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-slate-950/60 ring-1 ring-slate-800">
+                  <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-stone-950/60 ring-1 ring-stone-800">
                     {s.icon}
                   </span>
                   <span className="min-w-0 flex-1">
-                    <span className="block text-sm text-slate-400">{s.label}</span>
+                    <span className="block text-sm text-stone-400">{s.label}</span>
                     <span className="block truncate font-semibold text-white">{s.handle}</span>
                   </span>
-                  <ArrowUpRight className="size-5 text-slate-500 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-white" />
+                  <ArrowUpRight className="size-5 text-stone-500 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-white" />
                 </a>
               </Reveal>
             ))}

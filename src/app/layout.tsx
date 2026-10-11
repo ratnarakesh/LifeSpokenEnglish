@@ -11,6 +11,7 @@ const jakarta = Plus_Jakarta_Sans({
 
 const title =
   "LIFE Spoken English & Soft Skills Institute | Mani Sir | Madhurawada, Visakhapatnam";
+const OG_IMAGE = "/brand/og-image.png";
 const description =
   "Best Spoken English & Soft Skills classes in Madhurawada, Visakhapatnam (Vizag) by Mani Sir. 5.0★ Google rating from 1,800+ students. 10 free trial classes, monthly fees, 100% live offline & online batches, Telugu-friendly teaching.";
 
@@ -39,14 +40,21 @@ export const metadata: Metadata = {
     siteName: SITE.name,
     title,
     description,
+    ...(SITE.url && { images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: "LIFE – Live It For Eternity" }] }),
   },
-  twitter: { card: "summary", title, description },
+  twitter: {
+    card: SITE.url ? "summary_large_image" : "summary",
+    title,
+    description,
+    ...(SITE.url && { images: [OG_IMAGE] }),
+  },
+  appleWebApp: { capable: true, title: SITE.brand, statusBarStyle: "black-translucent" },
   robots: { index: true, follow: true },
   formatDetection: { telephone: true },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#06080F",
+  themeColor: "#0B0806",
   colorScheme: "dark",
 };
 

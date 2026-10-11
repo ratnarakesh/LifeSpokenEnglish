@@ -25,14 +25,14 @@ export function CourseTabs() {
               key={course.id}
               value={course.id}
               className={cn(
-                "relative isolate flex flex-col items-center gap-1 rounded-xl px-2 py-3 text-xs font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-emerald-400 sm:flex-row sm:justify-center sm:gap-2 sm:text-sm",
-                active ? "text-obsidian-950" : "text-slate-400 hover:text-white",
+                "relative isolate flex flex-col items-center gap-1 rounded-xl px-2 py-3 text-xs font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-ember-400 sm:flex-row sm:justify-center sm:gap-2 sm:text-sm",
+                active ? "text-obsidian-950" : "text-stone-400 hover:text-white",
               )}
             >
               {active && (
                 <motion.span
                   layoutId="course-tab"
-                  className="absolute inset-0 -z-10 rounded-xl bg-linear-to-r from-emerald-400 to-cyan-400"
+                  className="absolute inset-0 -z-10 rounded-xl bg-linear-to-r from-ember-400 to-sun-400"
                   transition={{ type: "spring", stiffness: 380, damping: 32 }}
                 />
               )}
@@ -62,25 +62,25 @@ function CoursePanel({ course }: { course: Course }) {
       className="glass glow-card grid gap-8 overflow-hidden rounded-3xl p-6 sm:p-10 lg:grid-cols-5"
     >
       <div className="lg:col-span-2">
-        <span className="grid size-14 place-items-center rounded-2xl bg-linear-to-br from-emerald-400 to-cyan-500 text-obsidian-950">
+        <span className="grid size-14 place-items-center rounded-2xl bg-linear-to-br from-ember-400 to-sun-500 text-obsidian-950">
           <Icon className="size-7" />
         </span>
         <h3 className="mt-6 text-2xl font-extrabold text-white sm:text-3xl">{course.name}</h3>
-        <p className="mt-2 text-slate-400">{course.tagline}</p>
+        <p className="mt-2 text-stone-400">{course.tagline}</p>
 
         <dl className="mt-6 space-y-4">
           <div className="flex items-start gap-3">
             <Clock className="mt-0.5 size-5 shrink-0 text-amber-400" />
             <div>
-              <dt className="text-xs font-semibold tracking-wider text-slate-500 uppercase">Duration</dt>
+              <dt className="text-xs font-semibold tracking-wider text-stone-500 uppercase">Duration</dt>
               <dd className="font-semibold text-white">{course.duration}</dd>
             </div>
           </div>
           <div className="flex items-start gap-3">
-            <Users className="mt-0.5 size-5 shrink-0 text-cyan-400" />
+            <Users className="mt-0.5 size-5 shrink-0 text-sun-400" />
             <div>
-              <dt className="text-xs font-semibold tracking-wider text-slate-500 uppercase">Ideal for</dt>
-              <dd className="text-slate-200">{course.audience}</dd>
+              <dt className="text-xs font-semibold tracking-wider text-stone-500 uppercase">Ideal for</dt>
+              <dd className="text-stone-200">{course.audience}</dd>
             </div>
           </div>
         </dl>
@@ -90,8 +90,8 @@ function CoursePanel({ course }: { course: Course }) {
         </TrialButton>
       </div>
 
-      <div className="rounded-2xl border border-slate-800 bg-obsidian-950/50 p-6 sm:p-8 lg:col-span-3">
-        <p className="text-xs font-semibold tracking-wider text-emerald-300 uppercase">What you&apos;ll master</p>
+      <div className="rounded-2xl border border-stone-800 bg-obsidian-950/50 p-6 sm:p-8 lg:col-span-3">
+        <p className="text-xs font-semibold tracking-wider text-ember-300 uppercase">What you&apos;ll master</p>
         <ul className="mt-5 grid gap-3 sm:grid-cols-2">
           {course.focus.map((item, i) => (
             <motion.li
@@ -99,10 +99,10 @@ function CoursePanel({ course }: { course: Course }) {
               initial={{ opacity: 0, x: -8 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.1 + i * 0.05 }}
-              className="flex items-start gap-3 rounded-xl border border-slate-800/80 bg-slate-900/50 p-4"
+              className="flex items-start gap-3 rounded-xl border border-stone-800/80 bg-stone-900/50 p-4"
             >
-              <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-emerald-400" />
-              <span className="text-sm font-medium text-slate-200">{item}</span>
+              <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-ember-400" />
+              <span className="text-sm font-medium text-stone-200">{item}</span>
             </motion.li>
           ))}
         </ul>

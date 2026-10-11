@@ -21,3 +21,6 @@ Read and strictly follow every rule in `.devin-rules.md` (project root) before d
 - Contact info / links live in `src/lib/site.ts`; marketing copy in `src/lib/content.ts`.
 - lucide-react 1.x has no brand icons; brand SVGs live in `src/components/ui/BrandIcons.tsx`.
 - Pin dependencies exactly and prefer versions published 7+ days ago.
+- Brand: official logo sources live in `assets/brand/`. Regenerate all logo/icon outputs (`public/brand/*`, `src/app/icon.png`, `src/app/apple-icon.png`) with `node scripts/build-brand-assets.mjs`.
+- Theme colours come from the logo: `ember-*` (sunset orange), `sun-*` (gold), `bark-*` (eagle brown), warm `obsidian-*` backgrounds and `stone-*` neutrals, all defined in `src/app/globals.css`. Do not reintroduce emerald/cyan/slate.
+- Bulk find/replace on class names must use word boundaries (a past `slate-`→`stone-` replace corrupted `translate-`).

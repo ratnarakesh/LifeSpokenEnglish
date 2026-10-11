@@ -30,31 +30,31 @@ export function WhyLife() {
           <Reveal className="lg:col-span-2">
             <GlowCard className="flex h-full flex-col justify-between p-8">
               <div>
-                <Sparkles className="size-8 text-emerald-400/80" />
-                <p className="mt-4 text-xs font-semibold tracking-wider text-emerald-300 uppercase">
+                <Sparkles className="size-8 text-ember-400/80" />
+                <p className="mt-4 text-xs font-semibold tracking-wider text-ember-300 uppercase">
                   The LIFE Approach
                 </p>
-                <p className="mt-2 text-lg leading-relaxed text-slate-200">
+                <p className="mt-2 text-lg leading-relaxed text-stone-200">
                   Live, face-to-face speaking practice rooted in real-life situations, with equal focus
                   on understanding concepts and speaking them aloud, explained in a Telugu-friendly way
                   so no learner is left behind.
                 </p>
                 <div className="mt-6 flex items-center gap-4">
-                  <span className="grid size-14 place-items-center rounded-2xl bg-linear-to-br from-emerald-400 to-cyan-500 text-xl font-black text-obsidian-950">
+                  <span className="grid size-14 place-items-center rounded-2xl bg-linear-to-br from-ember-400 to-sun-500 text-xl font-black text-obsidian-950">
                     MS
                   </span>
                   <div>
                     <p className="font-bold text-white">{SITE.founder}</p>
-                    <p className="text-sm text-slate-400">
+                    <p className="text-sm text-stone-400">
                       &ldquo;{SITE.founderAlias}&rdquo; · Founder & Lead Trainer
                     </p>
                   </div>
                 </div>
               </div>
-              <dl className="mt-8 grid grid-cols-2 gap-4 border-t border-slate-800 pt-6">
+              <dl className="mt-8 grid grid-cols-2 gap-4 border-t border-stone-800 pt-6">
                 {STATS.map((s) => (
                   <div key={s.label}>
-                    <dt className="text-xs text-slate-500">{s.label}</dt>
+                    <dt className="text-xs text-stone-500">{s.label}</dt>
                     <dd className="mt-1 text-2xl font-extrabold text-white">{s.value}</dd>
                   </div>
                 ))}
@@ -66,11 +66,11 @@ export function WhyLife() {
             {AUDIENCES.map(({ icon: Icon, title, description }, i) => (
               <Reveal key={title} delay={i * 0.08}>
                 <GlowCard className="h-full p-7">
-                  <span className="grid size-12 place-items-center rounded-2xl bg-cyan-500/10 text-cyan-300 ring-1 ring-cyan-500/30">
+                  <span className="grid size-12 place-items-center rounded-2xl bg-sun-500/10 text-sun-300 ring-1 ring-sun-500/30">
                     <Icon className="size-6" />
                   </span>
                   <h3 className="mt-5 text-lg font-bold text-white">{title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-400">{description}</p>
+                  <p className="mt-2 text-sm leading-relaxed text-stone-400">{description}</p>
                 </GlowCard>
               </Reveal>
             ))}
