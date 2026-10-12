@@ -1,5 +1,5 @@
 import { COURSES } from "@/lib/content";
-import { ADDRESS, LINKS, PHONES, SITE } from "@/lib/site";
+import { ADDRESS, LINKS, PHONES, SITE, VIDEO_ID } from "@/lib/site";
 
 export function JsonLd() {
   const orgId = `${SITE.url ?? ""}/#organization`;
@@ -17,6 +17,8 @@ export function JsonLd() {
       image: `${SITE.url}/brand/og-image.png`,
     }),
     slogan: "Live It For Eternity",
+    foundingDate: "2018",
+    foundingLocation: { "@type": "Place", name: "Madhurawada, Visakhapatnam, Andhra Pradesh, India" },
     telephone: PHONES.primary.e164,
     priceRange: "₹2,000 - ₹10,000 per month",
     address: {
@@ -32,7 +34,13 @@ export function JsonLd() {
       { "@type": "Place", name: "Madhurawada" },
     ],
     hasMap: LINKS.googleMaps,
-    founder: { "@type": "Person", name: SITE.founder, alternateName: SITE.founderAlias },
+    founder: {
+      "@type": "Person",
+      name: SITE.founder,
+      alternateName: SITE.founderAlias,
+      jobTitle: "Founder, Director & Lead Trainer",
+      ...(SITE.url && { image: `${SITE.url}/media/people/mani-sir-portrait.webp`, url: `${SITE.url}/about` }),
+    },
     contactPoint: [
       {
         "@type": "ContactPoint",
@@ -56,6 +64,14 @@ export function JsonLd() {
       reviewCount: SITE.rating.count,
     },
     sameAs: [LINKS.youtube, LINKS.instagram],
+    subjectOf: {
+      "@type": "VideoObject",
+      name: "LIFE Spoken English: Official Orientation by Mani Sir",
+      description: "Mani Sir explains how LIFE Spoken English & Soft Skills classes work.",
+      embedUrl: `https://www.youtube.com/embed/${VIDEO_ID}`,
+      thumbnailUrl: `https://i.ytimg.com/vi/${VIDEO_ID}/hqdefault.jpg`,
+      uploadDate: "2025-01-28T04:48:12-08:00",
+    },
     hasOfferCatalog: {
       "@type": "OfferCatalog",
       name: "Spoken English & Soft Skills Courses",

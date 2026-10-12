@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useModals } from "@/components/Providers";
+import { useModals, type VideoTarget } from "@/components/Providers";
 import type { CourseInterestId } from "@/lib/content";
 
 type TriggerProps = { className?: string; children: ReactNode };
@@ -15,10 +15,21 @@ export function TrialButton({ className, children, course }: TriggerProps & { co
   );
 }
 
-export function VideoButton({ className, children }: TriggerProps) {
+export function VideoButton({
+  className,
+  children,
+  video,
+  ariaLabel,
+}: TriggerProps & { video?: VideoTarget; ariaLabel?: string }) {
   const { openVideo } = useModals();
   return (
-    <button type="button" onClick={openVideo} className={className} aria-haspopup="dialog">
+    <button
+      type="button"
+      onClick={() => openVideo(video)}
+      className={className}
+      aria-haspopup="dialog"
+      aria-label={ariaLabel}
+    >
       {children}
     </button>
   );

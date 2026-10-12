@@ -2,6 +2,8 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, Phone, X } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { WhatsAppIcon } from "@/components/ui/BrandIcons";
 import { button, cn } from "@/lib/cn";
@@ -11,12 +13,16 @@ import { Brand } from "./Brand";
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [activeId, setActiveId] = useState<string | null>(null);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+  const pageActive = NAV_LINKS.find((l) => !l.href.includes("#") && pathname.startsWith(l.href))?.href ?? null;
+  const activeHref = isHome ? activeSection : pageActive;
 
   useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > 24);
-      if (window.scrollY < 120) setActiveId(null);
+      if (window.scrollY < 120) setActiveSection(null);
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -24,19 +30,20 @@ export function Navbar() {
   }, []);
 
   useEffect(() => {
-    const sections = NAV_LINKS.map((l) => document.querySelector(l.href)).filter(
-      (el): el is Element => el !== null,
-    );
+    if (!isHome) return;
+    const sections = NAV_LINKS.filter((l) => l.href.startsWith("/#"))
+      .map((l) => document.getElementById(l.href.slice(2)))
+      .filter((el): el is HTMLElement => el !== null);
     const observer = new IntersectionObserver(
       (entries) => {
         const visible = entries.find((e) => e.isIntersecting);
-        if (visible) setActiveId(`#${visible.target.id}`);
+        if (visible) setActiveSection(`/#${visible.target.id}`);
       },
       { rootMargin: "-45% 0px -50% 0px" },
     );
     sections.forEach((s) => observer.observe(s));
     return () => observer.disconnect();
-  }, []);
+  }, [isHome]);
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -63,14 +70,15 @@ export function Navbar() {
         <ul className="hidden items-center gap-0.5 xl:flex">
           {NAV_LINKS.map((link) => (
             <li key={link.href}>
-              <a
+              <Link
                 href={link.href}
+                aria-current={activeHref === link.href && !link.href.includes("#") ? "page" : undefined}
                 className={cn(
                   "relative isolate block rounded-full px-2.5 py-2 text-[13px] font-medium whitespace-nowrap transition-colors 2xl:px-3.5 2xl:text-sm",
-                  activeId === link.href ? "text-white" : "text-stone-400 hover:text-white",
+                  activeHref === link.href ? "text-white" : "text-stone-400 hover:text-white",
                 )}
               >
-                {activeId === link.href && (
+                {activeHref === link.href && (
                   <motion.span
                     layoutId="nav-active"
                     className="absolute inset-0 -z-10 rounded-full bg-stone-800/80 ring-1 ring-stone-700"
@@ -78,7 +86,7 @@ export function Navbar() {
                   />
                 )}
                 {link.label}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>
@@ -130,13 +138,16 @@ export function Navbar() {
             <ul className="mx-auto grid max-w-7xl gap-1 px-4 py-4 sm:px-6">
               {NAV_LINKS.map((link) => (
                 <li key={link.href}>
-                  <a
+                  <Link
                     href={link.href}
                     onClick={() => setMenuOpen(false)}
-                    className="block rounded-xl px-4 py-3 text-base font-medium text-stone-200 transition hover:bg-stone-800/60"
+                    className={cn(
+                      "block rounded-xl px-4 py-3 text-base font-medium transition hover:bg-stone-800/60",
+                      activeHref === link.href ? "bg-stone-800/60 text-white" : "text-stone-200",
+                    )}
                   >
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
               <li className="mt-2 grid gap-2 sm:grid-cols-2 lg:hidden">

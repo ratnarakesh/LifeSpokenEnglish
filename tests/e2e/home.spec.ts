@@ -32,28 +32,132 @@ test("page load: hero headline, 5.0 star badge and the 10 promises render", asyn
   await expect(page.getByRole("heading", { name: "10 Days Free Demo Classes" })).toBeAttached();
   await expect(page.getByRole("heading", { name: "Open Learning Environment" })).toBeVisible();
 
-  await expect(page.getByRole("heading", { name: /Why We Are Called .LIFE./ })).toBeAttached();
+  await expect(page.getByRole("heading", { name: /Meet Mani Sir and the meaning of LIFE/ })).toBeAttached();
 });
 
-test("typography: no em dash or en dash anywhere in rendered text, attributes or metadata", async ({ page }) => {
-  const found = await page.evaluate((pattern) => {
-    const re = new RegExp(pattern);
-    const hits: string[] = [];
-    if (re.test(document.title)) hits.push(`title: ${document.title}`);
-    const walker = document.createTreeWalker(document.documentElement, NodeFilter.SHOW_TEXT);
-    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
-      if (re.test(node.textContent ?? "")) hits.push(`text: ${node.textContent?.trim().slice(0, 80)}`);
-    }
-    for (const el of document.querySelectorAll("*")) {
-      for (const attr of ["alt", "title", "aria-label", "placeholder", "content", "value"]) {
-        const value = el.getAttribute(attr);
-        if (value && re.test(value)) hits.push(`${el.tagName.toLowerCase()}[${attr}]: ${value.slice(0, 80)}`);
-      }
-    }
-    return hits;
-  }, DASHES.source);
-  expect(found).toEqual([]);
+test("navigation: header links reach the About and Gallery pages and back to home sections", async ({ page, isMobile }) => {
+  const openMenu = async () => {
+    if (isMobile) await page.getByRole("button", { name: "Open menu" }).click();
+  };
+  const nav = () => (isMobile ? page.locator("#mobile-menu") : page.getByRole("navigation", { name: "Main" }));
+
+  await openMenu();
+  await nav().getByRole("link", { name: "About LIFE" }).click();
+  await expect(page).toHaveURL(/\/about$/);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(/Meet Mani Sir, the heart of LIFE/);
+
+  await openMenu();
+  await nav().getByRole("link", { name: "Gallery" }).click();
+  await expect(page).toHaveURL(/\/gallery$/);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(/Real classes\. Real energy\./);
+
+  await openMenu();
+  await nav().getByRole("link", { name: "Courses" }).click();
+  await expect(page).toHaveURL(/\/#courses$/);
+  await expect(page.locator("#courses")).toBeInViewport();
 });
+
+test("about page: Mani Sir story, meaning, logo story, milestones and chapters render", async ({ page }) => {
+  await page.goto("/about");
+  await expect(page).toHaveTitle(/About LIFE & Mani Sir/);
+  await expect(page.getByRole("img", { name: /Mani Sir \(K\. Maneendra Kumar\) in the LIFE classroom/ })).toBeVisible();
+  await expect(page.getByText("Some teachers teach English. Mani Sir teaches people to believe in their own voice.")).toBeVisible();
+
+  const meaning = page.locator("#meaning");
+  await expect(meaning.getByRole("heading", { level: 2 })).toHaveText(/Live It For Eternity/);
+  for (const word of ["Live", "It", "For", "Eternity"]) {
+    await expect(meaning.getByText(word, { exact: true }).first()).toBeAttached();
+  }
+
+  const logo = page.locator("#logo-story");
+  await expect(logo.getByRole("heading", { name: "The Young Eagle Who Was Afraid to Fly" })).toBeAttached();
+  for (const symbol of ["The Eagle", "Wings Spread Wide", "The Rising Sun", "The Circle", "Earth Brown"]) {
+    await expect(logo.getByRole("heading", { name: symbol })).toBeAttached();
+  }
+
+  const journey = page.locator("#journey");
+  for (const year of ["2018", "2024", "2025", "Today"]) {
+    await expect(journey.getByText(year, { exact: true }).first()).toBeAttached();
+  }
+  await expect(journey.getByRole("heading", { name: "A Single Room in Madhurawada, Visakhapatnam" })).toBeAttached();
+  await expect(journey.getByRole("heading", { name: /Education Built on Empathy/ })).toBeAttached();
+  await expect(journey.getByRole("heading", { name: "A Movement Built by Heart and Word of Mouth" })).toBeAttached();
+  await expect(page.getByText("Walk away with fluency you will Live For Eternity.")).toBeAttached();
+});
+
+test("about page: real lesson cards load their images and play the right video", async ({ page, request }) => {
+  await page.goto("/about");
+  const reel = page.getByRole("list", { name: "Mani Sir video lessons" });
+  await reel.scrollIntoViewIfNeeded();
+  const cards = reel.getByRole("button", { name: /^Play video:/ });
+  await expect(cards).toHaveCount(8);
+
+  for (const src of await reel.locator("img").evaluateAll((imgs) => imgs.map((i) => (i as HTMLImageElement).src))) {
+    expect((await request.get(src)).status(), src).toBe(200);
+  }
+
+  const card = reel.getByRole("button", { name: "Play video: Common Errors 14: Can vs Able to" });
+  await card.scrollIntoViewIfNeeded();
+  await card.click();
+  const dialog = page.getByRole("dialog", { name: "Common Errors 14: Can vs Able to" });
+  await expect(dialog).toBeVisible();
+  await expect(dialog.locator('iframe[src*="youtube-nocookie.com/embed/SwTh5KpmYJo"]')).toBeAttached();
+  await page.keyboard.press("Escape");
+  await expect(dialog).toBeHidden();
+});
+
+test("gallery page: filters narrow the grid and the classroom photo opens in a lightbox", async ({ page, request }) => {
+  await page.goto("/gallery");
+  const grid = page.locator("main ul[aria-live]");
+  const filter = (name: RegExp) => page.getByRole("group", { name: "Filter gallery" }).getByRole("button", { name });
+
+  await expect(filter(/^All/)).toHaveAttribute("aria-pressed", "true");
+  const total = await grid.locator(":scope > li").count();
+  expect(total).toBeGreaterThanOrEqual(17);
+
+  for (const src of await grid.locator("img").evaluateAll((imgs) => imgs.map((i) => (i as HTMLImageElement).src))) {
+    expect((await request.get(src)).status(), src).toBe(200);
+  }
+
+  await filter(/^Classroom/).click();
+  await expect(grid.locator(":scope > li")).toHaveCount(1);
+  await filter(/^Batches/).click();
+  await expect(grid.getByRole("button", { name: /^Play video: New online batch/ }).first()).toBeVisible();
+  await expect(grid.getByRole("button", { name: "Play video: Believe vs Trust" })).toHaveCount(0);
+  await filter(/^Lessons/).click();
+  await expect(grid.getByRole("button", { name: "Play video: Believe vs Trust" })).toBeVisible();
+
+  await filter(/^Classroom/).click();
+  await grid.getByRole("button", { name: /Open photo: Mani Sir in the LIFE classroom/ }).click();
+  const lightbox = page.getByRole("dialog", { name: "Mani Sir in the LIFE classroom, Madhurawada" });
+  await expect(lightbox).toBeVisible();
+  await expect(lightbox.getByRole("img")).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(lightbox).toBeHidden();
+});
+
+for (const path of ["/", "/about", "/gallery"]) {
+  test(`typography: no em dash or en dash on ${path}`, async ({ page }) => {
+    await page.goto(path);
+    const found = await page.evaluate((pattern) => {
+      const re = new RegExp(pattern);
+      const hits: string[] = [];
+      if (re.test(document.title)) hits.push(`title: ${document.title}`);
+      const walker = document.createTreeWalker(document.documentElement, NodeFilter.SHOW_TEXT);
+      for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+        if (re.test(node.textContent ?? "")) hits.push(`text: ${node.textContent?.trim().slice(0, 80)}`);
+      }
+      for (const el of document.querySelectorAll("*")) {
+        for (const attr of ["alt", "title", "aria-label", "placeholder", "content", "value"]) {
+          const value = el.getAttribute(attr);
+          if (value && re.test(value)) hits.push(`${el.tagName.toLowerCase()}[${attr}]: ${value.slice(0, 80)}`);
+        }
+      }
+      return hits;
+    }, DASHES.source);
+    expect(found).toEqual([]);
+  });
+}
 
 test("course tabs: switching Basic, Professional and Advanced swaps the panel content", async ({ page }) => {
   const section = page.locator("#courses");

@@ -1,9 +1,10 @@
 import Image from "next/image";
+import Link from "next/link";
 import { SITE } from "@/lib/site";
 
 export function Brand() {
   return (
-    <a href="#top" className="group flex shrink-0 items-center gap-2.5 sm:gap-3" aria-label={`${SITE.brand}, back to top`}>
+    <Link href="/" className="group flex shrink-0 items-center gap-2.5 sm:gap-3" aria-label={`${SITE.brand}, home`}>
       <Image
         src="/brand/life-emblem.png"
         alt=""
@@ -16,7 +17,7 @@ export function Brand() {
         <span className="block font-serif text-xl font-black tracking-[0.18em] text-white">{SITE.brand}</span>
         <span className="block text-[10px] font-medium text-stone-400 sm:text-[11px]">{SITE.tagline}</span>
       </span>
-    </a>
+    </Link>
   );
 }
 

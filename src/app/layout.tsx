@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
+import { SiteShell } from "@/components/layout/SiteShell";
+import { OG_IMAGE } from "@/lib/seo";
 import { SITE } from "@/lib/site";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -12,12 +14,11 @@ const jakarta = Plus_Jakarta_Sans({
 
 const title =
   "LIFE Spoken English & Soft Skills Institute | Mani Sir | Madhurawada, Visakhapatnam";
-const OG_IMAGE = "/brand/og-image.png";
 const description =
   "Best Spoken English & Soft Skills classes in Madhurawada, Visakhapatnam (Vizag) by Mani Sir. 5.0★ Google rating from 1,800+ students. 10 free trial classes, monthly fees, 100% live offline & online batches, Telugu-friendly teaching.";
 
 export const metadata: Metadata = {
-  ...(SITE.url && { metadataBase: new URL(SITE.url), alternates: { canonical: "/" } }),
+  ...(SITE.url && { metadataBase: new URL(SITE.url) }),
   title: { default: title, template: "%s | LIFE Spoken English" },
   description,
   applicationName: SITE.name,
@@ -66,7 +67,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en-IN" className={`${jakarta.variable} antialiased`}>
       <body className="min-h-dvh font-sans">
-        {children}
+        <SiteShell>{children}</SiteShell>
         <ServiceWorkerRegister />
       </body>
     </html>

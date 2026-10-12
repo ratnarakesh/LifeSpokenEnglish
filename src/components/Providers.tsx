@@ -4,15 +4,20 @@ import { MotionConfig } from "framer-motion";
 import dynamic from "next/dynamic";
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
 import type { CourseInterestId } from "@/lib/content";
+import { VIDEO_ID } from "@/lib/site";
 
 const TrialModal = dynamic(() => import("./modals/TrialModal"), { ssr: false });
 const VideoModal = dynamic(() => import("./modals/VideoModal"), { ssr: false });
 
 type ModalKind = "trial" | "video";
 
+export type VideoTarget = { id: string; title: string };
+
+const DEFAULT_VIDEO: VideoTarget = { id: VIDEO_ID, title: "Mani Sir's Video Introduction" };
+
 type ModalContextValue = {
   openTrial: (course?: CourseInterestId) => void;
-  openVideo: () => void;
+  openVideo: (video?: VideoTarget) => void;
 };
 
 const ModalContext = createContext<ModalContextValue | null>(null);
@@ -21,6 +26,7 @@ export function Providers({ children }: { children: ReactNode }) {
   const [active, setActive] = useState<ModalKind | null>(null);
   const [mounted, setMounted] = useState<Record<ModalKind, boolean>>({ trial: false, video: false });
   const [trialCourse, setTrialCourse] = useState<CourseInterestId>("basic");
+  const [video, setVideo] = useState<VideoTarget>(DEFAULT_VIDEO);
 
   const open = useCallback((kind: ModalKind) => {
     setMounted((prev) => (prev[kind] ? prev : { ...prev, [kind]: true }));
@@ -33,7 +39,10 @@ export function Providers({ children }: { children: ReactNode }) {
         setTrialCourse(course);
         open("trial");
       },
-      openVideo: () => open("video"),
+      openVideo: (target = DEFAULT_VIDEO) => {
+        setVideo(target);
+        open("video");
+      },
     }),
     [open],
   );
@@ -49,7 +58,9 @@ export function Providers({ children }: { children: ReactNode }) {
         {mounted.trial && (
           <TrialModal open={active === "trial"} onOpenChange={handleOpenChange} course={trialCourse} />
         )}
-        {mounted.video && <VideoModal open={active === "video"} onOpenChange={handleOpenChange} />}
+        {mounted.video && (
+          <VideoModal open={active === "video"} onOpenChange={handleOpenChange} video={video} />
+        )}
       </ModalContext>
     </MotionConfig>
   );

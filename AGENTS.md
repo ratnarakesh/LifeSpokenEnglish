@@ -23,6 +23,9 @@ Read and strictly follow every rule in `.devin-rules.md` (project root) before d
 - Contact info / links live in `src/lib/site.ts`; marketing copy in `src/lib/content.ts`.
 - lucide-react 1.x has no brand icons; brand SVGs live in `src/components/ui/BrandIcons.tsx`.
 - Pin dependencies exactly and prefer versions published 7+ days ago.
+- Story media: lesson cards in `public/media/yt/` come from official @ENGLISHBYMANISIR YouTube thumbnails via `npm run media:youtube`; video IDs and titles live in `REEL` in `src/lib/content.ts`.
+- Pages: `/` (home), `/about`, `/gallery`. Shared header/footer/modals live in `src/components/layout/SiteShell.tsx` (root layout). Nav links in `NAV_LINKS` use `/#section` for home sections. Per-page metadata via `pageMetadata()` in `src/lib/seo.ts`.
+- Photos: originals in `assets/people/`, web versions via `npm run media:photos` into `public/media/people/`.
 - Brand: official logo sources live in `assets/brand/`. Regenerate all logo/icon outputs (`public/brand/*`, `src/app/icon.png`, `src/app/apple-icon.png`) with `node scripts/build-brand-assets.mjs`.
 - Theme colours come from the logo: `ember-*` (sunset orange), `sun-*` (gold), `bark-*` (eagle brown), warm `obsidian-*` backgrounds and `stone-*` neutrals, all defined in `src/app/globals.css`. Do not reintroduce emerald/cyan/slate.
 - Bulk find/replace on class names must use word boundaries (a past `slate-`→`stone-` replace corrupted `translate-`).

@@ -1,9 +1,11 @@
-import { ArrowUpRight, Star } from "lucide-react";
+import { ArrowRight, ArrowUpRight, PlayCircle, Star } from "lucide-react";
+import Link from "next/link";
 import type { ReactNode } from "react";
 import { YouTubeLite } from "@/components/YouTubeLite";
 import { GoogleIcon, InstagramIcon, YouTubeIcon } from "@/components/ui/BrandIcons";
 import { Reveal } from "@/components/ui/Reveal";
 import { GradientText, SectionHeading } from "@/components/ui/SectionHeading";
+import { button } from "@/lib/cn";
 import { LINKS, SITE, VIDEO_ID } from "@/lib/site";
 
 type Social = { href: string; icon: ReactNode; label: string; handle: string; accent: string };
@@ -87,6 +89,11 @@ export function VideoShowcase() {
             </Reveal>
           </div>
         </div>
+        <Reveal className="mt-10 text-center">
+          <Link href="/gallery" className={button("secondary", "md")}>
+            <PlayCircle className="size-4 text-ember-400" /> See all lessons in the Gallery <ArrowRight className="size-4" />
+          </Link>
+        </Reveal>
       </div>
     </section>
   );

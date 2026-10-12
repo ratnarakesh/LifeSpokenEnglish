@@ -42,12 +42,23 @@ export const LINKS = {
 } as const;
 
 export const NAV_LINKS = [
-  { href: "#why", label: "Why LIFE" },
-  { href: "#courses", label: "Courses" },
-  { href: "#promises", label: "The 10 Promises" },
-  { href: "#fees", label: "Fees & Trial" },
-  { href: "#video", label: "Video Tour" },
-  { href: "#contact", label: "Location & Contact" },
+  { href: "/about", label: "About LIFE" },
+  { href: "/#courses", label: "Courses" },
+  { href: "/#promises", label: "The 10 Promises" },
+  { href: "/#fees", label: "Fees & Trial" },
+  { href: "/gallery", label: "Gallery" },
+  { href: "/#contact", label: "Location & Contact" },
+] as const;
+
+export const FOOTER_LINKS = [
+  { href: "/", label: "Home" },
+  { href: "/about", label: "About LIFE & Mani Sir" },
+  { href: "/about#logo-story", label: "The Story Inside Our Logo" },
+  { href: "/gallery", label: "Gallery" },
+  { href: "/#courses", label: "Courses" },
+  { href: "/#fees", label: "Fees & Free Trial" },
+  { href: "/#enroll", label: "Book 10 Free Classes" },
+  { href: "/#contact", label: "Location & Contact" },
 ] as const;
 
 export const DEFAULT_WA_MESSAGE =

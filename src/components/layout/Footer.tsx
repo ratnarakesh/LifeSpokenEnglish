@@ -1,5 +1,6 @@
+import Link from "next/link";
 import { InstagramIcon, YouTubeIcon } from "@/components/ui/BrandIcons";
-import { ADDRESS, LINKS, NAV_LINKS, PHONES, SITE, telLink } from "@/lib/site";
+import { ADDRESS, FOOTER_LINKS, LINKS, PHONES, SITE, telLink } from "@/lib/site";
 import { FullLogo } from "./Brand";
 
 export function Footer() {
@@ -7,9 +8,9 @@ export function Footer() {
     <footer className="relative border-t border-stone-800/80 bg-obsidian-950 pb-28 md:pb-0">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:px-8">
         <div className="lg:col-span-2">
-          <a href="#top" aria-label={`${SITE.brand}, back to top`} className="inline-block">
+          <Link href="/" aria-label={`${SITE.brand}, home`} className="inline-block">
             <FullLogo className="h-auto w-28 sm:w-32" />
-          </a>
+          </Link>
           <p className="mt-5 max-w-md text-sm leading-relaxed text-stone-400">
             Practical, live Spoken English & Soft Skills training in {ADDRESS.locality},{" "}
             {ADDRESS.city}, led personally by {SITE.founderAlias} ({SITE.founder}). Offline classroom
@@ -40,11 +41,11 @@ export function Footer() {
         <div>
           <h3 className="text-sm font-semibold tracking-wider text-white uppercase">Explore</h3>
           <ul className="mt-4 space-y-2 text-sm">
-            {NAV_LINKS.map((link) => (
+            {FOOTER_LINKS.map((link) => (
               <li key={link.href}>
-                <a href={link.href} className="text-stone-400 transition hover:text-ember-300">
+                <Link href={link.href} className="text-stone-400 transition hover:text-ember-300">
                   {link.label}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>

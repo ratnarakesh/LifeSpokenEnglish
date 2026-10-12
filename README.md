@@ -1,6 +1,6 @@
 # LIFE Spoken English & Soft Skills Institute
 
-Official single-page website for LIFE: Spoken English & Soft Skills Training Institute (Mani Sir), Madhurawada, Visakhapatnam.
+Official website for LIFE: Spoken English & Soft Skills Training Institute (Mani Sir), Madhurawada, Visakhapatnam.
 
 ## Stack
 
@@ -16,9 +16,17 @@ npm run build        # static export to ./out
 npm run preview      # serve ./out at http://localhost:8000 (zero-dependency Node server)
 npm run test:e2e     # builds, then runs Playwright on desktop + mobile (uses installed Google Chrome)
 npm run brand:assets # regenerate logo, favicon and app icons from assets/brand/
+npm run media:youtube # refresh story/reel/gallery images from Mani Sir's official YouTube thumbnails
+npm run media:photos  # regenerate web photos from originals in assets/people/
 ```
 
 E2E tests run against the locally installed **Google Chrome** (`channel: "chrome"`), so no browser download is needed. On CI, install Chrome first.
+
+## Pages
+
+- `/` Home: hero, Meet Mani Sir teaser, courses, 10 promises, fees, video, WhatsApp booking, contact
+- `/about` About LIFE & Mani Sir: his story, meaning of LIFE, the story inside our logo, journey since 2018
+- `/gallery` Gallery: classroom photos and real lesson videos with filters
 
 ## Structure
 
