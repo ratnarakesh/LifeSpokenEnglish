@@ -3,7 +3,7 @@ import { SITE } from "@/lib/site";
 
 export function Brand() {
   return (
-    <a href="#top" className="group flex shrink-0 items-center gap-2.5 sm:gap-3" aria-label={`${SITE.brand} – back to top`}>
+    <a href="#top" className="group flex shrink-0 items-center gap-2.5 sm:gap-3" aria-label={`${SITE.brand}, back to top`}>
       <Image
         src="/brand/life-emblem.png"
         alt=""
@@ -24,7 +24,7 @@ export function FullLogo({ className, priority }: { className?: string; priority
   return (
     <Image
       src="/brand/life-logo.png"
-      alt={`${SITE.brand} – Live It For Eternity logo`}
+      alt={`${SITE.brand}: Live It For Eternity logo`}
       width={520}
       height={537}
       priority={priority}

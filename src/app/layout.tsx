@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import { SITE } from "@/lib/site";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -40,7 +41,7 @@ export const metadata: Metadata = {
     siteName: SITE.name,
     title,
     description,
-    ...(SITE.url && { images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: "LIFE – Live It For Eternity" }] }),
+    ...(SITE.url && { images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: "LIFE: Live It For Eternity" }] }),
   },
   twitter: {
     card: SITE.url ? "summary_large_image" : "summary",
@@ -48,20 +49,26 @@ export const metadata: Metadata = {
     description,
     ...(SITE.url && { images: [OG_IMAGE] }),
   },
-  appleWebApp: { capable: true, title: SITE.brand, statusBarStyle: "black-translucent" },
+  manifest: "/manifest.json",
+  appleWebApp: { capable: true, title: "LIFE English", statusBarStyle: "black" },
+  other: { "apple-mobile-web-app-capable": "yes" },
   robots: { index: true, follow: true },
   formatDetection: { telephone: true },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0B0806",
+  themeColor: "#07090E",
   colorScheme: "dark",
+  viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en-IN" className={`${jakarta.variable} antialiased`}>
-      <body className="min-h-dvh font-sans">{children}</body>
+      <body className="min-h-dvh font-sans">
+        {children}
+        <ServiceWorkerRegister />
+      </body>
     </html>
   );
 }

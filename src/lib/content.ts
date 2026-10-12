@@ -101,7 +101,7 @@ export const COURSES: Course[] = [
   {
     id: "professional",
     name: "Professional Course",
-    duration: "4–5 Months",
+    duration: "4-5 Months",
     tagline: "Communicate like a professional. Crack the interview.",
     audience: "Job aspirants, college graduates and corporate / IT professionals.",
     focus: [
@@ -116,7 +116,7 @@ export const COURSES: Course[] = [
   {
     id: "advanced",
     name: "Advanced Course",
-    duration: "6–7 Months",
+    duration: "6-7 Months",
     tagline: "Lead the room with presence and persuasion.",
     audience:
       "Team leads, executives, competitive exam aspirants and aspiring public speakers.",
@@ -157,6 +157,42 @@ export const AUDIENCES: Audience[] = [
   },
 ];
 
+export const STORY = {
+  title: 'Why We Are Called "LIFE"',
+  philosophy:
+    "English is not just an academic subject or a grammar puzzle; it is a life enabler. In everyday reality, lack of spoken English creates invisible barriers in classrooms, family circles, job interviews, and corporate boardrooms. The institute was named LIFE because language training should transform the quality of one's everyday life, career, and self-respect.",
+  acronym: [
+    { letter: "L", word: "Live" },
+    { letter: "I", word: "It" },
+    { letter: "F", word: "For" },
+    { letter: "E", word: "Eternity" },
+  ],
+  chapters: [
+    {
+      id: "where",
+      label: "Where It Started",
+      title: "Madhurawada, Visakhapatnam",
+      body: "Starting in a humble classroom setting at Vasu Brothers Nilayam, Midhilapuri VUDA Colony, Mani Sir set out to solve a deep-rooted issue: students spend 15 years studying English in schools and colleges, yet hesitate to speak a single spontaneous sentence.",
+    },
+    {
+      id: "why",
+      label: "Why It Started",
+      title: "The Breaking Point",
+      body: "Mani Sir observed that traditional institutes exploit student insecurity by demanding heavy upfront fees, forcing memorization of textbook grammar, and delivering one-way lectures. He rebuilt the learning model around two core beliefs:",
+      beliefs: [
+        "If a student fears English, the teacher must remove the financial and psychological risk first. This led to the 10-Class Free Trial and the low-stress monthly fee model.",
+        "Language is acquired through vocal practice and life scenarios, not silent note taking.",
+      ],
+    },
+    {
+      id: "milestones",
+      label: "The Milestones",
+      title: "1,800+ Five-Star Stories",
+      body: "From local classroom sessions to 1,800+ five-star verified reviews, touching homemakers who now speak with confidence, job seekers clearing MNC interviews, and professionals commanding corporate meetings.",
+    },
+  ],
+} as const;
+
 export const LEARNER_CATEGORIES = [
   "Homemaker",
   "College Student",
@@ -165,3 +201,10 @@ export const LEARNER_CATEGORIES = [
 ] as const;
 
 export const LEARNING_MODES = ["Classroom in Madhurawada", "Live Online"] as const;
+
+export const COURSE_INTEREST_OPTIONS = [
+  ...COURSES.map((c) => ({ id: c.id, label: `${c.name} (${c.duration})` })),
+  { id: "unsure", label: "Not sure yet, please guide me" },
+] as const;
+
+export type CourseInterestId = Course["id"] | "unsure";

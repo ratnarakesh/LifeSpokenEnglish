@@ -49,7 +49,7 @@ export function VideoShowcase() {
         <div className="mt-14 grid gap-6 lg:grid-cols-3">
           <Reveal className="lg:col-span-2">
             <div className="glass rounded-3xl p-2 sm:p-3">
-              <YouTubeLite videoId={VIDEO_ID} title="LIFE Spoken English – Official Orientation by Mani Sir" />
+              <YouTubeLite videoId={VIDEO_ID} title="LIFE Spoken English: Official Orientation by Mani Sir" />
             </div>
           </Reveal>
 

@@ -4,6 +4,7 @@ import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { Footer } from "@/components/layout/Footer";
 import { MobileActionBar } from "@/components/layout/MobileActionBar";
 import { Navbar } from "@/components/layout/Navbar";
+import { BrandStory } from "@/components/sections/BrandStory";
 import { Contact } from "@/components/sections/Contact";
 import { Courses } from "@/components/sections/Courses";
 import { Enrollment } from "@/components/sections/Enrollment";
@@ -29,6 +30,7 @@ export default function Home() {
         <Navbar />
         <main id="main">
           <Hero />
+          <BrandStory />
           <WhyLife />
           <Courses />
           <Promises />

@@ -64,7 +64,7 @@ export function Pricing() {
               priceNote="1st month → ₹2,000 / month thereafter"
               features={[
                 "Monday to Friday · 5 days / week",
-                "Prime evening slots (e.g. 8:00 – 9:30 PM)",
+                "Prime evening slots (e.g. 8:00 to 9:30 PM)",
                 "Free weekend backup sessions",
                 "Study materials included",
                 "Live doubt clearance",

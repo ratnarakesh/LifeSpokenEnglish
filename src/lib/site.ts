@@ -26,7 +26,7 @@ export const ADDRESS = {
 
 export const TIMINGS = {
   weekdays: "Monday to Friday",
-  weekdayDetail: "Morning & Evening Batches (e.g. 8:00 PM – 9:30 PM)",
+  weekdayDetail: "Morning & Evening Batches (e.g. 8:00 PM to 9:30 PM)",
   saturday: "Saturdays reserved for backup / extra sessions",
 } as const;
 

@@ -85,7 +85,7 @@ function CoursePanel({ course }: { course: Course }) {
           </div>
         </dl>
 
-        <TrialButton className={button("primary", "md", "mt-8")}>
+        <TrialButton course={course.id} className={button("primary", "md", "mt-8")}>
           Start with 10 Free Classes <ArrowRight className="size-4" />
         </TrialButton>
       </div>

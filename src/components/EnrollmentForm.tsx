@@ -1,10 +1,15 @@
 "use client";
 
-import { CheckCircle2, Phone, User } from "lucide-react";
+import { BookOpen, CheckCircle2, ChevronDown, Phone, User } from "lucide-react";
 import { useId, useState, type FormEvent } from "react";
 import { WhatsAppIcon } from "@/components/ui/BrandIcons";
 import { button, cn } from "@/lib/cn";
-import { LEARNER_CATEGORIES, LEARNING_MODES } from "@/lib/content";
+import {
+  COURSE_INTEREST_OPTIONS,
+  LEARNER_CATEGORIES,
+  LEARNING_MODES,
+  type CourseInterestId,
+} from "@/lib/content";
 import { whatsappLink } from "@/lib/site";
 
 type Category = (typeof LEARNER_CATEGORIES)[number];
@@ -18,7 +23,9 @@ function normalisePhone(raw: string) {
   return /^[6-9]\d{9}$/.test(digits) ? digits : null;
 }
 
-function buildMessage(name: string, phone: string, category: Category, mode: Mode) {
+type Registration = { name: string; phone: string; category: Category; mode: Mode; course: string };
+
+function buildMessage({ name, phone, category, mode, course }: Registration) {
   return [
     "Hello Mani Sir,",
     "",
@@ -27,6 +34,7 @@ function buildMessage(name: string, phone: string, category: Category, mode: Mod
     `• Name: ${name}`,
     `• Phone: +91 ${phone.slice(0, 5)} ${phone.slice(5)}`,
     `• I am a: ${category}`,
+    `• Course of Interest: ${course}`,
     `• Preferred Mode: ${mode}`,
     "",
     "Kindly share the upcoming batch timings. Thank you!",
@@ -39,12 +47,16 @@ const inputClass =
 const chipClass =
   "flex cursor-pointer items-center justify-center rounded-xl border border-stone-700/80 bg-obsidian-950/40 px-3 py-2.5 text-center text-sm font-medium text-stone-300 transition hover:border-stone-500 has-checked:border-ember-500/70 has-checked:bg-ember-500/10 has-checked:text-ember-200 has-focus-visible:ring-2 has-focus-visible:ring-ember-400";
 
-export function EnrollmentForm() {
+const courseLabel = (courseId: CourseInterestId) =>
+  COURSE_INTEREST_OPTIONS.find((o) => o.id === courseId)?.label ?? COURSE_INTEREST_OPTIONS[0].label;
+
+export function EnrollmentForm({ defaultCourse = "basic" }: { defaultCourse?: CourseInterestId }) {
   const id = useId();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [category, setCategory] = useState<Category>(LEARNER_CATEGORIES[0]);
   const [mode, setMode] = useState<Mode>(LEARNING_MODES[0]);
+  const [course, setCourse] = useState<CourseInterestId>(defaultCourse);
   const [errors, setErrors] = useState<Errors>({});
   const [sent, setSent] = useState(false);
 
@@ -58,7 +70,9 @@ export function EnrollmentForm() {
     setErrors(nextErrors);
     if (!normalised || nextErrors.name) return;
 
-    const url = whatsappLink(buildMessage(trimmedName, normalised, category, mode));
+    const url = whatsappLink(
+      buildMessage({ name: trimmedName, phone: normalised, category, mode, course: courseLabel(course) }),
+    );
     const win = window.open(url, "_blank");
     if (win) win.opener = null;
     else window.location.href = url;
@@ -137,6 +151,29 @@ export function EnrollmentForm() {
           ))}
         </div>
       </fieldset>
+
+      <div>
+        <label htmlFor={`${id}-course`} className="mb-1.5 block text-sm font-medium text-stone-200">
+          Course of Interest
+        </label>
+        <div className="relative">
+          <BookOpen className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-stone-500" />
+          <select
+            id={`${id}-course`}
+            name="course"
+            value={course}
+            onChange={(e) => setCourse(e.target.value as CourseInterestId)}
+            className={cn(inputClass, "cursor-pointer appearance-none pr-10")}
+          >
+            {COURSE_INTEREST_OPTIONS.map((option) => (
+              <option key={option.id} value={option.id} className="bg-obsidian-900 text-white">
+                {option.label}
+              </option>
+            ))}
+          </select>
+          <ChevronDown className="pointer-events-none absolute top-1/2 right-4 size-4 -translate-y-1/2 text-stone-400" />
+        </div>
+      </div>
 
       <fieldset>
         <legend className="mb-1.5 text-sm font-medium text-stone-200">Preferred Mode</legend>

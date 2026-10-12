@@ -7,7 +7,7 @@ export function Footer() {
     <footer className="relative border-t border-stone-800/80 bg-obsidian-950 pb-28 md:pb-0">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:px-8">
         <div className="lg:col-span-2">
-          <a href="#top" aria-label={`${SITE.brand} – back to top`} className="inline-block">
+          <a href="#top" aria-label={`${SITE.brand}, back to top`} className="inline-block">
             <FullLogo className="h-auto w-28 sm:w-32" />
           </a>
           <p className="mt-5 max-w-md text-sm leading-relaxed text-stone-400">
@@ -66,7 +66,7 @@ export function Footer() {
               </a>
             </li>
             <li>
-              {ADDRESS.locality}, {ADDRESS.city} – {ADDRESS.postalCode}
+              {ADDRESS.locality}, {ADDRESS.city} - {ADDRESS.postalCode}
             </li>
           </ul>
         </div>

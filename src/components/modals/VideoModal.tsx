@@ -16,7 +16,7 @@ export default function VideoModal(props: ModalProps) {
           <iframe
             className="absolute inset-0 size-full"
             src={`https://www.youtube-nocookie.com/embed/${VIDEO_ID}?autoplay=1&rel=0&modestbranding=1`}
-            title="LIFE Spoken English – Mani Sir orientation video"
+            title="LIFE Spoken English: Mani Sir orientation video"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             referrerPolicy="strict-origin-when-cross-origin"
             allowFullScreen

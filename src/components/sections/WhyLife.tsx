@@ -14,10 +14,10 @@ const STATS = [
 
 export function WhyLife() {
   return (
-    <section id="why" className="relative py-20 sm:py-28">
+    <section id="for-you" className="relative py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          eyebrow="Why LIFE"
+          eyebrow="Who It's For"
           title={
             <>
               Built for everyone who has ever <GradientText>hesitated to speak.</GradientText>

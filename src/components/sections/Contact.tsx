@@ -37,7 +37,7 @@ export function Contact() {
                     <br />
                     <span className="text-stone-400">({ADDRESS.landmark})</span>
                     <br />
-                    {ADDRESS.locality}, {ADDRESS.city}, {ADDRESS.region} – {ADDRESS.postalCode}
+                    {ADDRESS.locality}, {ADDRESS.city}, {ADDRESS.region} - {ADDRESS.postalCode}
                   </address>
                 </div>
                 <a

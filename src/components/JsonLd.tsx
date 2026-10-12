@@ -18,7 +18,7 @@ export function JsonLd() {
     }),
     slogan: "Live It For Eternity",
     telephone: PHONES.primary.e164,
-    priceRange: "₹2,000 – ₹10,000 per month",
+    priceRange: "₹2,000 - ₹10,000 per month",
     address: {
       "@type": "PostalAddress",
       streetAddress: `${ADDRESS.building}, ${ADDRESS.street}, ${ADDRESS.landmark}`,
@@ -63,7 +63,7 @@ export function JsonLd() {
         "@type": "Offer",
         itemOffered: {
           "@type": "Course",
-          name: `${course.name} – Spoken English`,
+          name: `${course.name}: Spoken English`,
           description: `${course.tagline} Ideal for: ${course.audience} Focus: ${course.focus.join(", ")}.`,
           timeRequired: course.duration,
           provider: { "@id": orgId },
