@@ -13,6 +13,9 @@ export const PHONES = {
   primary: { display: "+91 73374 12999", e164: "+917337412999", wa: "917337412999" },
 } as const;
 
+// Official brand email; also the Grievance / Privacy contact on /privacy and /terms.
+export const EMAIL = "lifebymanisir@gmail.com";
+
 export const ADDRESS = {
   building: "Vasu Brothers Nilayam, D.No. 2-158/2",
   street: "Midhilapuri VUDA Colony",
@@ -72,3 +75,6 @@ export function whatsappLink(text: string = DEFAULT_WA_MESSAGE) {
 }
 
 export const telLink = (e164: string = PHONES.primary.e164) => `tel:${e164}`;
+
+export const mailtoLink = (subject?: string) =>
+  `mailto:${EMAIL}${subject ? `?subject=${encodeURIComponent(subject)}` : ""}`;

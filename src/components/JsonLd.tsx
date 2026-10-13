@@ -1,5 +1,5 @@
 import { COURSES } from "@/lib/content";
-import { ADDRESS, LINKS, PHONES, SITE, VIDEO_ID } from "@/lib/site";
+import { ADDRESS, EMAIL, LINKS, PHONES, SITE, VIDEO_ID } from "@/lib/site";
 
 export function JsonLd() {
   const orgId = `${SITE.url ?? ""}/#organization`;
@@ -20,6 +20,7 @@ export function JsonLd() {
     foundingDate: "2018",
     foundingLocation: { "@type": "Place", name: "Madhurawada, Visakhapatnam, Andhra Pradesh, India" },
     telephone: PHONES.primary.e164,
+    email: EMAIL,
     priceRange: "₹2,000 - ₹10,000 per month",
     address: {
       "@type": "PostalAddress",
@@ -45,6 +46,7 @@ export function JsonLd() {
       {
         "@type": "ContactPoint",
         telephone: PHONES.primary.e164,
+        email: EMAIL,
         contactType: "admissions",
         description: "Mani Sir direct: offline and online batches",
         availableLanguage: ["English", "Telugu"],

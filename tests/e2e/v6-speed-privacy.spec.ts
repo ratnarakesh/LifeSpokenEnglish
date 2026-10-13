@@ -100,3 +100,21 @@ test("speed: repeat visit is served instantly from the on-device cache", async (
   expect(fromServiceWorker).toBe(true);
   expect(elapsed).toBeLessThan(3000);
 });
+
+test("contact: official email is in the footer, structured data, and as grievance contact on /privacy and /terms", async ({ page }) => {
+  const EMAIL = "lifebymanisir@gmail.com";
+  await page.goto("/");
+  const footerEmail = page.locator("footer").getByRole("link", { name: EMAIL });
+  await expect(footerEmail).toHaveAttribute("href", `mailto:${EMAIL}`);
+  const json = JSON.parse((await page.locator('script[type="application/ld+json"]').textContent()) ?? "{}");
+  expect(json.email).toBe(EMAIL);
+  expect(json.contactPoint[0].email).toBe(EMAIL);
+
+  await page.goto("/privacy");
+  const grievance = page.locator("#contact");
+  await expect(grievance.getByText("Grievance / Privacy contact", { exact: false })).toBeVisible();
+  await expect(grievance.getByRole("link", { name: EMAIL })).toHaveAttribute("href", new RegExp(`^mailto:${EMAIL}\\?subject=`));
+
+  await page.goto("/terms");
+  await expect(page.locator("#law").getByRole("link", { name: EMAIL })).toHaveAttribute("href", new RegExp(`^mailto:${EMAIL}`));
+});

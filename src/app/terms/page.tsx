@@ -3,7 +3,7 @@ import Link from "next/link";
 import { LegalPage, LegalSection } from "@/components/legal/LegalPage";
 import { BATCH_POLICY } from "@/lib/content";
 import { pageMetadata } from "@/lib/seo";
-import { PHONES, SITE, TIMINGS, telLink } from "@/lib/site";
+import { EMAIL, PHONES, SITE, TIMINGS, mailtoLink, telLink } from "@/lib/site";
 
 const description =
   "Terms of use for the LIFE Spoken English & Soft Skills Institute website, and how our free trial, monthly fees, batches and backup sessions work.";
@@ -89,7 +89,8 @@ export default function TermsPage() {
 
       <LegalSection id="law" title="7. Governing law and contact">
         <p>
-          These terms are governed by the laws of India. For any question or concern, contact {SITE.founderAlias} on{" "}
+          These terms are governed by the laws of India. For any question, concern or grievance, contact{" "}
+          {SITE.founderAlias} at <a href={mailtoLink("Question about LIFE terms")}>{EMAIL}</a> or on{" "}
           <a href={telLink()}>{PHONES.primary.display}</a>. See our <Link href="/privacy">Privacy Policy</Link> for how we
           handle personal data.
         </p>

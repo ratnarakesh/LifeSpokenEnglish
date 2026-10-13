@@ -1,7 +1,7 @@
 import { ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { InstagramIcon, YouTubeIcon } from "@/components/ui/BrandIcons";
-import { ADDRESS, FOOTER_LINKS, LINKS, PHONES, SITE, TIMINGS, telLink } from "@/lib/site";
+import { ADDRESS, EMAIL, FOOTER_LINKS, LINKS, PHONES, SITE, TIMINGS, mailtoLink, telLink } from "@/lib/site";
 import { FullLogo } from "./Brand";
 
 export function Footer() {
@@ -59,6 +59,12 @@ export function Footer() {
               <span className="block text-xs text-stone-500">Mani Sir Direct: Calls & WhatsApp</span>
               <a href={telLink(PHONES.primary.e164)} className="font-medium text-stone-200 hover:text-ember-300">
                 {PHONES.primary.display}
+              </a>
+            </li>
+            <li>
+              <span className="block text-xs text-stone-500">Email</span>
+              <a href={mailtoLink()} className="font-medium break-all text-stone-200 hover:text-ember-300">
+                {EMAIL}
               </a>
             </li>
             <li>

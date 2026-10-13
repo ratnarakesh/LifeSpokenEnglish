@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalPage, LegalSection } from "@/components/legal/LegalPage";
 import { pageMetadata } from "@/lib/seo";
-import { ADDRESS, PHONES, SITE, WHATSAPP_URL, telLink } from "@/lib/site";
+import { ADDRESS, EMAIL, PHONES, SITE, WHATSAPP_URL, mailtoLink, telLink } from "@/lib/site";
 
 const description =
   "How LIFE Spoken English & Soft Skills Institute handles your personal data: no cookies, no tracking, enquiries only via WhatsApp, and your rights under India's Digital Personal Data Protection Act, 2023.";
@@ -122,14 +122,27 @@ export default function PrivacyPage() {
       </LegalSection>
 
       <LegalSection id="contact" title="9. Contact and grievances">
-        <p>
-          For any privacy question, request or grievance, contact {SITE.founderAlias} ({SITE.founder}) on{" "}
-          <a href={telLink()}>{PHONES.primary.display}</a> (call) or{" "}
-          <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
-            WhatsApp
-          </a>
-          , or visit us at the address above. We will respond as early as possible and within the time limits set by law.
-        </p>
+        <p>For any privacy question, request to exercise your rights, or grievance, contact our Grievance / Privacy contact:</p>
+        <ul>
+          <li>
+            <strong>Name:</strong> {SITE.founderAlias} ({SITE.founder}), Founder
+          </li>
+          <li>
+            <strong>Email:</strong> <a href={mailtoLink("Privacy / Grievance request")}>{EMAIL}</a>
+          </li>
+          <li>
+            <strong>Phone:</strong> <a href={telLink()}>{PHONES.primary.display}</a> (call or{" "}
+            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+              WhatsApp
+            </a>
+            )
+          </li>
+          <li>
+            <strong>Address:</strong> {ADDRESS.building}, {ADDRESS.street}, {ADDRESS.locality}, {ADDRESS.city} -{" "}
+            {ADDRESS.postalCode}
+          </li>
+        </ul>
+        <p>We will respond as early as possible and within the time limits set by law.</p>
       </LegalSection>
 
       <LegalSection id="security" title="10. Security and changes">
