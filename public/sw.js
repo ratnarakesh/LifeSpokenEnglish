@@ -1,6 +1,6 @@
 // LIFE Spoken English service worker: instant repeat loads + offline fallback.
 // Bump VERSION whenever the caching strategy or precache list changes.
-const VERSION = "life-v5";
+const VERSION = "life-v6";
 const PAGE_CACHE = `${VERSION}-pages`;
 const STATIC_CACHE = `${VERSION}-static`;
 

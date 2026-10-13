@@ -1,14 +1,18 @@
-import { ArrowRight, Check, Crown, Gift, Sparkles } from "lucide-react";
+import { ArrowRight, Check, Crown, Gift, Settings2, Sparkles } from "lucide-react";
 import type { ReactNode } from "react";
 import { TrialButton } from "@/components/modals/ModalTriggers";
 import { WhatsAppIcon } from "@/components/ui/BrandIcons";
 import { Reveal } from "@/components/ui/Reveal";
 import { GradientText, SectionHeading } from "@/components/ui/SectionHeading";
 import { button, cn } from "@/lib/cn";
+import { BATCH_POLICY } from "@/lib/content";
 import { whatsappLink } from "@/lib/site";
 
 const MENTORSHIP_MESSAGE =
   "Hello Mani Sir, I am interested in 1-on-1 Personal Mentorship at LIFE Spoken English. Please share the available time slots.";
+
+const CUSTOM_MESSAGE =
+  "Hello Mani Sir, I would like to ask about a custom batch timing or a special requirement at LIFE Spoken English.";
 
 const STEPS = [
   { title: "Register on WhatsApp", description: "Share your name and preferred mode. Takes 30 seconds." },
@@ -64,9 +68,10 @@ export function Pricing() {
               priceNote="1st month → ₹2,000 / month thereafter"
               features={[
                 "Monday to Friday · 5 days / week",
-                "Prime evening slots (e.g. 8:00 to 9:30 PM)",
-                "Free weekend backup sessions",
-                "Study materials included",
+                "Flexible slots from 6:00 AM to 10:00 PM",
+                "Personalized weekend backup classes",
+                `${BATCH_POLICY.booklet.title} included`,
+                `Only ${BATCH_POLICY.capacityShort}`,
                 "Live doubt clearance",
               ]}
               cta={
@@ -108,6 +113,23 @@ export function Pricing() {
             />
           </Reveal>
         </div>
+
+        <Reveal className="mt-8">
+          <div className="flex flex-col items-center justify-between gap-4 rounded-2xl border border-sun-400/30 bg-sun-400/5 p-5 text-center sm:flex-row sm:text-left">
+            <p className="flex items-start gap-3 text-sm leading-relaxed text-stone-200 sm:items-center">
+              <Settings2 className="mt-0.5 size-5 shrink-0 text-sun-300 sm:mt-0" />
+              {BATCH_POLICY.customRequest}
+            </p>
+            <a
+              href={whatsappLink(CUSTOM_MESSAGE)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={button("whatsapp", "sm", "shrink-0")}
+            >
+              <WhatsAppIcon className="size-4" /> Ask on WhatsApp
+            </a>
+          </div>
+        </Reveal>
 
         <Reveal className="mt-12">
           <ol className="glass grid gap-6 rounded-3xl p-6 sm:grid-cols-3 sm:p-8">

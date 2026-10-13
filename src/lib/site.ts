@@ -8,9 +8,9 @@ export const SITE = {
   rating: { value: "5.0", count: 1800, label: "1,800+" },
 };
 
+// Single official line for calls, WhatsApp, offline and online batches.
 export const PHONES = {
   primary: { display: "+91 73374 12999", e164: "+917337412999", wa: "917337412999" },
-  online: { display: "+91 90590 56833", e164: "+919059056833", wa: "919059056833" },
 } as const;
 
 export const ADDRESS = {
@@ -26,8 +26,9 @@ export const ADDRESS = {
 
 export const TIMINGS = {
   weekdays: "Monday to Friday",
-  weekdayDetail: "Morning & Evening Batches (e.g. 8:00 PM to 9:30 PM)",
-  saturday: "Saturdays reserved for backup / extra sessions",
+  weekdayDetail: "6:00 AM to 10:00 PM",
+  weekend: "Saturday and Sunday",
+  weekendDetail: "Reserved for on-demand personal backup sessions",
 } as const;
 
 export const VIDEO_ID = "Er5SNUeJwmk";
@@ -64,8 +65,10 @@ export const FOOTER_LINKS = [
 export const DEFAULT_WA_MESSAGE =
   "Hello Mani Sir, I am interested in the 10 Free Trial Classes at LIFE Spoken English. Please share the next batch details.";
 
-export function whatsappLink(text: string = DEFAULT_WA_MESSAGE, phone: string = PHONES.primary.wa) {
-  return `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+export const WHATSAPP_URL = `https://wa.me/${PHONES.primary.wa}`;
+
+export function whatsappLink(text: string = DEFAULT_WA_MESSAGE) {
+  return `${WHATSAPP_URL}?text=${encodeURIComponent(text)}`;
 }
 
 export const telLink = (e164: string = PHONES.primary.e164) => `tel:${e164}`;

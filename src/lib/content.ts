@@ -48,8 +48,9 @@ export const PROMISES: LifePromise[] = [
     icon: Repeat,
   },
   {
-    title: "Weekend Backup Sessions",
-    description: "Missed a class during the week? Free dedicated backup classes on weekends.",
+    title: "Flexible Weekend Backup",
+    description:
+      "Students who miss weekday sessions receive personalized on-demand makeup classes on Saturday and Sunday directly with Mani Sir.",
     icon: CalendarClock,
   },
   {
@@ -177,7 +178,7 @@ export const STORY = {
   milestones: [
     { year: "2018", title: "The first classroom", body: "A single room at Vasu Brothers Nilayam, Midhilapuri VUDA Colony, Madhurawada." },
     { year: "2024", title: "LIFE goes digital", body: "Mani Sir's YouTube channel begins sharing everyday English lessons, Telugu to English." },
-    { year: "2025", title: "Live online batches", body: "Interactive evening batches (8:00 to 9:30 PM) welcome learners far beyond Vizag." },
+    { year: "2025", title: "Live online batches", body: "Interactive live online batches welcome learners far beyond Vizag." },
     { year: "Today", title: "1,800+ five-star reviews", body: "A perfect 5.0 on Google, earned one confident speaker at a time." },
   ],
   beginning: {
@@ -325,8 +326,21 @@ export const LOGO_STORY = {
   ],
 } as const;
 
+export const BATCH_POLICY = {
+  capacity: "Strictly limited to 15 - 20 learners per batch to guarantee individual vocal attention and live correction.",
+  capacityShort: "15 - 20 learners per batch",
+  booklet: {
+    title: "Exclusive LIFE Physical Booklet",
+    body: "Every enrolled learner receives a custom printed reference handbook designed to support classroom speaking drills and serve as a permanent lifetime communication asset.",
+  },
+  eligibility:
+    "Open to all age groups: from upper primary school through college graduates, working professionals, and homemakers.",
+  customRequest: "Custom batch timing or special requirements available on request via WhatsApp.",
+} as const;
+
 export const LEARNER_CATEGORIES = [
   "Homemaker",
+  "School Student",
   "College Student",
   "Working Professional",
   "Other",

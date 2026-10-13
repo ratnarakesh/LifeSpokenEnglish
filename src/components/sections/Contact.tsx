@@ -6,9 +6,6 @@ import { GradientText, SectionHeading } from "@/components/ui/SectionHeading";
 import { button } from "@/lib/cn";
 import { ADDRESS, DEFAULT_WA_MESSAGE, LINKS, PHONES, SITE, TIMINGS, telLink, whatsappLink } from "@/lib/site";
 
-const ONLINE_WA_MESSAGE =
-  "Hello, I am interested in the Live Online Spoken English batch at LIFE. Please share the details.";
-
 export function Contact() {
   return (
     <section id="contact" className="relative py-20 sm:py-28">
@@ -54,12 +51,10 @@ export function Contact() {
             <Reveal delay={0.08}>
               <GlowCard className="space-y-5 p-5 sm:p-7">
                 <ContactRow
-                  label="Offline Batches & Mani Sir Direct"
+                  label="Mani Sir Direct: Offline & Online Batches"
                   phone={PHONES.primary}
                   waMessage={DEFAULT_WA_MESSAGE}
                 />
-                <div className="border-t border-stone-800" />
-                <ContactRow label="Online Batches Desk" phone={PHONES.online} waMessage={ONLINE_WA_MESSAGE} />
               </GlowCard>
             </Reveal>
 
@@ -74,8 +69,11 @@ export function Contact() {
                     <p className="mt-1 text-stone-300">
                       <span className="font-medium text-white">{TIMINGS.weekdays}:</span> {TIMINGS.weekdayDetail}
                     </p>
-                    <p className="mt-2 flex items-center gap-2 text-stone-400">
-                      <CalendarClock className="size-4 text-amber-400" /> {TIMINGS.saturday}
+                    <p className="mt-2 flex items-start gap-2 text-stone-400">
+                      <CalendarClock className="mt-0.5 size-4 shrink-0 text-amber-400" />
+                      <span>
+                        <span className="font-medium text-stone-200">{TIMINGS.weekend}:</span> {TIMINGS.weekendDetail}
+                      </span>
                     </p>
                   </div>
                 </div>
@@ -133,7 +131,7 @@ function ContactRow({ label, phone, waMessage }: ContactRowProps) {
         </div>
       </div>
       <a
-        href={whatsappLink(waMessage, phone.wa)}
+        href={whatsappLink(waMessage)}
         target="_blank"
         rel="noopener noreferrer"
         aria-label={`WhatsApp ${phone.display}`}

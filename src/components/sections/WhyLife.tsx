@@ -1,8 +1,8 @@
-import { Sparkles } from "lucide-react";
+import { Sparkles, UsersRound } from "lucide-react";
 import { GlowCard } from "@/components/ui/GlowCard";
 import { Reveal } from "@/components/ui/Reveal";
 import { GradientText, SectionHeading } from "@/components/ui/SectionHeading";
-import { AUDIENCES } from "@/lib/content";
+import { AUDIENCES, BATCH_POLICY } from "@/lib/content";
 import { SITE } from "@/lib/site";
 
 const STATS = [
@@ -25,6 +25,16 @@ export function WhyLife() {
           }
           description="Whether you're facing your first campus interview, speaking up at a parents' meeting, or leading a client call, LIFE meets you exactly where you are."
         />
+
+        <Reveal delay={0.05} className="mx-auto mt-8 max-w-3xl">
+          <p className="flex flex-col items-center gap-3 rounded-2xl border border-ember-500/40 bg-linear-to-r from-ember-500/15 via-sun-500/10 to-ember-500/15 px-5 py-4 text-center text-sm leading-relaxed font-medium text-stone-100 sm:flex-row sm:text-left sm:text-base">
+            <UsersRound className="size-6 shrink-0 text-sun-300" />
+            <span>
+              <strong className="text-white">Eligibility: </strong>
+              {BATCH_POLICY.eligibility}
+            </span>
+          </p>
+        </Reveal>
 
         <div className="mt-14 grid gap-6 lg:grid-cols-5">
           <Reveal className="lg:col-span-2">

@@ -54,12 +54,21 @@ tests/e2e/home.spec.ts   # Playwright suite
 scripts/                 # brand asset generator, static preview server
 ```
 
-## Deployment
+## Deployment (Cloudflare Pages)
 
-The site is a fully static export (`out/`).
+The site is a fully static export: `next.config.ts` sets `output: "export"` and `images.unoptimized: true`, so `npm run build` writes everything to `./out` (`index.html`, `about.html`, `gallery.html`, assets, `_headers`).
 
-- **Vercel**: import the repo; framework preset "Next.js" works as-is.
-- **Cloudflare Pages**: build command `npm run build`, output directory `out`.
+Cloudflare Pages project settings:
+
+| Setting | Value |
+| --- | --- |
+| Framework preset | None (or Next.js Static HTML Export) |
+| Build command | `npm run build` |
+| Build output directory | `out` |
+| Node version | from `.node-version` (22) |
+| Environment variable | `NEXT_PUBLIC_SITE_URL=https://<your-domain>` |
+
+`public/_headers` is copied into `out/` and gives Cloudflare long-lived caching for hashed assets, no-cache for the service worker and manifest, and basic security headers.
 
 Set `NEXT_PUBLIC_SITE_URL` (e.g. `https://your-domain.com`) in the hosting environment once the domain is known, to enable canonical URLs, absolute schema IDs and the social share image.
 

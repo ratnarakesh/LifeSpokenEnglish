@@ -2,11 +2,11 @@
 
 import * as Tabs from "@radix-ui/react-tabs";
 import { motion } from "framer-motion";
-import { ArrowRight, CheckCircle2, Clock, Users } from "lucide-react";
+import { ArrowRight, BookMarked, CheckCircle2, Clock, Users } from "lucide-react";
 import { useState } from "react";
 import { TrialButton } from "@/components/modals/ModalTriggers";
 import { button, cn } from "@/lib/cn";
-import { COURSES, type Course } from "@/lib/content";
+import { BATCH_POLICY, COURSES, type Course } from "@/lib/content";
 
 export function CourseTabs() {
   const [value, setValue] = useState<Course["id"]>(COURSES[0].id);
@@ -105,6 +105,24 @@ function CoursePanel({ course }: { course: Course }) {
               <span className="text-sm font-medium text-stone-200">{item}</span>
             </motion.li>
           ))}
+        </ul>
+
+        <p className="mt-8 text-xs font-semibold tracking-wider text-sun-300 uppercase">Included in every track</p>
+        <ul className="mt-4 grid gap-3">
+          <li className="flex items-start gap-3 rounded-xl border border-ember-500/30 bg-ember-500/5 p-4">
+            <Users className="mt-0.5 size-5 shrink-0 text-ember-400" />
+            <span className="text-sm text-stone-200">
+              <strong className="block text-white">Small, exclusive batches</strong>
+              {BATCH_POLICY.capacity}
+            </span>
+          </li>
+          <li className="flex items-start gap-3 rounded-xl border border-sun-400/30 bg-sun-400/5 p-4">
+            <BookMarked className="mt-0.5 size-5 shrink-0 text-sun-300" />
+            <span className="text-sm text-stone-200">
+              <strong className="block text-white">{BATCH_POLICY.booklet.title}</strong>
+              {BATCH_POLICY.booklet.body}
+            </span>
+          </li>
         </ul>
       </div>
     </motion.div>

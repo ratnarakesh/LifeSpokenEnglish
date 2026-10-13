@@ -136,8 +136,14 @@ export function EnrollmentForm({ defaultCourse = "basic" }: { defaultCourse?: Co
       <fieldset>
         <legend className="mb-1.5 text-sm font-medium text-stone-200">I am a</legend>
         <div className="grid grid-cols-2 gap-2">
-          {LEARNER_CATEGORIES.map((option) => (
-            <label key={option} className={chipClass}>
+          {LEARNER_CATEGORIES.map((option, i) => (
+            <label
+              key={option}
+              className={cn(
+                chipClass,
+                LEARNER_CATEGORIES.length % 2 === 1 && i === LEARNER_CATEGORIES.length - 1 && "col-span-2",
+              )}
+            >
               <input
                 type="radio"
                 name={`${id}-category`}

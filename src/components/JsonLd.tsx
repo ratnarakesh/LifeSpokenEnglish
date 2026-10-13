@@ -46,15 +46,16 @@ export function JsonLd() {
         "@type": "ContactPoint",
         telephone: PHONES.primary.e164,
         contactType: "admissions",
-        description: "Offline batches & Mani Sir direct",
+        description: "Mani Sir direct: offline and online batches",
         availableLanguage: ["English", "Telugu"],
       },
+    ],
+    openingHoursSpecification: [
       {
-        "@type": "ContactPoint",
-        telephone: PHONES.online.e164,
-        contactType: "customer support",
-        description: "Online batches desk",
-        availableLanguage: ["English", "Telugu"],
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        opens: "06:00",
+        closes: "22:00",
       },
     ],
     aggregateRating: {

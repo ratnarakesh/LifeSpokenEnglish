@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { InstagramIcon, YouTubeIcon } from "@/components/ui/BrandIcons";
-import { ADDRESS, FOOTER_LINKS, LINKS, PHONES, SITE, telLink } from "@/lib/site";
+import { ADDRESS, FOOTER_LINKS, LINKS, PHONES, SITE, TIMINGS, telLink } from "@/lib/site";
 import { FullLogo } from "./Brand";
 
 export function Footer() {
@@ -55,16 +55,14 @@ export function Footer() {
           <h3 className="text-sm font-semibold tracking-wider text-white uppercase">Contact</h3>
           <ul className="mt-4 space-y-3 text-sm text-stone-400">
             <li>
-              <span className="block text-xs text-stone-500">Offline & Mani Sir Direct</span>
+              <span className="block text-xs text-stone-500">Mani Sir Direct: Calls & WhatsApp</span>
               <a href={telLink(PHONES.primary.e164)} className="font-medium text-stone-200 hover:text-ember-300">
                 {PHONES.primary.display}
               </a>
             </li>
             <li>
-              <span className="block text-xs text-stone-500">Online Batches Desk</span>
-              <a href={telLink(PHONES.online.e164)} className="font-medium text-stone-200 hover:text-ember-300">
-                {PHONES.online.display}
-              </a>
+              <span className="block text-xs text-stone-500">{TIMINGS.weekdays}</span>
+              <span className="font-medium text-stone-200">{TIMINGS.weekdayDetail}</span>
             </li>
             <li>
               {ADDRESS.locality}, {ADDRESS.city} - {ADDRESS.postalCode}
