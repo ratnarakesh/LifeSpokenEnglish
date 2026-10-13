@@ -52,29 +52,36 @@ const transparent = await trim(await removeBlackBackground(SOURCE));
 const { width, height } = await sharp(transparent).metadata();
 
 // Full logo (eagle + sun + LIFE wordmark + tagline)
-await sharp(transparent).png({ compressionLevel: 9 }).toFile("public/brand/life-logo.png");
-await sharp(transparent).webp({ quality: 90 }).toFile("public/brand/life-logo.webp");
+// PNG kept for structured data / social; the site itself uses the much lighter WebP.
+await sharp(transparent).png({ compressionLevel: 9, palette: true, quality: 90 }).toFile("public/brand/life-logo.png");
+await sharp(transparent).webp({ quality: 80, alphaQuality: 90, effort: 6 }).toFile("public/brand/life-logo.webp");
 
 // Emblem only (eagle + sun), cropped just above the wordmark
 const emblemHeight = Math.round(height * 0.722);
 const emblem = await trim(
   await sharp(transparent).extract({ left: 0, top: 0, width, height: emblemHeight }).png().toBuffer(),
 );
-await sharp(await squarePad(emblem, 256, 0, { r: 0, g: 0, b: 0, alpha: 0 })).toFile("public/brand/life-emblem.png");
+const emblem256 = await squarePad(emblem, 256, 0, { r: 0, g: 0, b: 0, alpha: 0 });
+await sharp(emblem256).png({ compressionLevel: 9, palette: true }).toFile("public/brand/life-emblem.png");
+await sharp(emblem256).webp({ quality: 80, alphaQuality: 90, effort: 6 }).toFile("public/brand/life-emblem.webp");
+// Header emblem: displayed at 44-48 CSS px, 160px covers 3x screens.
+await sharp(emblem256).resize(160, 160).webp({ quality: 82, alphaQuality: 90, effort: 6 }).toFile("public/brand/life-emblem-160.webp");
 
 // Favicon + home-screen icons
 const clear = { r: 0, g: 0, b: 0, alpha: 0 };
-await sharp(await squarePad(emblem, 512, 0.02, clear)).toFile("src/app/icon.png");
-await sharp(await squarePad(emblem, 180, 0.08, BG)).toFile("src/app/apple-icon.png");
-await sharp(await squarePad(emblem, 192, 0.06, BG)).toFile("public/brand/icon-192.png");
-await sharp(await squarePad(emblem, 512, 0.06, BG)).toFile("public/brand/icon-512.png");
-await sharp(await squarePad(emblem, 512, 0.16, BG)).toFile("public/brand/icon-maskable-512.png");
+// Browser tab favicon is shown at 16-32px: 96px is plenty and keeps the first visit light.
+const png = (buf) => sharp(buf).png({ compressionLevel: 9, palette: true });
+await png(await squarePad(emblem, 96, 0.02, clear)).toFile("src/app/icon.png");
+await png(await squarePad(emblem, 180, 0.08, BG)).toFile("src/app/apple-icon.png");
+await png(await squarePad(emblem, 192, 0.06, BG)).toFile("public/brand/icon-192.png");
+await png(await squarePad(emblem, 512, 0.06, BG)).toFile("public/brand/icon-512.png");
+await png(await squarePad(emblem, 512, 0.16, BG)).toFile("public/brand/icon-maskable-512.png");
 
 // Social share image (1200x630)
 const ogLogo = await sharp(transparent).resize({ height: 500 }).toBuffer();
 await sharp({ create: { width: 1200, height: 630, channels: 4, background: BG } })
   .composite([{ input: ogLogo, gravity: "center" }])
-  .png({ compressionLevel: 9 })
+  .png({ compressionLevel: 9, palette: true })
   .toFile("public/brand/og-image.png");
 
 console.log(`Brand assets generated (source trimmed to ${width}x${height}).`);

@@ -1,4 +1,5 @@
 import { CalendarClock, Clock, MapPin, Navigation, Phone } from "lucide-react";
+import { MapEmbed } from "@/components/MapEmbed";
 import { WhatsAppIcon } from "@/components/ui/BrandIcons";
 import { GlowCard } from "@/components/ui/GlowCard";
 import { Reveal } from "@/components/ui/Reveal";
@@ -83,22 +84,10 @@ export function Contact() {
 
           <Reveal delay={0.1} className="lg:col-span-3">
             <div className="glass relative h-full min-h-[22rem] overflow-hidden rounded-3xl p-2">
-              <iframe
-                src={LINKS.mapEmbed}
+              <MapEmbed
                 title="Map showing LIFE Spoken English Institute in Madhurawada, Visakhapatnam"
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                className="size-full min-h-[22rem] rounded-2xl border-0 [filter:invert(0.9)_hue-rotate(180deg)_saturate(0.7)_brightness(0.95)]"
-                allowFullScreen
+                className="min-h-[22rem] rounded-2xl"
               />
-              <a
-                href={LINKS.googleMaps}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={button("primary", "sm", "absolute right-5 bottom-5")}
-              >
-                <MapPin className="size-4" /> Open in Google Maps
-              </a>
             </div>
           </Reveal>
         </div>

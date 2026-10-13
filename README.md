@@ -4,7 +4,7 @@ Official website for LIFE: Spoken English & Soft Skills Training Institute (Mani
 
 ## Stack
 
-Next.js 16 (App Router, static export) · React 19 · TypeScript · Tailwind CSS 4 · Framer Motion · Radix UI (Dialog, Tabs) · Lucide icons · Installable PWA (native service worker) · Playwright E2E
+Next.js 16 (App Router, static export) · React 19 · TypeScript · Tailwind CSS 4 (CSS-only animations) · Radix UI (Dialog, Tabs) · Lucide icons · Installable PWA (native service worker) · Playwright E2E
 
 ## Commands
 
@@ -13,7 +13,7 @@ npm install          # uses public npm registry via project .npmrc
 npm run dev          # http://localhost:3000
 npm run lint         # ESLint (must be 0 warnings)
 npm run build        # static export to ./out
-npm run preview      # serve ./out at http://localhost:8000 (zero-dependency Node server)
+npm run preview      # serve ./out at http://localhost:8000 with Brotli/gzip, like Cloudflare
 npm run test:e2e     # builds, then runs Playwright on desktop + mobile (uses installed Google Chrome)
 npm run brand:assets # regenerate logo, favicon and app icons from assets/brand/
 npm run media:youtube # refresh story/reel/gallery images from Mani Sir's official YouTube thumbnails
@@ -27,6 +27,7 @@ E2E tests run against the locally installed **Google Chrome** (`channel: "chrome
 - `/` Home: hero, Meet Mani Sir teaser, courses, 10 promises, fees, video, WhatsApp booking, contact
 - `/about` About LIFE & Mani Sir: his story, meaning of LIFE, the story inside our logo, journey since 2018
 - `/gallery` Gallery: classroom photos and real lesson videos with filters
+- `/privacy` Privacy Policy & Data Notice (DPDP Act 2023), `/terms` Terms of Use & Class Policies
 
 ## Structure
 

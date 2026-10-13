@@ -24,8 +24,11 @@ Read and strictly follow every rule in `.devin-rules.md` (project root) before d
 - lucide-react 1.x has no brand icons; brand SVGs live in `src/components/ui/BrandIcons.tsx`.
 - Pin dependencies exactly and prefer versions published 7+ days ago.
 - Story media: lesson cards in `public/media/yt/` come from official @ENGLISHBYMANISIR YouTube thumbnails via `npm run media:youtube`; video IDs and titles live in `REEL` in `src/lib/content.ts`.
-- Pages: `/` (home), `/about`, `/gallery`. Shared header/footer/modals live in `src/components/layout/SiteShell.tsx` (root layout). Nav links in `NAV_LINKS` use `/#section` for home sections. Per-page metadata via `pageMetadata()` in `src/lib/seo.ts`.
+- Pages: `/` (home), `/about`, `/gallery`, `/privacy`, `/terms`. Shared header/footer/modals live in `src/components/layout/SiteShell.tsx` (root layout). Nav links in `NAV_LINKS` use `/#section` for home sections. Per-page metadata via `pageMetadata()` in `src/lib/seo.ts`.
 - Photos: originals in `assets/people/`, web versions via `npm run media:photos` into `public/media/people/`.
 - Brand: official logo sources live in `assets/brand/`. Regenerate all logo/icon outputs (`public/brand/*`, `src/app/icon.png`, `src/app/apple-icon.png`) with `node scripts/build-brand-assets.mjs`.
 - Theme colours come from the logo: `ember-*` (sunset orange), `sun-*` (gold), `bark-*` (eagle brown), warm `obsidian-*` backgrounds and `stone-*` neutrals, all defined in `src/app/globals.css`. Do not reintroduce emerald/cyan/slate.
 - Bulk find/replace on class names must use word boundaries (a past `slate-`→`stone-` replace corrupted `translate-`).
+- Speed rules: no Framer Motion (removed for bundle size); animations are CSS only (`.reveal` scroll-driven reveal, `animate-fade-up`, `animate-menu-in` in globals.css). Images must be pre-optimised WebP (no large PNGs at runtime; check with `.qa`-style perf runs or the `speed:` E2E tests).
+- Privacy rules: the site sets no cookies and makes no third-party requests until the visitor acts (maps via click-to-load `MapEmbed`, YouTube only on play via youtube-nocookie, thumbnails served locally). E2E tests enforce this. Do not add analytics/trackers without adding a consent mechanism and updating `/privacy`.
+- Booking form requires the DPDP consent checkbox and shows the under-18 parent/guardian note; keep `/privacy` in sync with any data-flow change.

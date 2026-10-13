@@ -6,10 +6,10 @@ export function Brand() {
   return (
     <Link href="/" className="group flex shrink-0 items-center gap-2.5 sm:gap-3" aria-label={`${SITE.brand}, home`}>
       <Image
-        src="/brand/life-emblem.png"
+        src="/brand/life-emblem-160.webp"
         alt=""
-        width={256}
-        height={256}
+        width={160}
+        height={160}
         priority
         className="size-11 shrink-0 drop-shadow-[0_0_14px_rgb(234_138_42/0.45)] transition duration-300 group-hover:scale-105 sm:size-12"
       />
@@ -24,7 +24,7 @@ export function Brand() {
 export function FullLogo({ className, priority }: { className?: string; priority?: boolean }) {
   return (
     <Image
-      src="/brand/life-logo.png"
+      src="/brand/life-logo.webp"
       alt={`${SITE.brand}: Live It For Eternity logo`}
       width={520}
       height={537}

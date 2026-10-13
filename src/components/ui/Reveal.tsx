@@ -1,7 +1,5 @@
-"use client";
-
-import { motion } from "framer-motion";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
+import { cn } from "@/lib/cn";
 
 type RevealProps = {
   children: ReactNode;
@@ -10,16 +8,15 @@ type RevealProps = {
   y?: number;
 };
 
+// CSS-only scroll reveal (see `.reveal` in globals.css): no JavaScript, never hides content.
 export function Reveal({ children, className, delay = 0, y = 24 }: RevealProps) {
+  const style = {
+    "--reveal-y": `${y}px`,
+    ...(delay > 0 && { "--reveal-shift": `${Math.round(delay * 40)}%` }),
+  } as CSSProperties;
   return (
-    <motion.div
-      className={className}
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
-    >
+    <div className={cn("reveal", className)} style={style}>
       {children}
-    </motion.div>
+    </div>
   );
 }

@@ -14,7 +14,7 @@ export function StoryFinale() {
       <Reveal className="mx-auto max-w-5xl">
         <div className="relative overflow-hidden rounded-[2rem] bg-linear-to-br from-ember-600/30 via-bark-800/60 to-obsidian-900 p-8 text-center ring-1 ring-ember-500/40 sm:p-14">
           <Image
-            src="/brand/life-emblem.png"
+            src="/brand/life-emblem.webp"
             alt=""
             width={256}
             height={256}

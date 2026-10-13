@@ -28,7 +28,7 @@ export function YouTubeLite({ videoId, title }: YouTubeLiteProps) {
           aria-label={`Play video: ${title}`}
         >
           <Image
-            src={`https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`}
+            src={`/media/yt/${videoId}-wide.webp`}
             alt=""
             fill
             sizes="(min-width: 1024px) 60vw, 100vw"

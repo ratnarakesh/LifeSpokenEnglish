@@ -1,4 +1,5 @@
 import { MapPin, Navigation } from "lucide-react";
+import { MapEmbed } from "@/components/MapEmbed";
 import { GlowCard } from "@/components/ui/GlowCard";
 import { Reveal } from "@/components/ui/Reveal";
 import { GradientText } from "@/components/ui/SectionHeading";
@@ -75,15 +76,10 @@ export function StoryJourney() {
         <Reveal delay={0.1}>
           <GlowCard className="overflow-hidden p-0">
             <div className="relative aspect-[16/10] overflow-hidden">
-              <iframe
-                src={LINKS.mapEmbed}
-                title="Where LIFE began: Madhurawada, Visakhapatnam"
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                className="absolute inset-0 size-full border-0 [filter:invert(0.9)_hue-rotate(180deg)_saturate(0.7)_brightness(0.95)]"
-              />
-              <span className="pointer-events-none absolute inset-0 bg-linear-to-t from-obsidian-950/80 via-transparent to-transparent" />
-              <span className="absolute bottom-4 left-4 inline-flex items-center gap-2 rounded-full bg-obsidian-950/80 px-3 py-1.5 text-sm font-semibold text-white ring-1 ring-ember-500/40 backdrop-blur">
+              <div className="absolute inset-0">
+                <MapEmbed title="Where LIFE began: Madhurawada, Visakhapatnam" />
+              </div>
+              <span className="absolute top-4 left-4 inline-flex items-center gap-2 rounded-full bg-obsidian-950/80 px-3 py-1.5 text-sm font-semibold text-white ring-1 ring-ember-500/40 backdrop-blur">
                 <MapPin className="size-4 text-ember-400" /> Where it all began
               </span>
             </div>

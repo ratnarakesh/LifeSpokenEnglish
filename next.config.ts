@@ -6,7 +6,6 @@ const nextConfig: NextConfig = {
   images: {
     // No image optimisation server on static hosting; images are pre-optimised WebP/PNG.
     unoptimized: true,
-    remotePatterns: [{ protocol: "https", hostname: "i.ytimg.com", pathname: "/vi/**" }],
   },
 };
 

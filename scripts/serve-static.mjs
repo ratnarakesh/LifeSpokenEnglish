@@ -4,6 +4,7 @@ import { createReadStream } from "node:fs";
 import { stat } from "node:fs/promises";
 import { createServer } from "node:http";
 import path from "node:path";
+import { constants as zlib, createBrotliCompress, createGzip } from "node:zlib";
 
 const root = path.resolve(process.argv[2] ?? "out");
 const port = Number(process.argv[3] ?? process.env.PORT ?? 8000);
@@ -36,14 +37,25 @@ async function resolveFile(urlPath) {
   return null;
 }
 
+const COMPRESSIBLE = new Set([".html", ".js", ".css", ".json", ".webmanifest", ".txt", ".svg"]);
+
+// Mirrors production hosting (Cloudflare): Brotli/gzip for text assets, immutable caching for hashed files.
 createServer(async (req, res) => {
   const file = await resolveFile(req.url ?? "/");
   const target = file ?? path.join(root, "404.html");
+  const ext = path.extname(target);
+  const accept = String(req.headers["accept-encoding"] ?? "");
+  const encoding = !COMPRESSIBLE.has(ext) ? null : accept.includes("br") ? "br" : accept.includes("gzip") ? "gzip" : null;
   res.writeHead(file ? 200 : 404, {
-    "Content-Type": TYPES[path.extname(target)] ?? "application/octet-stream",
+    "Content-Type": TYPES[ext] ?? "application/octet-stream",
     "Cache-Control": target.includes(`${path.sep}_next${path.sep}static${path.sep}`)
       ? "public, max-age=31536000, immutable"
       : "no-cache",
+    Vary: "Accept-Encoding",
+    ...(encoding && { "Content-Encoding": encoding }),
   });
-  createReadStream(target).on("error", () => res.end()).pipe(res);
+  const stream = createReadStream(target).on("error", () => res.end());
+  if (encoding === "br") stream.pipe(createBrotliCompress({ params: { [zlib.BROTLI_PARAM_QUALITY]: 5 } })).pipe(res);
+  else if (encoding === "gzip") stream.pipe(createGzip()).pipe(res);
+  else stream.pipe(res);
 }).listen(port, () => console.log(`Serving ${root} at http://localhost:${port}`));

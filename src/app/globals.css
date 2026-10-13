@@ -147,8 +147,63 @@ body {
   animation: float 8s ease-in-out infinite;
 }
 
+/* Scroll reveal with zero JavaScript: content is always visible in HTML; browsers that support
+   scroll-driven animations fade it in as it enters the viewport. */
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(var(--reveal-y, 24px));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  .reveal {
+    animation: reveal-up linear both;
+    animation-timeline: view();
+    animation-range: entry var(--reveal-shift, 0%) entry calc(var(--reveal-shift, 0%) + 30%);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(var(--fade-y, 12px));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@utility animate-fade-up {
+  animation: fade-up 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--delay, 0ms);
+}
+
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@utility animate-menu-in {
+  animation: menu-in 0.22s ease-out both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-float,
+  .animate-fade-up,
+  .animate-menu-in,
+  .reveal,
   .dialog-overlay,
   .dialog-content {
     animation: none !important;

@@ -1,9 +1,8 @@
 "use client";
 
 import * as Tabs from "@radix-ui/react-tabs";
-import { motion } from "framer-motion";
 import { ArrowRight, BookMarked, CheckCircle2, Clock, Users } from "lucide-react";
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { TrialButton } from "@/components/modals/ModalTriggers";
 import { button, cn } from "@/lib/cn";
 import { BATCH_POLICY, COURSES, type Course } from "@/lib/content";
@@ -25,17 +24,12 @@ export function CourseTabs() {
               key={course.id}
               value={course.id}
               className={cn(
-                "relative isolate flex flex-col items-center gap-1 rounded-xl px-2 py-3 text-xs font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-ember-400 sm:flex-row sm:justify-center sm:gap-2 sm:text-sm",
-                active ? "text-obsidian-950" : "text-stone-400 hover:text-white",
+                "flex flex-col items-center gap-1 rounded-xl px-2 py-3 text-xs font-semibold transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-ember-400 sm:flex-row sm:justify-center sm:gap-2 sm:text-sm",
+                active
+                  ? "bg-linear-to-r from-ember-400 to-sun-400 text-obsidian-950 shadow-[0_8px_30px_-8px_rgb(234_138_42/0.6)]"
+                  : "text-stone-400 hover:bg-stone-800/50 hover:text-white",
               )}
             >
-              {active && (
-                <motion.span
-                  layoutId="course-tab"
-                  className="absolute inset-0 -z-10 rounded-xl bg-linear-to-r from-ember-400 to-sun-400"
-                  transition={{ type: "spring", stiffness: 380, damping: 32 }}
-                />
-              )}
               <Icon className="size-4" />
               <span>{course.name.replace(" Course", "")}</span>
             </Tabs.Trigger>
@@ -55,11 +49,8 @@ export function CourseTabs() {
 function CoursePanel({ course }: { course: Course }) {
   const Icon = course.icon;
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      className="glass glow-card grid gap-8 overflow-hidden rounded-3xl p-6 sm:p-10 lg:grid-cols-5"
+    <div
+      className="animate-fade-up glass glow-card grid gap-8 overflow-hidden rounded-3xl p-6 sm:p-10 lg:grid-cols-5"
     >
       <div className="lg:col-span-2">
         <span className="grid size-14 place-items-center rounded-2xl bg-linear-to-br from-ember-400 to-sun-500 text-obsidian-950">
@@ -94,16 +85,14 @@ function CoursePanel({ course }: { course: Course }) {
         <p className="text-xs font-semibold tracking-wider text-ember-300 uppercase">What you&apos;ll master</p>
         <ul className="mt-5 grid gap-3 sm:grid-cols-2">
           {course.focus.map((item, i) => (
-            <motion.li
+            <li
               key={item}
-              initial={{ opacity: 0, x: -8 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.1 + i * 0.05 }}
-              className="flex items-start gap-3 rounded-xl border border-stone-800/80 bg-stone-900/50 p-4"
+              style={{ "--delay": `${100 + i * 50}ms` } as CSSProperties}
+              className="animate-fade-up flex items-start gap-3 rounded-xl border border-stone-800/80 bg-stone-900/50 p-4"
             >
               <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-ember-400" />
               <span className="text-sm font-medium text-stone-200">{item}</span>
-            </motion.li>
+            </li>
           ))}
         </ul>
 
@@ -125,6 +114,6 @@ function CoursePanel({ course }: { course: Course }) {
           </li>
         </ul>
       </div>
-    </motion.div>
+    </div>
   );
 }

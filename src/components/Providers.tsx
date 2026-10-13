@@ -1,6 +1,5 @@
 "use client";
 
-import { MotionConfig } from "framer-motion";
 import dynamic from "next/dynamic";
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
 import type { CourseInterestId } from "@/lib/content";
@@ -52,8 +51,7 @@ export function Providers({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <MotionConfig reducedMotion="user">
-      <ModalContext value={value}>
+    <ModalContext value={value}>
         {children}
         {mounted.trial && (
           <TrialModal open={active === "trial"} onOpenChange={handleOpenChange} course={trialCourse} />
@@ -61,8 +59,7 @@ export function Providers({ children }: { children: ReactNode }) {
         {mounted.video && (
           <VideoModal open={active === "video"} onOpenChange={handleOpenChange} video={video} />
         )}
-      </ModalContext>
-    </MotionConfig>
+    </ModalContext>
   );
 }
 

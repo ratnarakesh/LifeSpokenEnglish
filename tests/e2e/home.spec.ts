@@ -211,6 +211,11 @@ test("whatsapp funnel: validates input and builds a wa.me link with name and sel
   await form.getByLabel("Course of Interest").selectOption("professional");
   await form.getByText("Live Online", { exact: true }).click();
   await submit.click();
+  await expect(form.getByText("Please tick the box to agree before continuing.")).toBeVisible();
+  expect(await page.evaluate(() => (window as unknown as { __waUrls: string[] }).__waUrls)).toHaveLength(0);
+
+  await form.getByRole("checkbox", { name: /I agree to share these details with LIFE/ }).check();
+  await submit.click();
 
   await expect(form.getByText(/Opening WhatsApp/)).toBeVisible();
   const urls = await page.evaluate(() => (window as unknown as { __waUrls: string[] }).__waUrls);

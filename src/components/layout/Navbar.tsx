@@ -1,6 +1,5 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
 import { Menu, Phone, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -74,17 +73,12 @@ export function Navbar() {
                 href={link.href}
                 aria-current={activeHref === link.href && !link.href.includes("#") ? "page" : undefined}
                 className={cn(
-                  "relative isolate block rounded-full px-2.5 py-2 text-[13px] font-medium whitespace-nowrap transition-colors 2xl:px-3.5 2xl:text-sm",
-                  activeHref === link.href ? "text-white" : "text-stone-400 hover:text-white",
+                  "block rounded-full px-2.5 py-2 text-[13px] font-medium whitespace-nowrap ring-1 transition-colors duration-300 2xl:px-3.5 2xl:text-sm",
+                  activeHref === link.href
+                    ? "bg-stone-800/80 text-white ring-stone-700"
+                    : "text-stone-400 ring-transparent hover:text-white",
                 )}
               >
-                {activeHref === link.href && (
-                  <motion.span
-                    layoutId="nav-active"
-                    className="absolute inset-0 -z-10 rounded-full bg-stone-800/80 ring-1 ring-stone-700"
-                    transition={{ type: "spring", stiffness: 400, damping: 32 }}
-                  />
-                )}
                 {link.label}
               </Link>
             </li>
@@ -125,16 +119,8 @@ export function Navbar() {
         </button>
       </nav>
 
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div
-            id="mobile-menu"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
-            className="overflow-hidden border-t border-stone-800/80 xl:hidden"
-          >
+      {menuOpen && (
+          <div id="mobile-menu" className="animate-menu-in border-t border-stone-800/80 xl:hidden">
             <ul className="mx-auto grid max-w-7xl gap-1 px-4 py-4 sm:px-6">
               {NAV_LINKS.map((link) => (
                 <li key={link.href}>
@@ -159,9 +145,8 @@ export function Navbar() {
                 </a>
               </li>
             </ul>
-          </motion.div>
+          </div>
         )}
-      </AnimatePresence>
     </header>
   );
 }

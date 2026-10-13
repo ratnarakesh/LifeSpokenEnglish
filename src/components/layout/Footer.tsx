@@ -1,3 +1,4 @@
+import { ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { InstagramIcon, YouTubeIcon } from "@/components/ui/BrandIcons";
 import { ADDRESS, FOOTER_LINKS, LINKS, PHONES, SITE, TIMINGS, telLink } from "@/lib/site";
@@ -71,9 +72,22 @@ export function Footer() {
         </div>
       </div>
       <div className="border-t border-stone-800/80">
-        <p className="mx-auto max-w-7xl px-4 py-6 text-center text-xs text-stone-500 sm:px-6 lg:px-8">
-          © {new Date().getFullYear()} {SITE.name}. All rights reserved.
-        </p>
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 py-6 text-center text-xs text-stone-500 sm:px-6 md:flex-row md:text-left lg:px-8">
+          <p>
+            © {new Date().getFullYear()} {SITE.name}. All rights reserved.
+          </p>
+          <p className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
+            <span className="inline-flex items-center gap-1.5 text-stone-400">
+              <ShieldCheck className="size-3.5 text-ember-400" /> No cookies. No tracking.
+            </span>
+            <Link href="/privacy" className="hover:text-ember-300">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="hover:text-ember-300">
+              Terms of Use
+            </Link>
+          </p>
+        </div>
       </div>
     </footer>
   );

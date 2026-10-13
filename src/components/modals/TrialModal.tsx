@@ -14,7 +14,7 @@ export default function TrialModal({ course, ...props }: ModalProps & { course: 
       className="max-w-lg"
     >
       <Image
-        src="/brand/life-emblem.png"
+        src="/brand/life-emblem.webp"
         alt=""
         width={256}
         height={256}

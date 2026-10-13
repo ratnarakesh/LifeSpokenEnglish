@@ -1,6 +1,7 @@
 // LIFE Spoken English service worker: instant repeat loads + offline fallback.
+// Stores only the site's own files (pages, scripts, images). No personal data, no cookies.
 // Bump VERSION whenever the caching strategy or precache list changes.
-const VERSION = "life-v6";
+const VERSION = "life-v7";
 const PAGE_CACHE = `${VERSION}-pages`;
 const STATIC_CACHE = `${VERSION}-static`;
 
@@ -11,8 +12,10 @@ const PRECACHE = [
   "/offline.html",
   "/manifest.json",
   "/icon.png",
-  "/brand/life-emblem.png",
-  "/brand/life-logo.png",
+  "/brand/life-emblem-160.webp",
+  "/brand/life-logo.webp",
+  "/privacy",
+  "/terms",
   "/brand/icon-192.png",
 ];
 
@@ -39,19 +42,24 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-async function networkFirstPage(request) {
+// Pages: instant repeat visits. Serve the saved copy immediately and refresh it in the
+// background, so the next visit shows the latest content. First visits use the network.
+async function stalePage(event) {
+  const { request } = event;
   const cache = await caches.open(PAGE_CACHE);
-  try {
-    const response = await fetch(request);
-    if (response.ok) cache.put(request, response.clone());
-    return response;
-  } catch {
-    return (
-      (await cache.match(request, { ignoreSearch: true })) ||
-      (await cache.match("/")) ||
-      (await cache.match("/offline.html"))
-    );
+  const cached = await cache.match(request, { ignoreSearch: true });
+  const network = fetch(request)
+    .then((response) => {
+      if (response.ok) cache.put(request, response.clone());
+      return response;
+    })
+    .catch(() => null);
+
+  if (cached) {
+    event.waitUntil(network);
+    return cached;
   }
+  return (await network) || (await cache.match("/")) || (await cache.match("/offline.html"));
 }
 
 async function cacheFirst(request) {
@@ -82,7 +90,7 @@ self.addEventListener("fetch", (event) => {
   // Only handle our own origin; YouTube, Google Maps and WhatsApp go straight to the network.
   if (url.origin !== self.location.origin) return;
 
-  if (request.mode === "navigate") event.respondWith(networkFirstPage(request));
+  if (request.mode === "navigate") event.respondWith(stalePage(event));
   else if (isStaticAsset(url)) event.respondWith(cacheFirst(request));
   else event.respondWith(staleWhileRevalidate(request));
 });

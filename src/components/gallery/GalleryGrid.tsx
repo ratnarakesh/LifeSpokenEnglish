@@ -1,9 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Expand } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { Modal } from "@/components/modals/Modal";
 import { VideoCard } from "@/components/story/VideoCard";
 import { cn } from "@/lib/cn";
@@ -68,12 +67,10 @@ export function GalleryGrid() {
 
       <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3" aria-live="polite">
         {visible.map((item, i) => (
-            <motion.li
+            <li
               key={`${filter}-${item.key}`}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: Math.min(i, 8) * 0.03 }}
-              className={item.kind === "photo" ? "sm:col-span-2 lg:row-span-2" : undefined}
+              style={{ "--delay": `${Math.min(i, 8) * 30}ms` } as CSSProperties}
+              className={cn("animate-fade-up", item.kind === "photo" && "sm:col-span-2 lg:row-span-2")}
             >
               {item.kind === "photo" ? (
                 <button
@@ -103,7 +100,7 @@ export function GalleryGrid() {
               ) : (
                 <VideoCard video={item.video} variant="wide" />
               )}
-            </motion.li>
+            </li>
         ))}
       </ul>
 

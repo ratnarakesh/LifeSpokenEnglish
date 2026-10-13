@@ -1,6 +1,7 @@
 "use client";
 
 import { BookOpen, CheckCircle2, ChevronDown, Phone, User } from "lucide-react";
+import Link from "next/link";
 import { useId, useState, type FormEvent } from "react";
 import { WhatsAppIcon } from "@/components/ui/BrandIcons";
 import { button, cn } from "@/lib/cn";
@@ -14,7 +15,7 @@ import { whatsappLink } from "@/lib/site";
 
 type Category = (typeof LEARNER_CATEGORIES)[number];
 type Mode = (typeof LEARNING_MODES)[number];
-type Errors = Partial<Record<"name" | "phone", string>>;
+type Errors = Partial<Record<"name" | "phone" | "consent", string>>;
 
 function normalisePhone(raw: string) {
   let digits = raw.replace(/\D/g, "");
@@ -59,6 +60,7 @@ export function EnrollmentForm({ defaultCourse = "basic" }: { defaultCourse?: Co
   const [course, setCourse] = useState<CourseInterestId>(defaultCourse);
   const [errors, setErrors] = useState<Errors>({});
   const [sent, setSent] = useState(false);
+  const [consent, setConsent] = useState(false);
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -67,8 +69,9 @@ export function EnrollmentForm({ defaultCourse = "basic" }: { defaultCourse?: Co
     const nextErrors: Errors = {};
     if (trimmedName.length < 2) nextErrors.name = "Please enter your full name.";
     if (!normalised) nextErrors.phone = "Please enter a valid 10-digit Indian mobile number.";
+    if (!consent) nextErrors.consent = "Please tick the box to agree before continuing.";
     setErrors(nextErrors);
-    if (!normalised || nextErrors.name) return;
+    if (!normalised || nextErrors.name || nextErrors.consent) return;
 
     const url = whatsappLink(
       buildMessage({ name: trimmedName, phone: normalised, category, mode, course: courseLabel(course) }),
@@ -200,6 +203,36 @@ export function EnrollmentForm({ defaultCourse = "basic" }: { defaultCourse?: Co
         </div>
       </fieldset>
 
+      <div>
+        <label htmlFor={`${id}-consent`} className="flex cursor-pointer items-start gap-3 text-sm leading-relaxed text-stone-300">
+          <input
+            id={`${id}-consent`}
+            type="checkbox"
+            checked={consent}
+            onChange={(e) => setConsent(e.target.checked)}
+            aria-invalid={!!errors.consent}
+            aria-describedby={`${id}-consent-note${errors.consent ? ` ${id}-consent-error` : ""}`}
+            className="mt-1 size-4 shrink-0 cursor-pointer accent-ember-500"
+          />
+          <span>
+            I agree to share these details with LIFE on WhatsApp to receive trial and batch information, as explained in
+            the{" "}
+            <Link href="/privacy" className="text-ember-300 underline hover:text-ember-200">
+              Privacy Policy
+            </Link>
+            .
+          </span>
+        </label>
+        <p id={`${id}-consent-note`} className="mt-2 pl-7 text-xs text-stone-500">
+          Learner under 18? Please ask a parent or guardian to fill this form.
+        </p>
+        {errors.consent && (
+          <p id={`${id}-consent-error`} className="mt-1.5 pl-7 text-sm text-rose-400">
+            {errors.consent}
+          </p>
+        )}
+      </div>
+
       <button type="submit" className={button("whatsapp", "lg", "w-full")}>
         <WhatsAppIcon className="size-5" />
         Register for 10 Free Classes via WhatsApp
@@ -217,7 +250,7 @@ export function EnrollmentForm({ defaultCourse = "basic" }: { defaultCourse?: Co
             <CheckCircle2 className="size-4" /> Opening WhatsApp… just tap send to confirm.
           </>
         ) : (
-          "Your details are only shared with Mani Sir over WhatsApp. No spam, ever."
+          "Nothing is stored on this website. Your message goes only to Mani Sir on WhatsApp. No spam, ever."
         )}
       </p>
     </form>
