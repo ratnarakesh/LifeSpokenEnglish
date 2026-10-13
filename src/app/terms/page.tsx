@@ -50,7 +50,15 @@ export default function TermsPage() {
         <p>For any question about fees, payments or refunds, please speak to {SITE.founderAlias} directly before paying.</p>
       </LegalSection>
 
-      <LegalSection id="classes" title="3. Batches, timings and backup sessions">
+      <LegalSection id="refunds" title="3. Refund policy">
+        <p>
+          10-Class Free Trial allows 100% risk-free evaluation. Once a monthly batch fee is paid, fees are non-refundable
+          for that active calendar month due to the strict 15 - 20 student seat limit. Batch pauses or transfers for
+          genuine emergencies may be granted at Mani Sir&apos;s sole discretion.
+        </p>
+      </LegalSection>
+
+      <LegalSection id="classes" title="4. Batches, timings and backup sessions">
         <ul>
           <li>{BATCH_POLICY.capacity}</li>
           <li>
@@ -64,15 +72,15 @@ export default function TermsPage() {
         </ul>
       </LegalSection>
 
-      <LegalSection id="results" title="4. Learning outcomes">
+      <LegalSection id="results" title="5. Outcome disclaimer">
         <p>
-          We give every learner live practice, personal correction and full support. Progress in speaking also depends on
-          each learner&apos;s attendance and practice, so specific results such as interview selection cannot be
-          guaranteed.
+          LIFE Spoken English provides practical spoken communication and soft skills mentorship. We do not offer or
+          guarantee job placements, employment contracts, or academic degrees. Individual fluency outcomes depend
+          entirely on learner practice, attendance, and commitment.
         </p>
       </LegalSection>
 
-      <LegalSection id="content" title="5. Our content">
+      <LegalSection id="content" title="6. Our content">
         <p>
           The LIFE name and logo, the {BATCH_POLICY.booklet.title}, class material and videos belong to LIFE. Please do
           not copy or reuse them commercially without permission. Sharing links to our pages and videos is always
@@ -80,14 +88,14 @@ export default function TermsPage() {
         </p>
       </LegalSection>
 
-      <LegalSection id="links" title="6. Other websites">
+      <LegalSection id="links" title="7. Other websites">
         <p>
           Links to WhatsApp, YouTube, Instagram and Google Maps take you to services run by other companies under their
           own terms and privacy policies.
         </p>
       </LegalSection>
 
-      <LegalSection id="law" title="7. Governing law and contact">
+      <LegalSection id="law" title="8. Governing law and contact">
         <p>
           These terms are governed by the laws of India. For any question, concern or grievance, contact{" "}
           {SITE.founderAlias} at <a href={mailtoLink("Question about LIFE terms")}>{EMAIL}</a> or on{" "}
