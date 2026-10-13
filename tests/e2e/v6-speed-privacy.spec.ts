@@ -106,7 +106,7 @@ test("contact: official email is in the footer, structured data, and as grievanc
   await page.goto("/");
   const footerEmail = page.locator("footer").getByRole("link", { name: EMAIL });
   await expect(footerEmail).toHaveAttribute("href", `mailto:${EMAIL}`);
-  const json = JSON.parse((await page.locator('script[type="application/ld+json"]').textContent()) ?? "{}");
+  const json = JSON.parse((await page.locator('script[type="application/ld+json"]').first().textContent()) ?? "{}");
   expect(json.email).toBe(EMAIL);
   expect(json.contactPoint[0].email).toBe(EMAIL);
 

@@ -1,10 +1,14 @@
+// Live Cloudflare Pages address; override with NEXT_PUBLIC_SITE_URL once a custom domain is connected.
+const DEFAULT_SITE_URL = "https://lifespokenenglish.pages.dev";
+
 export const SITE = {
   name: "LIFE Spoken English & Soft Skills Training Institute",
+  alternateName: "LIFE by Mani Sir",
   brand: "LIFE",
   tagline: "Spoken English & Soft Skills | Mani Sir",
   founder: "K. Maneendra Kumar",
   founderAlias: "Mani Sir",
-  url: process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || undefined,
+  url: process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || DEFAULT_SITE_URL,
   rating: { value: "5.0", count: 1800, label: "1,800+" },
 };
 
@@ -26,6 +30,8 @@ export const ADDRESS = {
   postalCode: "530041",
   country: "IN",
 } as const;
+
+export const GEO = { latitude: "17.8185", longitude: "83.3532" } as const;
 
 export const TIMINGS = {
   weekdays: "Monday to Friday",

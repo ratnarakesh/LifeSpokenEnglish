@@ -1,46 +1,58 @@
-import { COURSES } from "@/lib/content";
-import { ADDRESS, EMAIL, LINKS, PHONES, SITE, VIDEO_ID } from "@/lib/site";
+import { COURSES, FAQS } from "@/lib/content";
+import { ADDRESS, EMAIL, GEO, LINKS, PHONES, SITE, VIDEO_ID } from "@/lib/site";
+
+const orgId = `${SITE.url}/#organization`;
+
+function LdScript({ data }: { data: object }) {
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, "\\u003c") }}
+    />
+  );
+}
 
 export function JsonLd() {
-  const orgId = `${SITE.url ?? ""}/#organization`;
   const data = {
     "@context": "https://schema.org",
     "@type": ["EducationalOrganization", "LocalBusiness"],
     "@id": orgId,
     name: SITE.name,
-    alternateName: ["LIFE Spoken English", "English by Mani Sir"],
+    alternateName: SITE.alternateName,
     description:
       "Spoken English & Soft Skills training institute in Madhurawada, Visakhapatnam offering live offline and online batches with 10 free trial classes.",
-    ...(SITE.url && {
-      url: SITE.url,
-      logo: `${SITE.url}/brand/life-logo.png`,
-      image: `${SITE.url}/brand/og-image.png`,
-    }),
+    url: SITE.url,
+    logo: `${SITE.url}/brand/life-logo.png`,
+    image: [`${SITE.url}/brand/og-image.png`, `${SITE.url}/brand/life-logo.webp`, `${SITE.url}/media/people/mani-sir-portrait.webp`],
     slogan: "Live It For Eternity",
     foundingDate: "2018",
     foundingLocation: { "@type": "Place", name: "Madhurawada, Visakhapatnam, Andhra Pradesh, India" },
     telephone: PHONES.primary.e164,
     email: EMAIL,
-    priceRange: "₹2,000 - ₹10,000 per month",
+    priceRange: "₹2,000 - ₹10,000",
+    currenciesAccepted: "INR",
     address: {
       "@type": "PostalAddress",
-      streetAddress: `${ADDRESS.building}, ${ADDRESS.street}, ${ADDRESS.landmark}`,
+      streetAddress: `${ADDRESS.building}, ${ADDRESS.street}, Near Kushi Junction / Naira Petrol Bunk`,
       addressLocality: `${ADDRESS.locality}, ${ADDRESS.city}`,
       addressRegion: ADDRESS.region,
       postalCode: ADDRESS.postalCode,
       addressCountry: ADDRESS.country,
     },
+    geo: { "@type": "GeoCoordinates", latitude: GEO.latitude, longitude: GEO.longitude },
     areaServed: [
       { "@type": "City", name: "Visakhapatnam" },
       { "@type": "Place", name: "Madhurawada" },
+      { "@type": "Place", name: "PM Palem" },
     ],
     hasMap: LINKS.googleMaps,
     founder: {
       "@type": "Person",
       name: SITE.founder,
       alternateName: SITE.founderAlias,
-      jobTitle: "Founder, Director & Lead Trainer",
-      ...(SITE.url && { image: `${SITE.url}/media/people/mani-sir-portrait.webp`, url: `${SITE.url}/about` }),
+      jobTitle: "Founder & Lead Trainer",
+      image: `${SITE.url}/media/people/mani-sir-portrait.webp`,
+      url: `${SITE.url}/about`,
     },
     contactPoint: [
       {
@@ -63,8 +75,8 @@ export function JsonLd() {
     aggregateRating: {
       "@type": "AggregateRating",
       ratingValue: SITE.rating.value,
+      reviewCount: String(SITE.rating.count),
       bestRating: "5",
-      reviewCount: SITE.rating.count,
     },
     sameAs: [LINKS.youtube, LINKS.instagram],
     subjectOf: {
@@ -91,10 +103,22 @@ export function JsonLd() {
     },
   };
 
+  return <LdScript data={data} />;
+}
+
+export function FaqJsonLd() {
   return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, "\\u003c") }}
+    <LdScript
+      data={{
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "@id": `${SITE.url}/#faq`,
+        mainEntity: FAQS.map(({ question, answer }) => ({
+          "@type": "Question",
+          name: question,
+          acceptedAnswer: { "@type": "Answer", text: answer },
+        })),
+      }}
     />
   );
 }

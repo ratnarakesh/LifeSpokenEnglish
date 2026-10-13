@@ -338,6 +338,30 @@ export const BATCH_POLICY = {
   customRequest: "Custom batch timing or special requirements available on request via WhatsApp.",
 } as const;
 
+// Shown in the home page FAQ section and mirrored 1:1 in the FAQPage JSON-LD.
+export const FAQS = [
+  {
+    question: "How do the 10 free trial classes work at LIFE?",
+    answer:
+      "You attend 10 full, live classes with Mani Sir 100% free, with zero upfront fees and no advance payment. Join the classroom in Madhurawada or the live online batch, experience the speaking practice for yourself, and stop at any time during the trial. Only if you decide to continue do you pay the monthly fee: ₹3,000 for the first month, then ₹2,000 per month.",
+  },
+  {
+    question: "Is this suitable for Telugu-medium learners and homemakers?",
+    answer:
+      "Yes. LIFE was built for Telugu-medium learners, homemakers and complete beginners. Mani Sir bridges every idea from Telugu to English with zero judgment, so you can start from square one and speak with confidence. Batches are open to all age groups: from upper primary school through college graduates, working professionals, and homemakers.",
+  },
+  {
+    question: "What are the class timings and batch sizes?",
+    answer:
+      "Classes run Monday to Friday, 6:00 AM to 10:00 PM, so you can choose a batch that fits your day. Every batch is strictly limited to 15 - 20 learners to guarantee individual vocal attention and live correction from Mani Sir.",
+  },
+  {
+    question: "What happens if I miss a weekday class?",
+    answer:
+      "You do not fall behind. Students who miss weekday sessions receive flexible, personalized makeup sessions on Saturday and Sunday, arranged directly with Mani Sir.",
+  },
+] as const;
+
 export const LEARNER_CATEGORIES = [
   "Homemaker",
   "School Student",

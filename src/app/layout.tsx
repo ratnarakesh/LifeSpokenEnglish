@@ -3,7 +3,7 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import { SiteShell } from "@/components/layout/SiteShell";
-import { OG_IMAGE } from "@/lib/seo";
+import { HOME_DESCRIPTION, HOME_TITLE, KEYWORDS, TITLE_SUFFIX, rootSocial } from "@/lib/seo";
 import { SITE } from "@/lib/site";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -12,48 +12,21 @@ const jakarta = Plus_Jakarta_Sans({
   display: "swap",
 });
 
-const title =
-  "LIFE Spoken English & Soft Skills Institute | Mani Sir | Madhurawada, Visakhapatnam";
-const description =
-  "Best Spoken English & Soft Skills classes in Madhurawada, Visakhapatnam (Vizag) by Mani Sir. 5.0★ Google rating from 1,800+ students. 10 free trial classes, monthly fees, 100% live offline & online batches, Telugu-friendly teaching.";
-
 export const metadata: Metadata = {
-  ...(SITE.url && { metadataBase: new URL(SITE.url) }),
-  title: { default: title, template: "%s | LIFE Spoken English" },
-  description,
+  metadataBase: new URL(SITE.url),
+  title: { default: HOME_TITLE, template: `%s | ${TITLE_SUFFIX}` },
+  description: HOME_DESCRIPTION,
   applicationName: SITE.name,
   authors: [{ name: `${SITE.founder} (${SITE.founderAlias})` }],
-  keywords: [
-    "spoken English classes Visakhapatnam",
-    "spoken English Madhurawada",
-    "spoken English Vizag",
-    "soft skills training Visakhapatnam",
-    "English speaking course Vizag",
-    "interview preparation Visakhapatnam",
-    "online spoken English classes",
-    "Telugu to English speaking course",
-    "Mani Sir spoken English",
-    "LIFE Spoken English",
-  ],
+  creator: SITE.founder,
+  publisher: SITE.name,
+  keywords: KEYWORDS,
   category: "education",
-  openGraph: {
-    type: "website",
-    locale: "en_IN",
-    siteName: SITE.name,
-    title,
-    description,
-    ...(SITE.url && { images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: "LIFE: Live It For Eternity" }] }),
-  },
-  twitter: {
-    card: SITE.url ? "summary_large_image" : "summary",
-    title,
-    description,
-    ...(SITE.url && { images: [OG_IMAGE] }),
-  },
+  ...rootSocial,
   manifest: "/manifest.json",
   appleWebApp: { capable: true, title: "LIFE English", statusBarStyle: "black" },
   other: { "apple-mobile-web-app-capable": "yes" },
-  robots: { index: true, follow: true },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 } },
   formatDetection: { telephone: true },
 };
 

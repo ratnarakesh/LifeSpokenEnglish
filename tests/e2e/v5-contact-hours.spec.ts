@@ -54,7 +54,7 @@ test("hours: Monday to Friday 6:00 AM to 10:00 PM, weekends for personal backup 
 
 test("structured data: one official contact point and weekday opening hours", async ({ page }) => {
   await page.goto("/");
-  const json = JSON.parse((await page.locator('script[type="application/ld+json"]').textContent()) ?? "{}");
+  const json = JSON.parse((await page.locator('script[type="application/ld+json"]').first().textContent()) ?? "{}");
   expect(json.telephone).toBe("+917337412999");
   expect(json.contactPoint).toHaveLength(1);
   expect(json.contactPoint[0].telephone).toBe("+917337412999");
