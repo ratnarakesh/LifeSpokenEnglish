@@ -66,8 +66,18 @@ Cloudflare Pages project settings:
 | Framework preset | None (or Next.js Static HTML Export) |
 | Build command | `npm run build` |
 | Build output directory | `out` |
-| Node version | from `.node-version` (22) |
-| Environment variable | `NEXT_PUBLIC_SITE_URL=https://<your-domain>` |
+| Node version | from `.node-version` (24) |
+| Environment variables | `CONTENTFUL_SPACE_ID`, `CONTENTFUL_ACCESS_TOKEN` (Delivery token only); optional `NEXT_PUBLIC_SITE_URL=https://<your-domain>` |
+
+## Content management (Contentful)
+
+Mani Sir manages gallery photos (`galleryItem`) and the homepage banner (`announcement`) in Contentful. The site stays a static export:
+
+1. `npm run build` first runs `scripts/sync-cms.mts`, which fetches published content through the Delivery API (`src/lib/contentful.ts`), downloads every photo as WebP into `public/media/cms/` and writes `src/lib/cms.generated.json` (both git-ignored). Visitors never contact Contentful.
+2. If the keys are missing, Contentful errors or times out (15 s), or `CMS_SYNC=off`, the build uses the local fallback in `src/lib/content.ts` (`PHOTOS`, `ANNOUNCEMENT`) and never fails.
+3. Publishing in Contentful updates the live site after the next build. `npm run cms:setup` registers a webhook that triggers it automatically when `CLOUDFLARE_DEPLOY_HOOK_URL` is set.
+
+One-time setup: copy `.env.example` to `.env.local`, fill in the values, then run `npm run cms:setup`. It creates and publishes both content types, uploads the classroom photo and creates the initial entries. It can be re-run safely and never overwrites existing entries. E2E tests always build with `CMS_SYNC=off` so the results are deterministic.
 
 `public/_headers` is copied into `out/` and gives Cloudflare long-lived caching for hashed assets, no-cache for the service worker and manifest, and basic security headers.
 

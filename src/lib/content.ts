@@ -17,6 +17,7 @@ import {
   Wallet,
   type LucideIcon,
 } from "lucide-react";
+import type { PhotoCategory } from "./contentful";
 
 export type LifePromise = { title: string; description: string; icon: LucideIcon };
 
@@ -275,16 +276,37 @@ export const VIDEOS: LifeVideo[] = [
 const REEL_IDS = ["4LtuKMa_cIQ", "5WTLd30TzjE", "SwTh5KpmYJo", "7eD_4PgSrYs", "VlGL4PvH4QI", "Z1EMnIaNG5E", "-ITXb2VtlSM", "wTCG6LFzdHs"];
 export const REEL: LifeVideo[] = REEL_IDS.map((id) => VIDEOS.find((v) => v.id === id) as LifeVideo);
 
-export const PHOTOS = [
+export type { PhotoCategory };
+export type GalleryPhoto = {
+  id: string;
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+  caption: string;
+  category: PhotoCategory;
+};
+
+// Local fallback for the gallery; the live list is managed in Contentful (galleryItem) and synced at build.
+export const PHOTOS: GalleryPhoto[] = [
   {
+    id: "mani-sir-classroom",
     src: "/media/people/mani-sir-classroom.webp",
     width: 1024,
     height: 764,
     alt: "Mani\u00A0Sir teaching in the LIFE Spoken English & Soft Skills classroom in Madhurawada",
     caption: "Mani\u00A0Sir in the LIFE classroom, Madhurawada",
-    tag: "Classroom",
+    category: "Classroom",
   },
-] as const;
+];
+
+export type Announcement = { message: string; badgeText: string | null };
+
+// Local fallback for the homepage banner; the live text is managed in Contentful (announcement).
+export const ANNOUNCEMENT: Announcement = {
+  badgeText: "New Batch",
+  message: "New batches are starting soon. Book your 10 free trial classes with Mani\u00A0Sir today.",
+};
 
 export const MANI_SIR = {
   name: "K. Maneendra Kumar",

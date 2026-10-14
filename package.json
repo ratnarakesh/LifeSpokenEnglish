@@ -4,20 +4,24 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file-if-exists=.env.local scripts/sync-cms.mts",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "preview": "node scripts/serve-static.mjs out 8000",
-    "pretest:e2e": "next build",
+    "pretest:e2e": "CMS_SYNC=off npm run build",
     "test:e2e": "playwright test",
     "brand:assets": "node scripts/build-brand-assets.mjs",
     "media:youtube": "node scripts/fetch-youtube-media.mjs",
-    "media:photos": "node scripts/build-photos.mjs"
+    "media:photos": "node scripts/build-photos.mjs",
+    "cms:setup": "node --env-file-if-exists=.env.local scripts/contentful-setup.mjs",
+    "cms:sync": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file-if-exists=.env.local scripts/sync-cms.mts"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "1.2.21",
     "@radix-ui/react-dialog": "1.1.23",
     "@radix-ui/react-tabs": "1.1.22",
+    "contentful": "11.12.10",
     "lucide-react": "1.52.0",
     "next": "16.3.8",
     "react": "19.3.0",

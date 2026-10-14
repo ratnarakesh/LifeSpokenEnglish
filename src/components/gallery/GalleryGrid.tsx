@@ -6,45 +6,54 @@ import { useState, type CSSProperties } from "react";
 import { Modal } from "@/components/modals/Modal";
 import { VideoCard } from "@/components/story/VideoCard";
 import { cn } from "@/lib/cn";
-import { PHOTOS, VIDEOS, type VideoCategory } from "@/lib/content";
+import { VIDEOS, type GalleryPhoto, type LifeVideo, type PhotoCategory, type VideoCategory } from "@/lib/content";
 
+// Photo-only filters appear only when Contentful has photos in that category; "Orientation" photos join
+// the orientation videos under "Batches & Orientation".
 const FILTERS = [
   { id: "all", label: "All" },
   { id: "classroom", label: "Classroom" },
+  { id: "success", label: "Student Success" },
+  { id: "event", label: "Events" },
   { id: "lesson", label: "Lessons" },
   { id: "batch", label: "Batches & Orientation" },
 ] as const;
 
 type FilterId = (typeof FILTERS)[number]["id"];
-type Photo = (typeof PHOTOS)[number];
 
-type Item =
-  | { kind: "photo"; key: string; photo: Photo }
-  | { kind: "video"; key: string; video: (typeof VIDEOS)[number] };
+type Item = { kind: "photo"; key: string; photo: GalleryPhoto } | { kind: "video"; key: string; video: LifeVideo };
 
-const ITEMS: Item[] = [
-  ...PHOTOS.map((photo) => ({ kind: "photo" as const, key: photo.src, photo })),
-  ...VIDEOS.map((video) => ({ kind: "video" as const, key: video.id, video })),
-];
+const PHOTO_FILTER: Record<PhotoCategory, FilterId> = {
+  Classroom: "classroom",
+  "Student Success": "success",
+  Event: "event",
+  Orientation: "batch",
+};
+const BATCH_LIKE: VideoCategory[] = ["batch", "orientation"];
 
 const matches = (item: Item, filter: FilterId) => {
   if (filter === "all") return true;
-  if (item.kind === "photo") return filter === "classroom";
+  if (item.kind === "photo") return PHOTO_FILTER[item.photo.category] === filter;
   if (filter === "lesson") return item.video.category === "lesson";
-  const batchLike: VideoCategory[] = ["batch", "orientation"];
-  return filter === "batch" && batchLike.includes(item.video.category);
+  return filter === "batch" && BATCH_LIKE.includes(item.video.category);
 };
 
-export function GalleryGrid() {
+export function GalleryGrid({ photos }: { photos: GalleryPhoto[] }) {
   const [filter, setFilter] = useState<FilterId>("all");
-  const [openPhoto, setOpenPhoto] = useState<Photo | null>(null);
-  const visible = ITEMS.filter((item) => matches(item, filter));
+  const [openPhoto, setOpenPhoto] = useState<GalleryPhoto | null>(null);
+  const items: Item[] = [
+    ...photos.map((photo) => ({ kind: "photo" as const, key: photo.id, photo })),
+    ...VIDEOS.map((video) => ({ kind: "video" as const, key: video.id, video })),
+  ];
+  const visible = items.filter((item) => matches(item, filter));
+  const filters = FILTERS.map((f) => ({ ...f, count: items.filter((item) => matches(item, f.id)).length })).filter(
+    (f) => f.id === "all" || f.count > 0,
+  );
 
   return (
     <div>
       <div role="group" aria-label="Filter gallery" className="flex flex-wrap justify-center gap-2">
-        {FILTERS.map((f) => {
-          const count = ITEMS.filter((item) => matches(item, f.id)).length;
+        {filters.map((f) => {
           const active = filter === f.id;
           return (
             <button
@@ -59,7 +68,7 @@ export function GalleryGrid() {
                   : "glass text-stone-300 hover:border-ember-500/50 hover:text-white",
               )}
             >
-              {f.label} <span className={active ? "text-obsidian-950/70" : "text-stone-500"}>({count})</span>
+              {f.label} <span className={active ? "text-obsidian-950/70" : "text-stone-500"}>({f.count})</span>
             </button>
           );
         })}
@@ -88,7 +97,7 @@ export function GalleryGrid() {
                   />
                   <span className="absolute inset-0 bg-linear-to-t from-obsidian-950/90 via-transparent to-transparent" />
                   <span className="absolute top-3 left-3 rounded-full bg-obsidian-950/70 px-2.5 py-1 text-[11px] font-semibold text-sun-200 ring-1 ring-sun-400/30 backdrop-blur">
-                    {item.photo.tag}
+                    {item.photo.category}
                   </span>
                   <span className="absolute top-3 right-3 grid size-9 place-items-center rounded-full bg-obsidian-950/70 text-white ring-1 ring-stone-700 backdrop-blur">
                     <Expand className="size-4" />

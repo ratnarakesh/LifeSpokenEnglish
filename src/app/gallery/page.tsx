@@ -6,6 +6,7 @@ import { GalleryGrid } from "@/components/gallery/GalleryGrid";
 import { InstagramIcon, WhatsAppIcon, YouTubeIcon } from "@/components/ui/BrandIcons";
 import { Reveal } from "@/components/ui/Reveal";
 import { GradientText } from "@/components/ui/SectionHeading";
+import { getGalleryPhotos } from "@/lib/cms";
 import { button } from "@/lib/cn";
 import { LINKS, whatsappLink } from "@/lib/site";
 
@@ -42,7 +43,7 @@ export default function GalleryPage() {
             </p>
           </Reveal>
           <div className="mt-12">
-            <GalleryGrid />
+            <GalleryGrid photos={getGalleryPhotos()} />
           </div>
         </div>
       </section>
