@@ -50,7 +50,7 @@ export const PROMISES: LifePromise[] = [
   {
     title: "Flexible Weekend Backup",
     description:
-      "Students who miss weekday sessions receive personalized on-demand makeup classes on Saturday and Sunday directly with Mani Sir.",
+      "Students who miss weekday sessions receive personalized on-demand makeup classes on Saturday and Sunday directly with Mani\u00A0Sir.",
     icon: CalendarClock,
   },
   {
@@ -160,13 +160,13 @@ export const AUDIENCES: Audience[] = [
 ];
 
 export const STORY = {
-  eyebrow: "The Spirit of LIFE and Mani Sir",
+  eyebrow: "The Spirit of LIFE and Mani\u00A0Sir",
   meaningTitle: "The Meaning Behind Our Name",
   meaning: [
     "Most people approach English like a temporary subject: something you study just to pass an exam, clear an interview, or memorize for a few weeks. But language is not a school textbook. Language is life itself.",
     "When you acquire true confidence in speaking, it does not disappear after an interview. It stays with you when you talk to your children, when you present in boardrooms, when you travel the world, and when you stand on any public stage. It transforms how you carry yourself forever.",
   ],
-  namedLine: "That is why Mani Sir named the institute LIFE:",
+  namedLine: "That is why Mani\u00A0Sir named the institute LIFE:",
   acronym: [
     { letter: "L", word: "Live" },
     { letter: "I", word: "It" },
@@ -177,7 +177,7 @@ export const STORY = {
     "We do not teach you English to get through tomorrow. We build an unshakeable speaking voice that you will live with, grow with, and celebrate for eternity.",
   milestones: [
     { year: "2018", title: "The first classroom", body: "A single room at Vasu Brothers Nilayam, Midhilapuri VUDA Colony, Madhurawada." },
-    { year: "2024", title: "LIFE goes digital", body: "Mani Sir's YouTube channel begins sharing everyday English lessons, Telugu to English." },
+    { year: "2024", title: "LIFE goes digital", body: "Mani\u00A0Sir's YouTube channel begins sharing everyday English lessons, Telugu to English." },
     { year: "2025", title: "Live online batches", body: "Interactive live online batches welcome learners far beyond Vizag." },
     { year: "Today", title: "1,800+ five-star reviews", body: "A perfect 5.0 on Google, earned one confident speaker at a time." },
   ],
@@ -188,7 +188,7 @@ export const STORY = {
     title: "A Single Room in Madhurawada, Visakhapatnam",
     paragraphs: [
       "The story started in 2018 in a humble classroom at Vasu Brothers Nilayam, Midhilapuri VUDA Colony.",
-      "Mani Sir (K. Maneendra Kumar) met countless students, homemakers, and working graduates across Visakhapatnam who shared the exact same pain: they had studied English for 10 to 15 years in schools and colleges, yet their throats tightened whenever they had to speak a single spontaneous sentence.",
+      "Mani\u00A0Sir (K. Maneendra Kumar) met countless students, homemakers, and working graduates across Visakhapatnam who shared the exact same pain: they had studied English for 10 to 15 years in schools and colleges, yet their throats tightened whenever they had to speak a single spontaneous sentence.",
       "They were not lacking intelligence. They were simply trapped in fear, stage fright, and the silent guilt of coming from Telugu-medium or non-English backgrounds.",
     ],
   },
@@ -197,9 +197,9 @@ export const STORY = {
     label: "The Turning Point: Why LIFE Broke the Traditional Rules",
     title: "Education Built on Empathy, Not Commercial Exploitation",
     paragraphs: [
-      "Mani Sir noticed that traditional institutes treated language training like a business trap: demanding heavy upfront fees, forcing students to silently copy grammar notes, and lecturing from a stage without letting students speak. If a student still could not speak after months, the institute blamed the student.",
+      "Mani\u00A0Sir noticed that traditional institutes treated language training like a business trap: demanding heavy upfront fees, forcing students to silently copy grammar notes, and lecturing from a stage without letting students speak. If a student still could not speak after months, the institute blamed the student.",
     ],
-    truthsIntro: "Mani Sir chose to rebuild the entire learning experience on three student-first truths:",
+    truthsIntro: "Mani\u00A0Sir chose to rebuild the entire learning experience on three student-first truths:",
     truths: [
       {
         title: "Remove the Fear of Money First",
@@ -269,7 +269,7 @@ export const VIDEOS: LifeVideo[] = [
   { id: "jKc3s6B-4gc", title: "Wake up vs Wake someone up", tag: "Vocabulary", category: "lesson" },
   { id: "XLq_cRbhnKA", title: "Commonly Confused: Used to", tag: "Grammar Made Easy", category: "lesson" },
   { id: "XMvkLBuzCac", title: "New online batch announcement", tag: "Live Online", category: "batch" },
-  { id: "Er5SNUeJwmk", title: "Official orientation by Mani Sir", tag: "Orientation", category: "orientation" },
+  { id: "Er5SNUeJwmk", title: "Official orientation by Mani\u00A0Sir", tag: "Orientation", category: "orientation" },
 ];
 
 const REEL_IDS = ["4LtuKMa_cIQ", "5WTLd30TzjE", "SwTh5KpmYJo", "7eD_4PgSrYs", "VlGL4PvH4QI", "Z1EMnIaNG5E", "-ITXb2VtlSM", "wTCG6LFzdHs"];
@@ -280,19 +280,19 @@ export const PHOTOS = [
     src: "/media/people/mani-sir-classroom.webp",
     width: 1024,
     height: 764,
-    alt: "Mani Sir teaching in the LIFE Spoken English & Soft Skills classroom in Madhurawada",
-    caption: "Mani Sir in the LIFE classroom, Madhurawada",
+    alt: "Mani\u00A0Sir teaching in the LIFE Spoken English & Soft Skills classroom in Madhurawada",
+    caption: "Mani\u00A0Sir in the LIFE classroom, Madhurawada",
     tag: "Classroom",
   },
 ] as const;
 
 export const MANI_SIR = {
   name: "K. Maneendra Kumar",
-  alias: "Mani Sir",
+  alias: "Mani\u00A0Sir",
   role: "Founder, Director & Lead Trainer",
-  lede: "Some teachers teach English. Mani Sir teaches people to believe in their own voice.",
+  lede: "Some teachers teach English. Mani\u00A0Sir teaches people to believe in their own voice.",
   paragraphs: [
-    "K. Maneendra Kumar, known to thousands of learners simply as Mani Sir, founded LIFE in Madhurawada, Visakhapatnam with one simple belief: nobody is bad at English. Most people have just never been given a safe place to speak it.",
+    "K. Maneendra Kumar, known to thousands of learners simply as Mani\u00A0Sir, founded LIFE in Madhurawada, Visakhapatnam with one simple belief: nobody is bad at English. Most people have just never been given a safe place to speak it.",
     "In his classroom, mistakes are not punished; they are welcomed as proof that you are trying. Lessons sound like real life: waking up, travelling, explaining, negotiating, interviewing. A new word is not finished until every student has said it aloud and used it in a sentence of their own.",
     "By bridging every idea from Telugu to English, he turns the language people feared most into something that feels familiar. Students often say his classes feel more like watching a movie than sitting through a lecture.",
     "Today his lessons travel far beyond one classroom through YouTube and live online batches. But the goal has never changed: the day each student speaks without fear.",
@@ -343,22 +343,22 @@ export const FAQS = [
   {
     question: "How do the 10 free trial classes work at LIFE?",
     answer:
-      "You attend 10 full, live classes with Mani Sir 100% free, with zero upfront fees and no advance payment. Join the classroom in Madhurawada or the live online batch, experience the speaking practice for yourself, and stop at any time during the trial. Only if you decide to continue do you pay the monthly fee: ₹3,000 for the first month, then ₹2,000 per month.",
+      "You attend 10 full, live classes with Mani\u00A0Sir 100% free, with zero upfront fees and no advance payment. Join the classroom in Madhurawada or the live online batch, experience the speaking practice for yourself, and stop at any time during the trial. Only if you decide to continue do you pay the monthly fee: ₹3,000 for the first month, then ₹2,000 per month.",
   },
   {
     question: "Is this suitable for Telugu-medium learners and homemakers?",
     answer:
-      "Yes. LIFE was built for Telugu-medium learners, homemakers and complete beginners. Mani Sir bridges every idea from Telugu to English with zero judgment, so you can start from square one and speak with confidence. Batches are open to all age groups: from upper primary school through college graduates, working professionals, and homemakers.",
+      "Yes. LIFE was built for Telugu-medium learners, homemakers and complete beginners. Mani\u00A0Sir bridges every idea from Telugu to English with zero judgment, so you can start from square one and speak with confidence. Batches are open to all age groups: from upper primary school through college graduates, working professionals, and homemakers.",
   },
   {
     question: "What are the class timings and batch sizes?",
     answer:
-      "Classes run Monday to Friday, 6:00 AM to 10:00 PM, so you can choose a batch that fits your day. Every batch is strictly limited to 15 - 20 learners to guarantee individual vocal attention and live correction from Mani Sir.",
+      "Classes run Monday to Friday, 6:00 AM to 10:00 PM, so you can choose a batch that fits your day. Every batch is strictly limited to 15 - 20 learners to guarantee individual vocal attention and live correction from Mani\u00A0Sir.",
   },
   {
     question: "What happens if I miss a weekday class?",
     answer:
-      "You do not fall behind. Students who miss weekday sessions receive flexible, personalized makeup sessions on Saturday and Sunday, arranged directly with Mani Sir.",
+      "You do not fall behind. Students who miss weekday sessions receive flexible, personalized makeup sessions on Saturday and Sunday, arranged directly with Mani\u00A0Sir.",
   },
 ] as const;
 

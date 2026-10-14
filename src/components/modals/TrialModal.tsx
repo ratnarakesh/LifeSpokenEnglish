@@ -10,7 +10,7 @@ export default function TrialModal({ course, ...props }: ModalProps & { course: 
     <Modal
       {...props}
       title="Claim Your 10 Free Trial Classes"
-      description="No fee, no commitment. Share a few details and continue on WhatsApp with Mani Sir."
+      description="No fee, no commitment. Share a few details and continue on WhatsApp with Mani&nbsp;Sir."
       className="max-w-lg"
     >
       <Image

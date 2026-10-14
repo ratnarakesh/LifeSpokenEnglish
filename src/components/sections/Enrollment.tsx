@@ -8,7 +8,7 @@ const BENEFITS = [
   "10 full live classes, absolutely free",
   "Classroom in Madhurawada or Live Online",
   "No upfront payment, no lock-in",
-  "Direct reply from Mani Sir on WhatsApp",
+  "Direct reply from Mani\u00A0Sir on WhatsApp",
   `${BATCH_POLICY.booklet.title} for every enrolled learner`,
   BATCH_POLICY.eligibility,
 ] as const;
@@ -26,7 +26,7 @@ export function Enrollment() {
                 Book your seat in <GradientText>under a minute.</GradientText>
               </>
             }
-            description="Fill in your details and we'll open WhatsApp with a ready-to-send message to Mani Sir. Just tap send."
+            description="Fill in your details and we'll open WhatsApp with a ready-to-send message to Mani&nbsp;Sir. Just tap send."
           />
           <Reveal delay={0.1}>
             <ul className="mt-8 space-y-3">

@@ -91,7 +91,7 @@ export function Pricing() {
               price="₹10,000"
               priceNote="per month"
               features={[
-                "Dedicated solo training with Mani Sir",
+                "Dedicated solo training with Mani\u00A0Sir",
                 "Flexible timing slots",
                 "Personalised curriculum",
                 "Tailored to your career goals",

@@ -54,7 +54,7 @@ export default function TermsPage() {
         <p>
           10-Class Free Trial allows 100% risk-free evaluation. Once a monthly batch fee is paid, fees are non-refundable
           for that active calendar month due to the strict 15 - 20 student seat limit. Batch pauses or transfers for
-          genuine emergencies may be granted at Mani Sir&apos;s sole discretion.
+          genuine emergencies may be granted at Mani&nbsp;Sir&apos;s sole discretion.
         </p>
       </LegalSection>
 

@@ -1,13 +1,17 @@
 // Live Cloudflare Pages address; override with NEXT_PUBLIC_SITE_URL once a custom domain is connected.
 const DEFAULT_SITE_URL = "https://lifespokenenglish.pages.dev";
 
+// Visible copy writes "Mani Sir" with a non-breaking space (\u00A0 in strings, &nbsp; in JSX) so it never wraps
+// across lines. Use plainText() for machine-read output (JSON-LD, metadata).
+export const plainText = (text: string) => text.replace(/\u00A0/g, " ");
+
 export const SITE = {
   name: "LIFE Spoken English & Soft Skills Training Institute",
   alternateName: "LIFE by Mani Sir",
   brand: "LIFE",
-  tagline: "Spoken English & Soft Skills | Mani Sir",
+  tagline: "Spoken English & Soft Skills | Mani\u00A0Sir",
   founder: "K. Maneendra Kumar",
-  founderAlias: "Mani Sir",
+  founderAlias: "Mani\u00A0Sir",
   url: process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || DEFAULT_SITE_URL,
   rating: { value: "5.0", count: 1800, label: "1,800+" },
 };
@@ -62,7 +66,7 @@ export const NAV_LINKS = [
 
 export const FOOTER_LINKS = [
   { href: "/", label: "Home" },
-  { href: "/about", label: "About LIFE & Mani Sir" },
+  { href: "/about", label: "About LIFE & Mani\u00A0Sir" },
   { href: "/about#logo-story", label: "The Story Inside Our Logo" },
   { href: "/gallery", label: "Gallery" },
   { href: "/#courses", label: "Courses" },

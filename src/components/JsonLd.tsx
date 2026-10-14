@@ -1,5 +1,5 @@
 import { COURSES, FAQS } from "@/lib/content";
-import { ADDRESS, EMAIL, GEO, LINKS, PHONES, SITE, VIDEO_ID } from "@/lib/site";
+import { ADDRESS, EMAIL, GEO, LINKS, PHONES, SITE, VIDEO_ID, plainText } from "@/lib/site";
 
 const orgId = `${SITE.url}/#organization`;
 
@@ -49,7 +49,7 @@ export function JsonLd() {
     founder: {
       "@type": "Person",
       name: SITE.founder,
-      alternateName: SITE.founderAlias,
+      alternateName: plainText(SITE.founderAlias),
       jobTitle: "Founder & Lead Trainer",
       image: `${SITE.url}/media/people/mani-sir-portrait.webp`,
       url: `${SITE.url}/about`,
@@ -115,8 +115,8 @@ export function FaqJsonLd() {
         "@id": `${SITE.url}/#faq`,
         mainEntity: FAQS.map(({ question, answer }) => ({
           "@type": "Question",
-          name: question,
-          acceptedAnswer: { "@type": "Answer", text: answer },
+          name: plainText(question),
+          acceptedAnswer: { "@type": "Answer", text: plainText(answer) },
         })),
       }}
     />

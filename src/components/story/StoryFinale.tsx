@@ -38,7 +38,7 @@ export function StoryFinale() {
               rel="noopener noreferrer"
               className={button("whatsapp", "lg", "w-full sm:w-auto")}
             >
-              <WhatsAppIcon className="size-5" /> Talk to Mani Sir
+              <WhatsAppIcon className="size-5" /> Talk to Mani&nbsp;Sir
             </a>
           </div>
         </div>

@@ -37,7 +37,7 @@ export default function GalleryPage() {
               Real classes. <GradientText>Real energy.</GradientText>
             </h1>
             <p className="mt-5 text-base leading-relaxed text-pretty text-stone-400 sm:text-lg">
-              A peek inside LIFE: Mani Sir in the classroom, everyday English lessons explained from Telugu to
+              A peek inside LIFE: Mani&nbsp;Sir in the classroom, everyday English lessons explained from Telugu to
               English, and our live online batches. Tap any video to play it right here.
             </p>
           </Reveal>

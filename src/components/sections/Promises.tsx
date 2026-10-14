@@ -15,7 +15,7 @@ export function Promises() {
               Ten commitments you won&apos;t find <GradientText>anywhere else.</GradientText>
             </>
           }
-          description="Straight from Mani Sir's official orientation: a student-first approach that removes every barrier between you and fluent English."
+          description="Straight from Mani&nbsp;Sir's official orientation: a student-first approach that removes every barrier between you and fluent English."
         />
 
         <ol className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">

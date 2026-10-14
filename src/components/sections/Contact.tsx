@@ -52,7 +52,7 @@ export function Contact() {
             <Reveal delay={0.08}>
               <GlowCard className="space-y-5 p-5 sm:p-7">
                 <ContactRow
-                  label="Mani Sir Direct: Offline & Online Batches"
+                  label="Mani&nbsp;Sir Direct: Offline & Online Batches"
                   phone={PHONES.primary}
                   waMessage={DEFAULT_WA_MESSAGE}
                 />

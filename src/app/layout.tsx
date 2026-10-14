@@ -4,7 +4,7 @@ import "./globals.css";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import { SiteShell } from "@/components/layout/SiteShell";
 import { HOME_DESCRIPTION, HOME_TITLE, KEYWORDS, TITLE_SUFFIX, rootSocial } from "@/lib/seo";
-import { SITE } from "@/lib/site";
+import { SITE, plainText } from "@/lib/site";
 
 const jakarta = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   title: { default: HOME_TITLE, template: `%s | ${TITLE_SUFFIX}` },
   description: HOME_DESCRIPTION,
   applicationName: SITE.name,
-  authors: [{ name: `${SITE.founder} (${SITE.founderAlias})` }],
+  authors: [{ name: `${SITE.founder} (${plainText(SITE.founderAlias)})` }],
   creator: SITE.founder,
   publisher: SITE.name,
   keywords: KEYWORDS,

@@ -11,7 +11,7 @@ export function MobileActionBar() {
       <div className="grid grid-cols-[auto_1fr] gap-2">
         <a href={telLink()} className={cn(base, buttonStyles.secondary, "whitespace-nowrap")}>
           <Phone className="size-4 shrink-0 text-ember-400" />
-          Call Mani Sir
+          Call Mani&nbsp;Sir
         </a>
         <a
           href={whatsappLink()}

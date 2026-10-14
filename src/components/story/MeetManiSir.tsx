@@ -63,7 +63,7 @@ export function MeetManiSir() {
 
           <Reveal delay={0.1}>
             <h2 className="mt-8 text-sm font-semibold tracking-wider text-ember-300 uppercase">
-              Inside Mani Sir&apos;s classroom
+              Inside Mani&nbsp;Sir&apos;s classroom
             </h2>
             <ul className="mt-4 grid gap-3 sm:grid-cols-2">
               {MANI_SIR.classroomRules.map((rule) => (

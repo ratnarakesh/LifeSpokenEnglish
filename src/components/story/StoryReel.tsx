@@ -14,7 +14,7 @@ export function StoryReel({ showGalleryLink = true }: { showGalleryLink?: boolea
         <Reveal>
           <p className="text-xs font-semibold tracking-wider text-ember-300 uppercase">Real Classes, Real Energy</p>
           <h2 id="reel-title" className="mt-2 text-2xl font-bold text-white sm:text-3xl">
-            See Mani Sir in action
+            See Mani&nbsp;Sir in action
           </h2>
           <p className="mt-1 text-sm text-stone-400">Tap any lesson to play it right here. Swipe for more.</p>
         </Reveal>

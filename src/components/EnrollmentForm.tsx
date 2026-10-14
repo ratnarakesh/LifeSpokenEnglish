@@ -250,7 +250,7 @@ export function EnrollmentForm({ defaultCourse = "basic" }: { defaultCourse?: Co
             <CheckCircle2 className="size-4" /> Opening WhatsApp… just tap send to confirm.
           </>
         ) : (
-          "Nothing is stored on this website. Your message goes only to Mani Sir on WhatsApp. No spam, ever."
+          "Nothing is stored on this website. Your message goes only to Mani\u00A0Sir on WhatsApp. No spam, ever."
         )}
       </p>
     </form>

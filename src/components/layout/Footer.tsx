@@ -56,7 +56,7 @@ export function Footer() {
           <h3 className="text-sm font-semibold tracking-wider text-white uppercase">Contact</h3>
           <ul className="mt-4 space-y-3 text-sm text-stone-400">
             <li>
-              <span className="block text-xs text-stone-500">Mani Sir Direct: Calls & WhatsApp</span>
+              <span className="block text-xs text-stone-500">Mani&nbsp;Sir Direct: Calls & WhatsApp</span>
               <a href={telLink(PHONES.primary.e164)} className="font-medium text-stone-200 hover:text-ember-300">
                 {PHONES.primary.display}
               </a>

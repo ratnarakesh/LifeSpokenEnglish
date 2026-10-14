@@ -83,7 +83,7 @@ export function Hero() {
           </TrialButton>
           <VideoButton className={button("secondary", "lg", "w-full sm:w-auto")}>
             <PlayCircle className="size-5 text-ember-400" />
-            Watch Mani Sir&apos;s Video Intro
+            Watch Mani&nbsp;Sir&apos;s Video Intro
           </VideoButton>
         </Reveal>
 

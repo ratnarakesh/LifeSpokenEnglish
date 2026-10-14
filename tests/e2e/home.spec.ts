@@ -44,7 +44,7 @@ test("navigation: header links reach the About and Gallery pages and back to hom
   await openMenu();
   await nav().getByRole("link", { name: "About LIFE" }).click();
   await expect(page).toHaveURL(/\/about$/);
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText(/Meet Mani Sir, the heart of LIFE/);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(/Meet Mani\s+Sir, the heart of LIFE/);
 
   await openMenu();
   await nav().getByRole("link", { name: "Gallery" }).click();

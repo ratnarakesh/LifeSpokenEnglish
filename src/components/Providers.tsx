@@ -12,7 +12,7 @@ type ModalKind = "trial" | "video";
 
 export type VideoTarget = { id: string; title: string };
 
-const DEFAULT_VIDEO: VideoTarget = { id: VIDEO_ID, title: "Mani Sir's Video Introduction" };
+const DEFAULT_VIDEO: VideoTarget = { id: VIDEO_ID, title: "Mani\u00A0Sir's Video Introduction" };
 
 type ModalContextValue = {
   openTrial: (course?: CourseInterestId) => void;
