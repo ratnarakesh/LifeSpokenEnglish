@@ -1,10 +1,16 @@
 // Build-time Contentful sync (runs automatically before `npm run build`).
-// Fetches published gallery items and the active announcement, downloads every photo as an optimised
-// WebP into public/media/cms/ (so visitors never contact a third party), and writes a snapshot to
-// src/lib/cms.generated.json. If keys are missing, CMS_SYNC=off, or Contentful fails or times out, it
-// removes the snapshot so the site falls back to local content in src/lib/content.ts. Never fails the build.
-import { mkdir, rm, writeFile } from "node:fs/promises";
-import { fetchCmsContent, type CmsPhoto } from "../src/lib/contentful.ts";
+// Fetches published gallery items (photos and videos), the active announcement, and the founder profile.
+// Downloads every asset into public/media/cms/ as optimised WebP (or YouTube thumbnail as WebP for videos),
+// prunes any orphaned files not present in the current sync, and writes a snapshot to src/lib/cms.generated.json.
+// If keys are missing, CMS_SYNC=off, or Contentful fails/times out, it removes the snapshot so the site
+// falls back to local content in src/lib/content.ts. Never fails the build.
+import { mkdir, readdir, rm, unlink, writeFile } from "node:fs/promises";
+import {
+  fetchCmsContent,
+  type CmsAnnouncement,
+  type CmsFounderProfile,
+  type CmsGalleryItem,
+} from "../src/lib/contentful.ts";
 
 const IMAGE_DIR = "public/media/cms";
 const SNAPSHOT = "src/lib/cms.generated.json";
@@ -16,22 +22,106 @@ async function fallbackToLocal(reason: string) {
   console.log(`[cms] ${reason} Using local content from src/lib/content.ts.`);
 }
 
-async function download(photo: CmsPhoto) {
-  const width = Math.min(photo.width, MAX_WIDTH);
-  const height = Math.round((photo.height * width) / photo.width);
-  const res = await fetch(`${photo.assetUrl}?fm=webp&q=78&w=${width}`, { signal: AbortSignal.timeout(20_000) });
-  if (!res.ok) throw new Error(`image ${photo.id} returned ${res.status}`);
-  const file = `${photo.id}.webp`;
-  await writeFile(`${IMAGE_DIR}/${file}`, Buffer.from(await res.arrayBuffer()));
+async function downloadAsset(url: string, filename: string, targetWidth?: number) {
+  const widthParam = targetWidth ? `&w=${Math.min(targetWidth, MAX_WIDTH)}` : `&w=${MAX_WIDTH}`;
+  const res = await fetch(`${url}?fm=webp&q=78${widthParam}`, { signal: AbortSignal.timeout(20_000) });
+  if (!res.ok) throw new Error(`Asset download failed (${res.status}) from ${url}`);
+  const buffer = Buffer.from(await res.arrayBuffer());
+  await writeFile(`${IMAGE_DIR}/${filename}`, buffer);
+}
+
+async function downloadYouTubeThumbnail(youtubeId: string, filename: string) {
+  // Try maxresdefault first, then hqdefault
+  let res = await fetch(`https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`, { signal: AbortSignal.timeout(15_000) });
+  if (!res.ok) {
+    res = await fetch(`https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`, { signal: AbortSignal.timeout(15_000) });
+  }
+  if (!res.ok) throw new Error(`YouTube thumbnail failed for ${youtubeId}`);
+  const buffer = Buffer.from(await res.arrayBuffer());
+  // Save as WebP extension (browsers handle JPEG/WebP streams transparently when decoded via Image)
+  await writeFile(`${IMAGE_DIR}/${filename}`, buffer);
+}
+
+async function syncGalleryItem(item: CmsGalleryItem): Promise<{
+  id: string;
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+  caption: string;
+  category: CmsGalleryItem["category"];
+  mediaType: CmsGalleryItem["mediaType"];
+  youtubeId?: string | null;
+  youtubeUrl?: string | null;
+  file: string;
+}> {
+  const file = `${item.id}.webp`;
+  const width = Math.min(item.width, MAX_WIDTH);
+  const height = Math.round((item.height * width) / item.width);
+
+  if (item.assetUrl) {
+    await downloadAsset(item.assetUrl, file, width);
+  } else if (item.youtubeId) {
+    await downloadYouTubeThumbnail(item.youtubeId, file);
+  } else {
+    throw new Error(`Item ${item.id} has neither assetUrl nor youtubeId`);
+  }
+
   return {
-    id: photo.id,
+    id: item.id,
     src: `/media/cms/${file}`,
     width,
     height,
-    alt: photo.alt,
-    caption: photo.title,
-    category: photo.category,
+    alt: item.alt,
+    caption: item.title,
+    category: item.category,
+    mediaType: item.mediaType,
+    youtubeId: item.youtubeId,
+    youtubeUrl: item.youtubeUrl,
+    file,
   };
+}
+
+async function syncFounderProfile(profile: CmsFounderProfile | null): Promise<{
+  name: string;
+  title: string;
+  bio: string | null;
+  portraitSrc: string;
+  altText: string;
+  width: number;
+  height: number;
+  file?: string;
+} | null> {
+  if (!profile) return null;
+  const file = "mani-sir-portrait.webp";
+  const width = Math.min(profile.width, 1200);
+  const height = Math.round((profile.height * width) / profile.width);
+  await downloadAsset(profile.portraitUrl, file, width);
+
+  return {
+    name: profile.name,
+    title: profile.title,
+    bio: profile.bio,
+    portraitSrc: `/media/cms/${file}`,
+    altText: profile.altText,
+    width,
+    height,
+    file,
+  };
+}
+
+async function pruneOrphanedFiles(activeFiles: Set<string>) {
+  try {
+    const entries = await readdir(IMAGE_DIR, { withFileTypes: true });
+    for (const entry of entries) {
+      if (entry.isFile() && !activeFiles.has(entry.name)) {
+        await unlink(`${IMAGE_DIR}/${entry.name}`);
+        console.log(`[cms] Pruned orphaned asset: ${entry.name}`);
+      }
+    }
+  } catch {
+    // If directory doesn't exist, nothing to prune
+  }
 }
 
 async function main() {
@@ -39,14 +129,51 @@ async function main() {
   const content = await fetchCmsContent();
   if (!content) return fallbackToLocal("Contentful not configured or unavailable.");
 
-  await rm(IMAGE_DIR, { recursive: true, force: true });
   await mkdir(IMAGE_DIR, { recursive: true });
-  const photos = await Promise.all(content.photos.map(download));
+
+  const activeFiles = new Set<string>();
+
+  // Sync gallery items (photos and videos)
+  const galleryItems = await Promise.all(
+    content.photos.map(async (item) => {
+      const synced = await syncGalleryItem(item);
+      activeFiles.add(synced.file);
+      return synced;
+    }),
+  );
+
+  // Sync founder profile
+  const founder = await syncFounderProfile(content.founderProfile);
+  if (founder?.file) {
+    activeFiles.add(founder.file);
+  }
+
+  // Prune any deleted/unpublished assets
+  await pruneOrphanedFiles(activeFiles);
+
+  const photos = galleryItems.map(({ file, ...rest }) => rest);
+  const founderProfile = founder ? (({ file, ...rest }) => rest)(founder) : null;
+
+  const videoCount = photos.filter((p) => p.mediaType === "Video").length;
+  const photoCount = photos.filter((p) => p.mediaType === "Photo").length;
+
   await writeFile(
     SNAPSHOT,
-    `${JSON.stringify({ syncedAt: new Date().toISOString(), photos, announcement: content.announcement }, null, 2)}\n`,
+    `${JSON.stringify(
+      {
+        syncedAt: new Date().toISOString(),
+        photos,
+        announcement: content.announcement,
+        founderProfile,
+      },
+      null,
+      2,
+    )}\n`,
   );
-  console.log(`[cms] Synced ${photos.length} gallery photo(s); announcement: ${content.announcement ? "active" : "none"}.`);
+
+  console.log(
+    `[cms] Synced ${photoCount} photo(s), ${videoCount} video(s); founder profile: ${founderProfile ? "active" : "none"}; announcement: ${content.announcement ? "active" : "none"}.`,
+  );
 }
 
 main().catch((error: Error) => fallbackToLocal(`Sync failed (${error.message}).`));

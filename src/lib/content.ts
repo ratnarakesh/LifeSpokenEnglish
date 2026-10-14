@@ -285,6 +285,9 @@ export type GalleryPhoto = {
   alt: string;
   caption: string;
   category: PhotoCategory;
+  mediaType?: "Photo" | "Video";
+  youtubeId?: string | null;
+  youtubeUrl?: string | null;
 };
 
 // Local fallback for the gallery; the live list is managed in Contentful (galleryItem) and synced at build.

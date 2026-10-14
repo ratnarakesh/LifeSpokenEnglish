@@ -8,7 +8,10 @@ import { button } from "@/lib/cn";
 import { MANI_SIR } from "@/lib/content";
 import { SITE } from "@/lib/site";
 
+import { getFounderProfile } from "@/lib/cms";
+
 export function MeetManiSir() {
+  const founder = getFounderProfile();
   return (
     <section id="mani-sir" aria-labelledby="about-title" className="relative overflow-hidden pt-10 pb-20 sm:pt-16 sm:pb-28">
       <div className="pointer-events-none absolute inset-0 -z-10 bg-grid" aria-hidden="true" />
@@ -21,8 +24,8 @@ export function MeetManiSir() {
             />
             <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] ring-1 ring-ember-500/40">
               <Image
-                src="/media/people/mani-sir-portrait.webp"
-                alt={`${MANI_SIR.alias} (${MANI_SIR.name}) in the LIFE classroom`}
+                src={founder.portraitSrc}
+                alt={founder.altText}
                 fill
                 priority
                 sizes="(min-width: 1024px) 28rem, 90vw"
@@ -31,8 +34,8 @@ export function MeetManiSir() {
               <span className="absolute inset-0 bg-linear-to-t from-obsidian-950/85 via-transparent to-transparent" />
             </div>
             <figcaption className="glass absolute -bottom-6 left-1/2 w-[85%] -translate-x-1/2 rounded-2xl px-5 py-4 text-center shadow-2xl shadow-black/50">
-              <span className="block text-lg font-bold text-white">{MANI_SIR.name}</span>
-              <span className="block text-sm text-ember-300">{MANI_SIR.role}</span>
+              <span className="block text-lg font-bold text-white">{founder.name}</span>
+              <span className="block text-sm text-ember-300">{founder.title}</span>
             </figcaption>
           </figure>
         </Reveal>

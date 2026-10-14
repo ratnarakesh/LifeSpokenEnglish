@@ -1,7 +1,7 @@
 // One-time (idempotent) Contentful provisioning via the Content Management API.
-//   1. Creates/updates and publishes the `galleryItem` and `announcement` content types.
-//   2. Uploads the existing classroom photo as an asset and publishes it.
-//   3. Creates and publishes the initial gallery entry and the default announcement.
+//   1. Creates/updates and publishes `galleryItem`, `announcement`, and `founderProfile` content types.
+//   2. Uploads existing photos as assets (classroom photo and founder portrait).
+//   3. Creates and publishes initial entries: gallery classroom, founder profile, and default announcement.
 // Existing assets and entries are never overwritten, so Mani Sir's edits in Contentful are safe.
 // Reads CONTENTFUL_SPACE_ID and CONTENTFUL_MANAGEMENT_TOKEN from .env.local. Usage: npm run cms:setup
 import { readFile } from "node:fs/promises";
@@ -47,7 +47,7 @@ const CONTENT_TYPES = (locale) => [
   {
     id: "galleryItem",
     name: "Gallery Item",
-    description: "A photo on the website gallery (/gallery). Lower 'order' shows first.",
+    description: "A photo or video on the website gallery (/gallery). Lower 'order' shows first.",
     displayField: "title",
     fields: [
       { id: "title", name: "Title", type: "Symbol", required: true, validations: [{ size: { max: 120 } }, NO_LONG_DASH] },
@@ -59,12 +59,27 @@ const CONTENT_TYPES = (locale) => [
         validations: [{ in: ["Classroom", "Orientation", "Student Success", "Event"] }],
       },
       {
+        id: "mediaType",
+        name: "Media Type",
+        type: "Symbol",
+        required: true,
+        defaultValue: { [locale]: "Photo" },
+        validations: [{ in: ["Photo", "Video"] }],
+      },
+      {
         id: "image",
         name: "Image",
         type: "Link",
         linkType: "Asset",
-        required: true,
+        required: false,
         validations: [{ linkMimetypeGroup: ["image"] }, { assetFileSize: { max: 20 * 1024 * 1024 } }],
+      },
+      {
+        id: "youtubeUrl",
+        name: "YouTube URL",
+        type: "Symbol",
+        required: false,
+        validations: [{ size: { max: 200 } }, NO_LONG_DASH],
       },
       { id: "date", name: "Date", type: "Date", required: false },
       { id: "order", name: "Order", type: "Integer", required: false },
@@ -79,6 +94,26 @@ const CONTENT_TYPES = (locale) => [
       { id: "message", name: "Message", type: "Symbol", required: true, validations: [{ size: { max: 200 } }, NO_LONG_DASH] },
       { id: "isActive", name: "Is Active", type: "Boolean", required: true, defaultValue: { [locale]: true } },
       { id: "badgeText", name: "Badge Text", type: "Symbol", required: false, validations: [{ size: { max: 24 } }, NO_LONG_DASH] },
+    ],
+  },
+  {
+    id: "founderProfile",
+    name: "Founder Profile",
+    description: "Mani Sir's official profile information, portrait photo, and biography.",
+    displayField: "name",
+    fields: [
+      { id: "name", name: "Name", type: "Symbol", required: true, defaultValue: { [locale]: "Mani Sir" }, validations: [{ size: { max: 80 } }, NO_LONG_DASH] },
+      { id: "title", name: "Title", type: "Symbol", required: false, defaultValue: { [locale]: "Founder & Chief Mentor" }, validations: [{ size: { max: 120 } }, NO_LONG_DASH] },
+      { id: "bio", name: "Bio", type: "Text", required: false },
+      {
+        id: "portraitImage",
+        name: "Portrait Image",
+        type: "Link",
+        linkType: "Asset",
+        required: true,
+        validations: [{ linkMimetypeGroup: ["image"] }, { assetFileSize: { max: 20 * 1024 * 1024 } }],
+      },
+      { id: "altText", name: "Alt Text", type: "Symbol", required: false, validations: [{ size: { max: 160 } }, NO_LONG_DASH] },
     ],
   },
 ];
@@ -147,12 +182,25 @@ await ensureAsset(
   locale,
 );
 
+await ensureAsset(
+  {
+    id: "life-mani-sir-portrait",
+    file: "assets/people/mani-sir-classroom-source.jpg",
+    fileName: "mani-sir-portrait.jpg",
+    contentType: "image/jpeg",
+    title: "Mani Sir - Official Portrait",
+    description: "Mani Sir (K. Maneendra Kumar), Founder & Chief Mentor of LIFE Spoken English",
+  },
+  locale,
+);
+
 await ensureEntry(
   "life-gallery-classroom",
   "galleryItem",
   {
     title: "Mani Sir in the LIFE classroom, Madhurawada",
     category: "Classroom",
+    mediaType: "Photo",
     image: { sys: { type: "Link", linkType: "Asset", id: "life-mani-sir-classroom" } },
     order: 1,
   },
@@ -166,6 +214,19 @@ await ensureEntry(
     message: "New batches are starting soon. Book your 10 free trial classes with Mani Sir today.",
     isActive: true,
     badgeText: "New Batch",
+  },
+  locale,
+);
+
+await ensureEntry(
+  "life-founder-profile",
+  "founderProfile",
+  {
+    name: "Mani Sir",
+    title: "Founder & Chief Mentor",
+    bio: "K. Maneendra Kumar, known to thousands of learners as Mani Sir, founded LIFE in Madhurawada, Visakhapatnam to give learners a safe, judgment-free space to build English fluency.",
+    portraitImage: { sys: { type: "Link", linkType: "Asset", id: "life-mani-sir-portrait" } },
+    altText: "Mani Sir - Founder of LIFE Spoken English",
   },
   locale,
 );

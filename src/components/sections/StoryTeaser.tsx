@@ -7,7 +7,10 @@ import { GradientText } from "@/components/ui/SectionHeading";
 import { button } from "@/lib/cn";
 import { MANI_SIR, STORY } from "@/lib/content";
 
+import { getFounderProfile } from "@/lib/cms";
+
 export function StoryTeaser() {
+  const founder = getFounderProfile();
   return (
     <section id="story" aria-labelledby="teaser-title" className="relative py-20 sm:py-28">
       <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-12 lg:gap-16 lg:px-8">
@@ -19,8 +22,8 @@ export function StoryTeaser() {
           >
             <div className="relative aspect-[4/5]">
               <Image
-                src="/media/people/mani-sir-portrait.webp"
-                alt={`${MANI_SIR.alias} in the LIFE classroom`}
+                src={founder.portraitSrc}
+                alt={founder.altText}
                 fill
                 sizes="(min-width: 1024px) 28rem, 90vw"
                 className="object-cover transition duration-700 group-hover:scale-105"
@@ -28,8 +31,8 @@ export function StoryTeaser() {
             </div>
             <span className="absolute inset-0 bg-linear-to-t from-obsidian-950/90 via-transparent to-transparent" />
             <span className="absolute inset-x-5 bottom-5">
-              <span className="block text-lg font-bold text-white">{MANI_SIR.name}</span>
-              <span className="block text-sm text-ember-300">{MANI_SIR.role}</span>
+              <span className="block text-lg font-bold text-white">{founder.name}</span>
+              <span className="block text-sm text-ember-300">{founder.title}</span>
             </span>
           </Link>
         </Reveal>
