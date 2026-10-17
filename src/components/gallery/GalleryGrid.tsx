@@ -138,14 +138,27 @@ export function GalleryGrid({ photos }: { photos: GalleryPhoto[] }) {
                   sizes="(min-width: 1024px) 24rem, (min-width: 640px) 50vw, 100vw"
                   className="object-cover transition duration-500 group-hover:scale-105"
                 />
-                <span className="absolute inset-0 bg-linear-to-t from-obsidian-950/95 via-obsidian-950/10 to-transparent" />
-                <span className="absolute top-3 left-3 rounded-full bg-obsidian-950/70 px-2.5 py-1 text-[11px] font-semibold text-ember-200 ring-1 ring-ember-500/30 backdrop-blur">
+                {/* Soft gradient at bottom for crisp title readability without hiding thumbnail face/graphics */}
+                <span className="absolute inset-0 bg-linear-to-t from-obsidian-950/90 via-obsidian-950/15 to-transparent" />
+                
+                {/* Top-left category badge */}
+                <span className="absolute top-3 left-3 rounded-full bg-obsidian-950/75 px-2.5 py-1 text-[11px] font-semibold text-ember-200 ring-1 ring-ember-500/30 backdrop-blur-md">
                   {item.item.category}
                 </span>
-                <span className="absolute top-1/2 left-1/2 grid size-14 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-linear-to-br from-ember-400 to-sun-500 text-obsidian-950 opacity-90 shadow-[0_0_40px_rgb(234_138_42/0.55)] transition duration-300 group-hover:scale-110 group-hover:opacity-100">
-                  <Play className="ml-0.5 size-6 fill-current" />
+
+                {/* Top-right Play pill button: elegant glass pill by default, glowing sun gradient on hover */}
+                <span className="absolute top-3 right-3 inline-flex items-center gap-1.5 rounded-full bg-obsidian-950/75 px-3 py-1.5 text-xs font-semibold text-white ring-1 ring-stone-700/80 backdrop-blur-md transition duration-300 group-hover:scale-105 group-hover:bg-linear-to-r group-hover:from-ember-400 group-hover:to-sun-400 group-hover:text-obsidian-950 group-hover:ring-transparent group-hover:shadow-[0_0_24px_rgb(234_138_42/0.6)]">
+                  <Play className="size-3.5 fill-current" />
+                  <span>Play</span>
                 </span>
-                <span className="absolute inset-x-4 bottom-4 text-sm leading-snug font-semibold text-white sm:text-base">
+
+                {/* Centered subtle play badge that gently scales and glows on hover */}
+                <span className="pointer-events-none absolute top-1/2 left-1/2 grid size-12 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-obsidian-950/60 text-white/90 ring-1 ring-white/20 backdrop-blur-xs opacity-75 transition duration-300 group-hover:scale-115 group-hover:bg-linear-to-br group-hover:from-ember-400 group-hover:to-sun-500 group-hover:text-obsidian-950 group-hover:opacity-100 group-hover:ring-transparent group-hover:shadow-[0_0_35px_rgb(234_138_42/0.7)]">
+                  <Play className="ml-0.5 size-5 fill-current" />
+                </span>
+
+                {/* Bottom title */}
+                <span className="absolute inset-x-4 bottom-3.5 text-sm leading-snug font-semibold text-white drop-shadow-sm sm:text-base">
                   {item.item.caption}
                 </span>
               </VideoButton>
