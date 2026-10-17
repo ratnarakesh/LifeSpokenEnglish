@@ -2,7 +2,7 @@
 // Self-contained (npm imports only) so Node can run it directly; never import it from client components.
 import { createClient } from "contentful";
 
-export const PHOTO_CATEGORIES = ["Classroom", "Orientation", "Student Success", "Event"] as const;
+export const PHOTO_CATEGORIES = ["Classroom", "Lessons", "Orientation", "Student Success", "Event"] as const;
 export type PhotoCategory = (typeof PHOTO_CATEGORIES)[number];
 
 export type CmsMediaType = "Photo" | "Video";

@@ -52,7 +52,7 @@ const CONTENT_TYPES = (locale) => [
         name: "Category",
         type: "Symbol",
         required: true,
-        validations: [{ in: ["Classroom", "Orientation", "Student Success", "Event"] }],
+        validations: [{ in: ["Classroom", "Lessons", "Orientation", "Student Success", "Event"] }],
       },
       {
         id: "mediaType",

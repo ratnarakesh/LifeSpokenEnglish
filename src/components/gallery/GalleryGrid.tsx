@@ -29,6 +29,7 @@ type Item =
 
 const PHOTO_FILTER: Record<PhotoCategory, FilterId> = {
   Classroom: "classroom",
+  Lessons: "lesson",
   "Student Success": "success",
   Event: "event",
   Orientation: "batch",
@@ -49,13 +50,15 @@ export function GalleryGrid({ photos }: { photos: GalleryPhoto[] }) {
   const [filter, setFilter] = useState<FilterId>("all");
   const [openPhoto, setOpenPhoto] = useState<GalleryPhoto | null>(null);
 
+  const hasCmsVideos = photos.some((p) => p.mediaType === "Video");
+
   const items: Item[] = [
     ...photos.map((photo) =>
       photo.mediaType === "Video"
         ? ({ kind: "cmsVideo" as const, key: photo.id, item: photo })
         : ({ kind: "photo" as const, key: photo.id, photo }),
     ),
-    ...VIDEOS.map((video) => ({ kind: "video" as const, key: video.id, video })),
+    ...(hasCmsVideos ? [] : VIDEOS.map((video) => ({ kind: "video" as const, key: video.id, video }))),
   ];
 
   const visible = items.filter((item) => matches(item, filter));
