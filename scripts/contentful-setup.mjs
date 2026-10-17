@@ -15,10 +15,6 @@ if (!SPACE || !TOKEN) {
 }
 
 const BASE = `https://api.contentful.com/spaces/${SPACE}/environments/${ENV}`;
-const NO_LONG_DASH = {
-  regexp: { pattern: "^[^\\u2013\\u2014]*$" },
-  message: "Please use a plain hyphen (-) instead of long dashes.",
-};
 
 async function cma(path, { method = "GET", version, body, url, contentType, entryType } = {}) {
   for (let attempt = 0; ; attempt++) {
@@ -50,7 +46,7 @@ const CONTENT_TYPES = (locale) => [
     description: "A photo or video on the website gallery (/gallery). Lower 'order' shows first.",
     displayField: "title",
     fields: [
-      { id: "title", name: "Title", type: "Symbol", required: true, validations: [{ size: { max: 120 } }, NO_LONG_DASH] },
+      { id: "title", name: "Title", type: "Symbol", required: true, validations: [{ size: { max: 120 } }] },
       {
         id: "category",
         name: "Category",
@@ -79,7 +75,7 @@ const CONTENT_TYPES = (locale) => [
         name: "YouTube URL",
         type: "Symbol",
         required: false,
-        validations: [{ size: { max: 200 } }, NO_LONG_DASH],
+        validations: [{ size: { max: 200 } }],
       },
       { id: "date", name: "Date", type: "Date", required: false },
       { id: "order", name: "Order", type: "Integer", required: false },
@@ -91,9 +87,9 @@ const CONTENT_TYPES = (locale) => [
     description: "Banner at the top of the homepage. The most recently updated active announcement is shown.",
     displayField: "message",
     fields: [
-      { id: "message", name: "Message", type: "Symbol", required: true, validations: [{ size: { max: 200 } }, NO_LONG_DASH] },
+      { id: "message", name: "Message", type: "Symbol", required: true, validations: [{ size: { max: 200 } }] },
       { id: "isActive", name: "Is Active", type: "Boolean", required: true, defaultValue: { [locale]: true } },
-      { id: "badgeText", name: "Badge Text", type: "Symbol", required: false, validations: [{ size: { max: 24 } }, NO_LONG_DASH] },
+      { id: "badgeText", name: "Badge Text", type: "Symbol", required: false, validations: [{ size: { max: 24 } }] },
     ],
   },
   {
@@ -102,8 +98,8 @@ const CONTENT_TYPES = (locale) => [
     description: "Mani Sir's official profile information, portrait photo, and biography.",
     displayField: "name",
     fields: [
-      { id: "name", name: "Name", type: "Symbol", required: true, defaultValue: { [locale]: "Mani Sir" }, validations: [{ size: { max: 80 } }, NO_LONG_DASH] },
-      { id: "title", name: "Title", type: "Symbol", required: false, defaultValue: { [locale]: "Founder & Chief Mentor" }, validations: [{ size: { max: 120 } }, NO_LONG_DASH] },
+      { id: "name", name: "Name", type: "Symbol", required: true, defaultValue: { [locale]: "Mani Sir" }, validations: [{ size: { max: 80 } }] },
+      { id: "title", name: "Title", type: "Symbol", required: false, defaultValue: { [locale]: "Founder & Chief Mentor" }, validations: [{ size: { max: 120 } }] },
       { id: "bio", name: "Bio", type: "Text", required: false },
       {
         id: "portraitImage",
@@ -113,7 +109,7 @@ const CONTENT_TYPES = (locale) => [
         required: true,
         validations: [{ linkMimetypeGroup: ["image"] }, { assetFileSize: { max: 20 * 1024 * 1024 } }],
       },
-      { id: "altText", name: "Alt Text", type: "Symbol", required: false, validations: [{ size: { max: 160 } }, NO_LONG_DASH] },
+      { id: "altText", name: "Alt Text", type: "Symbol", required: false, validations: [{ size: { max: 160 } }] },
     ],
   },
 ];
