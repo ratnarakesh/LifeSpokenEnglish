@@ -7,7 +7,6 @@
 import { mkdir, readdir, rm, unlink, writeFile } from "node:fs/promises";
 import {
   fetchCmsContent,
-  type CmsAnnouncement,
   type CmsFounderProfile,
   type CmsGalleryItem,
 } from "../src/lib/contentful.ts";
@@ -151,8 +150,17 @@ async function main() {
   // Prune any deleted/unpublished assets
   await pruneOrphanedFiles(activeFiles);
 
-  const photos = galleryItems.map(({ file, ...rest }) => rest);
-  const founderProfile = founder ? (({ file, ...rest }) => rest)(founder) : null;
+  const photos = galleryItems.map((item) => {
+    const copy = { ...item };
+    delete (copy as { file?: string }).file;
+    return copy;
+  });
+  let founderProfile: Omit<NonNullable<typeof founder>, "file"> | null = null;
+  if (founder) {
+    const copy = { ...founder };
+    delete (copy as { file?: string }).file;
+    founderProfile = copy;
+  }
 
   const videoCount = photos.filter((p) => p.mediaType === "Video").length;
   const photoCount = photos.filter((p) => p.mediaType === "Photo").length;
