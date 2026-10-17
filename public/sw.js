@@ -1,7 +1,7 @@
 // LIFE Spoken English service worker: instant repeat loads + offline fallback.
 // Stores only the site's own files (pages, scripts, images). No personal data, no cookies.
 // Bump VERSION whenever the caching strategy or precache list changes.
-const VERSION = "life-v19";
+const VERSION = "life-v20";
 const PAGE_CACHE = `${VERSION}-pages`;
 const STATIC_CACHE = `${VERSION}-static`;
 

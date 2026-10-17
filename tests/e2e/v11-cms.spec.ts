@@ -20,7 +20,7 @@ test("cms fallback: gallery shows the local classroom photo and hides empty phot
   await expect(filters.getByRole("button", { name: /^Student Success/ })).toHaveCount(0);
   await expect(filters.getByRole("button", { name: /^Events/ })).toHaveCount(0);
   const photo = page.getByRole("button", { name: /Open photo: Mani\s+Sir in the LIFE classroom/ });
-  await expect(photo.locator("img")).toHaveAttribute("src", "/media/people/mani-sir-classroom.webp");
+  await expect(photo.locator("img")).toHaveAttribute("src", "/media/people/mani-sir-classroom-v2.webp");
 });
 
 test("cms client: editor text follows house style and missing keys fall back without network calls", async () => {

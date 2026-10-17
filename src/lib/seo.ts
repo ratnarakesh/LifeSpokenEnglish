@@ -22,7 +22,7 @@ export const KEYWORDS = [
 export const OG_IMAGES = [
   { url: OG_IMAGE, width: 1200, height: 630, alt: "LIFE: Live It For Eternity" },
   { url: "/brand/life-logo.webp", width: 520, height: 537, alt: "LIFE Spoken English official logo" },
-  { url: "/media/people/mani-sir-portrait.webp", width: 611, height: 764, alt: "Mani Sir (K. Maneendra Kumar), founder of LIFE" },
+  { url: "/media/people/mani-sir-portrait-v2.webp", width: 610, height: 763, alt: "Mani Sir (K. Maneendra Kumar), founder of LIFE" },
 ];
 
 const social = (title: string, description: string, path?: string) => ({

@@ -24,10 +24,10 @@ const DEFAULT_FOUNDER_PROFILE: FounderProfile = {
   name: MANI_SIR.name,
   title: MANI_SIR.role,
   bio: MANI_SIR.lede,
-  portraitSrc: "/media/people/mani-sir-portrait.webp",
+  portraitSrc: "/media/people/mani-sir-portrait-v2.webp",
   altText: `${MANI_SIR.alias} (${MANI_SIR.name}) in the LIFE classroom`,
-  width: 611,
-  height: 764,
+  width: 610,
+  height: 763,
 };
 
 function readSnapshot(): Snapshot | null {

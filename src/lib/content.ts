@@ -294,9 +294,9 @@ export type GalleryPhoto = {
 export const PHOTOS: GalleryPhoto[] = [
   {
     id: "mani-sir-classroom",
-    src: "/media/people/mani-sir-classroom.webp",
+    src: "/media/people/mani-sir-classroom-v2.webp",
     width: 1024,
-    height: 764,
+    height: 763,
     alt: "Mani\u00A0Sir teaching in the LIFE Spoken English & Soft Skills classroom in Madhurawada",
     caption: "Mani\u00A0Sir in the LIFE classroom, Madhurawada",
     category: "Classroom",

@@ -23,7 +23,7 @@ export function JsonLd() {
       "Spoken English & Soft Skills training institute in Madhurawada, Visakhapatnam offering live offline and online batches with 10 free trial classes.",
     url: SITE.url,
     logo: `${SITE.url}/brand/life-logo.png`,
-    image: [`${SITE.url}/brand/og-image.png`, `${SITE.url}/brand/life-logo.webp`, `${SITE.url}/media/people/mani-sir-portrait.webp`],
+    image: [`${SITE.url}/brand/og-image.png`, `${SITE.url}/brand/life-logo.webp`, `${SITE.url}/media/people/mani-sir-portrait-v2.webp`],
     slogan: "Live It For Eternity",
     foundingDate: "2018",
     foundingLocation: { "@type": "Place", name: "Madhurawada, Visakhapatnam, Andhra Pradesh, India" },
@@ -51,7 +51,7 @@ export function JsonLd() {
       name: SITE.founder,
       alternateName: plainText(SITE.founderAlias),
       jobTitle: "Founder & Lead Trainer",
-      image: `${SITE.url}/media/people/mani-sir-portrait.webp`,
+      image: `${SITE.url}/media/people/mani-sir-portrait-v2.webp`,
       url: `${SITE.url}/about`,
     },
     contactPoint: [

@@ -87,7 +87,7 @@ test("metadata: home title, description, keywords, canonical, Open Graph and Twi
 
   const ogImages = await page.locator('meta[property="og:image"]').evaluateAll((m) => m.map((e) => e.getAttribute("content")));
   expect(ogImages).toEqual(
-    expect.arrayContaining([`${SITE_URL}/brand/life-logo.webp`, `${SITE_URL}/media/people/mani-sir-portrait.webp`]),
+    expect.arrayContaining([`${SITE_URL}/brand/life-logo.webp`, `${SITE_URL}/media/people/mani-sir-portrait-v2.webp`]),
   );
   expect(await meta(page, "name", "twitter:card")).toBe("summary_large_image");
   const twImages = await page.locator('meta[name="twitter:image"]').evaluateAll((m) => m.map((e) => e.getAttribute("content")));

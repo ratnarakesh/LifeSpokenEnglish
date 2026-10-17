@@ -54,7 +54,7 @@ async function syncGalleryItem(item: CmsGalleryItem): Promise<{
   youtubeUrl?: string | null;
   file: string;
 }> {
-  const file = `${item.id}.webp`;
+  const file = `${item.id}-v2.webp`;
   const width = Math.min(item.width, MAX_WIDTH);
   const height = Math.round((item.height * width) / item.width);
 
@@ -92,7 +92,7 @@ async function syncFounderProfile(profile: CmsFounderProfile | null): Promise<{
   file?: string;
 } | null> {
   if (!profile) return null;
-  const file = "mani-sir-portrait.webp";
+  const file = "mani-sir-portrait-v2.webp";
   const width = Math.min(profile.width, 1200);
   const height = Math.round((profile.height * width) / profile.width);
   await downloadAsset(profile.portraitUrl, file, width);
