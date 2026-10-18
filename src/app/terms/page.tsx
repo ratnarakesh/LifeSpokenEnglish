@@ -4,17 +4,19 @@ import { LegalPage, LegalSection } from "@/components/legal/LegalPage";
 import { BATCH_POLICY } from "@/lib/content";
 import { pageMetadata } from "@/lib/seo";
 import { EMAIL, PHONES, SITE, TIMINGS, mailtoLink, telLink } from "@/lib/site";
+import { legalCopy } from "@/lib/site-copy";
 
-const description =
-  "Terms of use for the LIFE Spoken English & Soft Skills Institute website, and how our free trial, monthly fees, batches and backup sessions work.";
-
-export const metadata: Metadata = pageMetadata({ title: "Terms of Use & Class Policies", description, path: "/terms" });
+export const metadata: Metadata = pageMetadata({
+  title: legalCopy.terms.title,
+  description: legalCopy.terms.description,
+  path: "/terms",
+});
 
 export default function TermsPage() {
   return (
     <LegalPage
-      title="Terms of Use & Class Policies"
-      breadcrumb="Terms of Use"
+      title={legalCopy.terms.title}
+      breadcrumb={legalCopy.terms.breadcrumb}
       intro={
         <p>
           By using this website you agree to these terms. They also summarise how classes at {SITE.name} work, so there

@@ -5,7 +5,8 @@ import { ArrowRight, BookMarked, CheckCircle2, Clock, Users } from "lucide-react
 import { useState, type CSSProperties } from "react";
 import { TrialButton } from "@/components/modals/ModalTriggers";
 import { button, cn } from "@/lib/cn";
-import { BATCH_POLICY, COURSES, type Course } from "@/lib/content";
+import { COURSES, type Course } from "@/lib/content";
+import { courseCopy } from "@/lib/site-copy";
 
 export function CourseTabs() {
   const [value, setValue] = useState<Course["id"]>(COURSES[0].id);
@@ -77,7 +78,7 @@ function CoursePanel({ course }: { course: Course }) {
         </dl>
 
         <TrialButton course={course.id} className={button("primary", "md", "mt-8")}>
-          Start with 10 Free Classes <ArrowRight className="size-4" />
+          {courseCopy.feePolicies.regularCard.cta} <ArrowRight className="size-4" />
         </TrialButton>
       </div>
 
@@ -102,14 +103,14 @@ function CoursePanel({ course }: { course: Course }) {
             <Users className="mt-0.5 size-5 shrink-0 text-ember-400" />
             <span className="text-sm text-stone-200">
               <strong className="block text-white">Small, exclusive batches</strong>
-              {BATCH_POLICY.capacity}
+              {courseCopy.admissionTerms.capacity}
             </span>
           </li>
           <li className="flex items-start gap-3 rounded-xl border border-sun-400/30 bg-sun-400/5 p-4">
             <BookMarked className="mt-0.5 size-5 shrink-0 text-sun-300" />
             <span className="text-sm text-stone-200">
-              <strong className="block text-white">{BATCH_POLICY.booklet.title}</strong>
-              {BATCH_POLICY.booklet.body}
+              <strong className="block text-white">{courseCopy.admissionTerms.booklet.title}</strong>
+              {courseCopy.admissionTerms.booklet.body}
             </span>
           </li>
         </ul>

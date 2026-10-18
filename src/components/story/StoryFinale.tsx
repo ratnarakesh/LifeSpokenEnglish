@@ -5,7 +5,7 @@ import { WhatsAppIcon } from "@/components/ui/BrandIcons";
 import { Reveal } from "@/components/ui/Reveal";
 import { GradientText } from "@/components/ui/SectionHeading";
 import { button } from "@/lib/cn";
-import { STORY } from "@/lib/content";
+import { storyCopy } from "@/lib/site-copy";
 import { whatsappLink } from "@/lib/site";
 
 export function StoryFinale() {
@@ -24,13 +24,13 @@ export function StoryFinale() {
             className="pointer-events-none absolute -top-24 left-1/2 size-72 -translate-x-1/2 rounded-full bg-sun-400/30 blur-3xl"
             aria-hidden="true"
           />
-          <p className="relative text-2xl font-bold text-stone-200 sm:text-3xl">{STORY.finale.lead}</p>
+          <p className="relative text-2xl font-bold text-stone-200 sm:text-3xl">{storyCopy.finale.lead}</p>
           <p className="relative mt-2 text-3xl leading-tight font-extrabold text-balance sm:text-5xl">
-            <GradientText>{STORY.finale.tail}</GradientText>
+            <GradientText>{storyCopy.finale.tail}</GradientText>
           </p>
           <div className="relative mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <TrialButton className={button("primary", "lg", "w-full sm:w-auto")}>
-              Begin Your Journey: 10 Free Classes <ArrowRight className="size-5" />
+              {storyCopy.finale.ctaTrial} <ArrowRight className="size-5" />
             </TrialButton>
             <a
               href={whatsappLink()}
@@ -38,7 +38,7 @@ export function StoryFinale() {
               rel="noopener noreferrer"
               className={button("whatsapp", "lg", "w-full sm:w-auto")}
             >
-              <WhatsAppIcon className="size-5" /> Talk to Mani&nbsp;Sir
+              <WhatsAppIcon className="size-5" /> {storyCopy.finale.ctaTalk}
             </a>
           </div>
         </div>

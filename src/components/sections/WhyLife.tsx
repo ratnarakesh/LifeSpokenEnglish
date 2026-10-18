@@ -2,7 +2,8 @@ import { Sparkles, UsersRound } from "lucide-react";
 import { GlowCard } from "@/components/ui/GlowCard";
 import { Reveal } from "@/components/ui/Reveal";
 import { GradientText, SectionHeading } from "@/components/ui/SectionHeading";
-import { AUDIENCES, BATCH_POLICY } from "@/lib/content";
+import { AUDIENCES } from "@/lib/content";
+import { brandCopy, courseCopy, founderCopy, storyCopy } from "@/lib/site-copy";
 import { SITE } from "@/lib/site";
 
 const STATS = [
@@ -17,13 +18,14 @@ export function WhyLife() {
     <section id="for-you" className="relative py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          eyebrow="Who It's For"
+          eyebrow={storyCopy.audiencesHeading.eyebrow}
           title={
             <>
-              Built for everyone who has ever <GradientText>hesitated to speak.</GradientText>
+              {storyCopy.audiencesHeading.titleLead}{" "}
+              <GradientText>{storyCopy.audiencesHeading.titleGradient}</GradientText>
             </>
           }
-          description="Whether you're facing your first campus interview, speaking up at a parents' meeting, or leading a client call, LIFE meets you exactly where you are."
+          description={storyCopy.audiencesHeading.description}
         />
 
         <Reveal delay={0.05} className="mx-auto mt-8 max-w-3xl">
@@ -31,7 +33,7 @@ export function WhyLife() {
             <UsersRound className="size-6 shrink-0 text-sun-300" />
             <span>
               <strong className="text-white">Eligibility: </strong>
-              {BATCH_POLICY.eligibility}
+              {courseCopy.admissionTerms.eligibility}
             </span>
           </p>
         </Reveal>
@@ -42,21 +44,19 @@ export function WhyLife() {
               <div>
                 <Sparkles className="size-8 text-ember-400/80" />
                 <p className="mt-4 text-xs font-semibold tracking-wider text-ember-300 uppercase">
-                  The LIFE Approach
+                  {storyCopy.approach.badge}
                 </p>
                 <p className="mt-2 text-lg leading-relaxed text-stone-200">
-                  Live, face-to-face speaking practice rooted in real-life situations, with equal focus
-                  on understanding concepts and speaking them aloud, explained in a Telugu-friendly way
-                  so no learner is left behind.
+                  {storyCopy.approach.description}
                 </p>
                 <div className="mt-6 flex items-center gap-4">
                   <span className="grid size-14 place-items-center rounded-2xl bg-linear-to-br from-ember-400 to-sun-500 text-xl font-black text-obsidian-950">
                     MS
                   </span>
                   <div>
-                    <p className="font-bold text-white">{SITE.founder}</p>
+                    <p className="font-bold text-white">{brandCopy.founder}</p>
                     <p className="text-sm text-stone-400">
-                      &ldquo;{SITE.founderAlias}&rdquo; · Founder & Lead Trainer
+                      &ldquo;{brandCopy.founderAlias}&rdquo; · {founderCopy.title}
                     </p>
                   </div>
                 </div>

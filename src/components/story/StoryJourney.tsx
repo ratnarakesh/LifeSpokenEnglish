@@ -1,11 +1,23 @@
-import { MapPin, Navigation } from "lucide-react";
+import {
+  Briefcase,
+  GraduationCap,
+  Home,
+  Languages,
+  MapPin,
+  Mic,
+  Navigation,
+  Wallet,
+} from "lucide-react";
 import { MapEmbed } from "@/components/MapEmbed";
 import { GlowCard } from "@/components/ui/GlowCard";
 import { Reveal } from "@/components/ui/Reveal";
 import { GradientText } from "@/components/ui/SectionHeading";
 import { button, cn } from "@/lib/cn";
-import { STORY } from "@/lib/content";
+import { storyCopy } from "@/lib/site-copy";
 import { ADDRESS, LINKS } from "@/lib/site";
+
+const TRUTH_ICONS = [Wallet, Mic, Languages];
+const STORY_ICONS = [Home, GraduationCap, Briefcase];
 
 type ChapterHeaderProps = { number: string; label: string; title: string; year?: string; centered?: boolean };
 
@@ -29,7 +41,7 @@ function ChapterHeader({ number, label, title, year, centered }: ChapterHeaderPr
 }
 
 export function StoryJourney() {
-  const { beginning, turningPoint, evolution } = STORY;
+  const { beginning, turningPoint, evolution, milestones } = storyCopy;
 
   return (
     <section id="journey" aria-labelledby="journey-title" className="relative py-20 sm:py-28">
@@ -45,7 +57,7 @@ export function StoryJourney() {
             className="absolute top-7 right-[12.5%] left-[12.5%] hidden h-px bg-linear-to-r from-ember-500/70 via-sun-400/60 to-ember-500/70 lg:block"
             aria-hidden="true"
           />
-          {STORY.milestones.map((m, i) => (
+          {milestones.map((m, i) => (
             <li key={m.year}>
               <Reveal delay={i * 0.08} className="relative flex h-full flex-col items-center text-center">
                 <span className="relative z-10 grid size-14 place-items-center rounded-full bg-obsidian-950 shadow-[0_0_30px_-4px_rgb(234_138_42/0.7)] ring-2 ring-ember-500/70">
@@ -111,22 +123,25 @@ export function StoryJourney() {
             </div>
           </Reveal>
           <ol className="grid gap-4 lg:col-span-7">
-            {turningPoint.truths.map(({ title, body, icon: Icon }, i) => (
-              <li key={title}>
-                <Reveal delay={i * 0.08}>
-                  <GlowCard className="flex gap-5 p-6 sm:p-7">
-                    <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-linear-to-br from-ember-400 to-sun-500 text-obsidian-950 shadow-[0_0_30px_-6px_rgb(234_138_42/0.7)]">
-                      <Icon className="size-6" />
-                    </span>
-                    <div>
-                      <p className="text-xs font-semibold tracking-wider text-ember-300 uppercase">Truth {i + 1}</p>
-                      <h4 className="mt-1 text-lg font-bold text-white sm:text-xl">{title}</h4>
-                      <p className="mt-2 text-sm leading-relaxed text-stone-300 sm:text-base">{body}</p>
-                    </div>
-                  </GlowCard>
-                </Reveal>
-              </li>
-            ))}
+            {turningPoint.truths.map(({ title, body }, i) => {
+              const Icon = TRUTH_ICONS[i % TRUTH_ICONS.length];
+              return (
+                <li key={title}>
+                  <Reveal delay={i * 0.08}>
+                    <GlowCard className="flex gap-5 p-6 sm:p-7">
+                      <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-linear-to-br from-ember-400 to-sun-500 text-obsidian-950 shadow-[0_0_30px_-6px_rgb(234_138_42/0.7)]">
+                        <Icon className="size-6" />
+                      </span>
+                      <div>
+                        <p className="text-xs font-semibold tracking-wider text-ember-300 uppercase">Truth {i + 1}</p>
+                        <h4 className="mt-1 text-lg font-bold text-white sm:text-xl">{title}</h4>
+                        <p className="mt-2 text-sm leading-relaxed text-stone-300 sm:text-base">{body}</p>
+                      </div>
+                    </GlowCard>
+                  </Reveal>
+                </li>
+              );
+            })}
           </ol>
         </div>
       </div>
@@ -138,20 +153,23 @@ export function StoryJourney() {
           <p className="mt-6 leading-relaxed text-pretty text-stone-300 sm:text-lg">{evolution.intro}</p>
         </Reveal>
         <ul className="mt-10 grid gap-4 md:grid-cols-3">
-          {evolution.stories.map(({ who, body, icon: Icon }, i) => (
-            <li key={who}>
-              <Reveal delay={i * 0.08} className="h-full">
-                <GlowCard className="h-full p-7">
-                  <span className="grid size-12 place-items-center rounded-2xl bg-sun-500/10 text-sun-300 ring-1 ring-sun-500/30">
-                    <Icon className="size-6" />
-                  </span>
-                  <p className="mt-5 leading-relaxed text-stone-300">
-                    <strong className="text-lg font-bold text-white">{who}</strong> {body}
-                  </p>
-                </GlowCard>
-              </Reveal>
-            </li>
-          ))}
+          {evolution.stories.map(({ who, body }, i) => {
+            const Icon = STORY_ICONS[i % STORY_ICONS.length];
+            return (
+              <li key={who}>
+                <Reveal delay={i * 0.08} className="h-full">
+                  <GlowCard className="h-full p-7">
+                    <span className="grid size-12 place-items-center rounded-2xl bg-sun-500/10 text-sun-300 ring-1 ring-sun-500/30">
+                      <Icon className="size-6" />
+                    </span>
+                    <p className="mt-5 leading-relaxed text-stone-300">
+                      <strong className="text-lg font-bold text-white">{who}</strong> {body}
+                    </p>
+                  </GlowCard>
+                </Reveal>
+              </li>
+            );
+          })}
         </ul>
         <Reveal delay={0.1}>
           <p className="mx-auto mt-10 max-w-3xl text-center leading-relaxed text-pretty text-stone-300 sm:text-lg">

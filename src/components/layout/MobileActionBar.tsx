@@ -1,6 +1,7 @@
 import { Phone } from "lucide-react";
 import { WhatsAppIcon } from "@/components/ui/BrandIcons";
 import { buttonStyles, cn } from "@/lib/cn";
+import { brandCopy } from "@/lib/site-copy";
 import { telLink, whatsappLink } from "@/lib/site";
 
 const base = cn(buttonStyles.base, "gap-1.5 px-3 py-3 text-[13px] leading-tight min-[400px]:text-sm");
@@ -11,7 +12,7 @@ export function MobileActionBar() {
       <div className="grid grid-cols-[auto_1fr] gap-2">
         <a href={telLink()} className={cn(base, buttonStyles.secondary, "whitespace-nowrap")}>
           <Phone className="size-4 shrink-0 text-ember-400" />
-          Call Mani&nbsp;Sir
+          Call {brandCopy.founderAlias}
         </a>
         <a
           href={whatsappLink()}
@@ -20,9 +21,10 @@ export function MobileActionBar() {
           className={cn(base, buttonStyles.whatsapp, "text-center")}
         >
           <WhatsAppIcon className="size-4 shrink-0" />
-          WhatsApp 10 Days Free
+          {brandCopy.whatsappCta.mobileBar}
         </a>
       </div>
     </div>
   );
 }
+

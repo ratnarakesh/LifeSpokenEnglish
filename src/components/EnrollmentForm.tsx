@@ -11,6 +11,7 @@ import {
   LEARNING_MODES,
   type CourseInterestId,
 } from "@/lib/content";
+import { enrollmentCopy } from "@/lib/site-copy";
 import { whatsappLink } from "@/lib/site";
 
 type Category = (typeof LEARNER_CATEGORIES)[number];
@@ -22,24 +23,6 @@ function normalisePhone(raw: string) {
   if (digits.length === 12 && digits.startsWith("91")) digits = digits.slice(2);
   if (digits.length === 11 && digits.startsWith("0")) digits = digits.slice(1);
   return /^[6-9]\d{9}$/.test(digits) ? digits : null;
-}
-
-type Registration = { name: string; phone: string; category: Category; mode: Mode; course: string };
-
-function buildMessage({ name, phone, category, mode, course }: Registration) {
-  return [
-    "Hello Mani Sir,",
-    "",
-    "I would like to register for the 10 Free Trial Classes at LIFE Spoken English & Soft Skills Institute.",
-    "",
-    `• Name: ${name}`,
-    `• Phone: +91 ${phone.slice(0, 5)} ${phone.slice(5)}`,
-    `• I am a: ${category}`,
-    `• Course of Interest: ${course}`,
-    `• Preferred Mode: ${mode}`,
-    "",
-    "Kindly share the upcoming batch timings. Thank you!",
-  ].join("\n");
 }
 
 const inputClass =
@@ -67,14 +50,20 @@ export function EnrollmentForm({ defaultCourse = "basic" }: { defaultCourse?: Co
     const trimmedName = name.trim();
     const normalised = normalisePhone(phone);
     const nextErrors: Errors = {};
-    if (trimmedName.length < 2) nextErrors.name = "Please enter your full name.";
-    if (!normalised) nextErrors.phone = "Please enter a valid 10-digit Indian mobile number.";
-    if (!consent) nextErrors.consent = "Please tick the box to agree before continuing.";
+    if (trimmedName.length < 2) nextErrors.name = enrollmentCopy.validationErrors.name;
+    if (!normalised) nextErrors.phone = enrollmentCopy.validationErrors.phone;
+    if (!consent) nextErrors.consent = enrollmentCopy.validationErrors.consent;
     setErrors(nextErrors);
     if (!normalised || nextErrors.name || nextErrors.consent) return;
 
     const url = whatsappLink(
-      buildMessage({ name: trimmedName, phone: normalised, category, mode, course: courseLabel(course) }),
+      enrollmentCopy.buildWhatsAppMessage({
+        name: trimmedName,
+        phone: normalised,
+        category,
+        mode,
+        course: courseLabel(course),
+      }),
     );
     const win = window.open(url, "_blank");
     if (win) win.opener = null;
@@ -86,7 +75,7 @@ export function EnrollmentForm({ defaultCourse = "basic" }: { defaultCourse?: Co
     <form onSubmit={handleSubmit} noValidate className="space-y-5">
       <div>
         <label htmlFor={`${id}-name`} className="mb-1.5 block text-sm font-medium text-stone-200">
-          Full Name
+          {enrollmentCopy.fieldLabels.fullName}
         </label>
         <div className="relative">
           <User className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-stone-500" />
@@ -96,7 +85,7 @@ export function EnrollmentForm({ defaultCourse = "basic" }: { defaultCourse?: Co
             autoComplete="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="e.g. Lakshmi Prasanna"
+            placeholder={enrollmentCopy.placeholders.name}
             aria-invalid={!!errors.name}
             aria-describedby={errors.name ? `${id}-name-error` : undefined}
             className={inputClass}
@@ -109,9 +98,10 @@ export function EnrollmentForm({ defaultCourse = "basic" }: { defaultCourse?: Co
         )}
       </div>
 
+
       <div>
         <label htmlFor={`${id}-phone`} className="mb-1.5 block text-sm font-medium text-stone-200">
-          Phone Number
+          {enrollmentCopy.fieldLabels.phoneNumber}
         </label>
         <div className="relative">
           <Phone className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-stone-500" />
@@ -123,7 +113,7 @@ export function EnrollmentForm({ defaultCourse = "basic" }: { defaultCourse?: Co
             autoComplete="tel"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            placeholder="98765 43210"
+            placeholder={enrollmentCopy.placeholders.phone}
             aria-invalid={!!errors.phone}
             aria-describedby={errors.phone ? `${id}-phone-error` : undefined}
             className={inputClass}
@@ -137,7 +127,7 @@ export function EnrollmentForm({ defaultCourse = "basic" }: { defaultCourse?: Co
       </div>
 
       <fieldset>
-        <legend className="mb-1.5 text-sm font-medium text-stone-200">I am a</legend>
+        <legend className="mb-1.5 text-sm font-medium text-stone-200">{enrollmentCopy.fieldLabels.category}</legend>
         <div className="grid grid-cols-2 gap-2">
           {LEARNER_CATEGORIES.map((option, i) => (
             <label
@@ -163,7 +153,7 @@ export function EnrollmentForm({ defaultCourse = "basic" }: { defaultCourse?: Co
 
       <div>
         <label htmlFor={`${id}-course`} className="mb-1.5 block text-sm font-medium text-stone-200">
-          Course of Interest
+          {enrollmentCopy.fieldLabels.course}
         </label>
         <div className="relative">
           <BookOpen className="pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-stone-500" />
@@ -185,7 +175,7 @@ export function EnrollmentForm({ defaultCourse = "basic" }: { defaultCourse?: Co
       </div>
 
       <fieldset>
-        <legend className="mb-1.5 text-sm font-medium text-stone-200">Preferred Mode</legend>
+        <legend className="mb-1.5 text-sm font-medium text-stone-200">{enrollmentCopy.fieldLabels.mode}</legend>
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           {LEARNING_MODES.map((option) => (
             <label key={option} className={chipClass}>
@@ -215,16 +205,15 @@ export function EnrollmentForm({ defaultCourse = "basic" }: { defaultCourse?: Co
             className="mt-1 size-4 shrink-0 cursor-pointer accent-ember-500"
           />
           <span>
-            I agree to share these details with LIFE on WhatsApp to receive trial and batch information, as explained in
-            the{" "}
+            {enrollmentCopy.consent.agreeText}{" "}
             <Link href="/privacy" className="text-ember-300 underline hover:text-ember-200">
-              Privacy Policy
+              {enrollmentCopy.consent.policyLinkText}
             </Link>
             .
           </span>
         </label>
         <p id={`${id}-consent-note`} className="mt-2 pl-7 text-xs text-stone-500">
-          Learner under 18? Please ask a parent or guardian to fill this form.
+          {enrollmentCopy.consent.minorNote}
         </p>
         {errors.consent && (
           <p id={`${id}-consent-error`} className="mt-1.5 pl-7 text-sm text-rose-400">
@@ -235,7 +224,7 @@ export function EnrollmentForm({ defaultCourse = "basic" }: { defaultCourse?: Co
 
       <button type="submit" className={button("whatsapp", "lg", "w-full")}>
         <WhatsAppIcon className="size-5" />
-        Register for 10 Free Classes via WhatsApp
+        {enrollmentCopy.submitButton}
       </button>
 
       <p
@@ -247,10 +236,10 @@ export function EnrollmentForm({ defaultCourse = "basic" }: { defaultCourse?: Co
       >
         {sent ? (
           <>
-            <CheckCircle2 className="size-4" /> Opening WhatsApp… just tap send to confirm.
+            <CheckCircle2 className="size-4" /> {enrollmentCopy.status.opening}
           </>
         ) : (
-          "Nothing is stored on this website. Your message goes only to Mani\u00A0Sir on WhatsApp. No spam, ever."
+          enrollmentCopy.status.privacyNote
         )}
       </p>
     </form>

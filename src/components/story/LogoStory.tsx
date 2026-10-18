@@ -3,12 +3,13 @@ import { FullLogo } from "@/components/layout/Brand";
 import { GlowCard } from "@/components/ui/GlowCard";
 import { Reveal } from "@/components/ui/Reveal";
 import { GradientText } from "@/components/ui/SectionHeading";
-import { LOGO_STORY } from "@/lib/content";
+import { storyCopy } from "@/lib/site-copy";
 
 const SYMBOL_ICONS: LucideIcon[] = [Bird, Wind, Sunrise, InfinityIcon, Sprout];
 
 export function LogoStory() {
-  const [first, ...rest] = LOGO_STORY.parable;
+  const { logoStory } = storyCopy;
+  const [first, ...rest] = logoStory.parable;
   return (
     <section id="logo-story" aria-labelledby="logo-story-title" className="relative overflow-hidden py-20 sm:py-28">
       <div
@@ -26,13 +27,13 @@ export function LogoStory() {
         <div className="lg:col-span-7">
           <Reveal>
             <p className="inline-flex items-center gap-2 rounded-full border border-sun-400/40 bg-sun-400/10 px-3 py-1 text-xs font-semibold tracking-wider text-sun-300 uppercase">
-              <Bird className="size-3.5" /> {LOGO_STORY.eyebrow}
+              <Bird className="size-3.5" /> {logoStory.eyebrow}
             </p>
             <h2
               id="logo-story-title"
               className="mt-4 text-3xl leading-tight font-extrabold tracking-tight text-balance text-white sm:text-4xl lg:text-5xl"
             >
-              <GradientText>{LOGO_STORY.title}</GradientText>
+              <GradientText>{logoStory.title}</GradientText>
             </h2>
           </Reveal>
           <Reveal delay={0.08}>
@@ -47,7 +48,7 @@ export function LogoStory() {
           </Reveal>
           <Reveal delay={0.12}>
             <p className="mt-6 rounded-2xl border border-ember-500/40 bg-ember-500/10 p-5 text-base leading-relaxed font-semibold text-ember-50 sm:text-lg">
-              {LOGO_STORY.moral}
+              {logoStory.moral}
             </p>
           </Reveal>
         </div>
@@ -55,10 +56,10 @@ export function LogoStory() {
 
       <div className="mx-auto mt-16 max-w-7xl px-4 sm:px-6 lg:px-8">
         <Reveal className="text-center">
-          <h3 className="text-xl font-bold text-white sm:text-2xl">Every part of the logo means something</h3>
+          <h3 className="text-xl font-bold text-white sm:text-2xl">{logoStory.symbolsHeading}</h3>
         </Reveal>
         <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-          {LOGO_STORY.symbols.map((symbol, i) => {
+          {logoStory.symbols.map((symbol, i) => {
             const Icon = SYMBOL_ICONS[i];
             return (
               <li key={symbol.title}>

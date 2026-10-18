@@ -4,6 +4,8 @@ import { VideoButton } from "@/components/modals/ModalTriggers";
 import { cn } from "@/lib/cn";
 import type { LifeVideo } from "@/lib/content";
 
+import { galleryCopy } from "@/lib/site-copy";
+
 type VideoCardProps = { video: LifeVideo; className?: string; priority?: boolean; variant?: "portrait" | "wide" };
 
 export function VideoCard({ video, className, priority, variant = "portrait" }: VideoCardProps) {
@@ -40,7 +42,7 @@ export function VideoCard({ video, className, priority, variant = "portrait" }: 
       {/* Top-right sleek glassmorphic pill badge: 100% visible on resting state, glowing on hover */}
       <span className="absolute top-3 right-3 inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-black/60 px-2.5 py-1 text-xs font-medium text-white/90 backdrop-blur-md transition-all duration-300 group-hover:border-ember-400/50 group-hover:bg-linear-to-r group-hover:from-ember-400 group-hover:to-sun-400 group-hover:text-obsidian-950 group-hover:shadow-[0_0_20px_rgb(234_138_42/0.6)]">
         <Play className="size-3 fill-current" />
-        <span>Video</span>
+        <span>{galleryCopy.videoBadge}</span>
       </span>
 
       {/* Centered play button: completely hidden (opacity-0 scale-90) by default to prevent obscuring artwork/text; reveals smoothly on hover/focus */}

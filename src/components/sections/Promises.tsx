@@ -2,6 +2,7 @@ import { GlowCard } from "@/components/ui/GlowCard";
 import { Reveal } from "@/components/ui/Reveal";
 import { GradientText, SectionHeading } from "@/components/ui/SectionHeading";
 import { PROMISES } from "@/lib/content";
+import { storyCopy } from "@/lib/site-copy";
 
 export function Promises() {
   return (
@@ -9,14 +10,16 @@ export function Promises() {
       <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[40rem] bg-mesh opacity-70" aria-hidden="true" />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          eyebrow="The 10 LIFE Promises"
+          eyebrow={storyCopy.promisesHeading.eyebrow}
           title={
             <>
-              Ten commitments you won&apos;t find <GradientText>anywhere else.</GradientText>
+              {storyCopy.promisesHeading.titleLead}{" "}
+              <GradientText>{storyCopy.promisesHeading.titleGradient}</GradientText>
             </>
           }
-          description="Straight from Mani&nbsp;Sir's official orientation: a student-first approach that removes every barrier between you and fluent English."
+          description={storyCopy.promisesHeading.description}
         />
+
 
         <ol className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {PROMISES.map(({ icon: Icon, title, description }, i) => (

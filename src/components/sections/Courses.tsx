@@ -1,4 +1,5 @@
 import { GradientText, SectionHeading } from "@/components/ui/SectionHeading";
+import { courseCopy } from "@/lib/site-copy";
 import { CourseTabs } from "./CourseTabs";
 
 export function Courses() {
@@ -6,16 +7,18 @@ export function Courses() {
     <section id="courses" className="relative py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          eyebrow="Course Tracks"
+          eyebrow={courseCopy.sectionHeading.eyebrow}
           title={
             <>
-              Three clear paths. <GradientText>One fluent you.</GradientText>
+              {courseCopy.sectionHeading.titleLead}{" "}
+              <GradientText>{courseCopy.sectionHeading.titleGradient}</GradientText>
             </>
           }
-          description="Start where you are today. Every track is taught live, with practical, situation-based speaking drills."
+          description={courseCopy.sectionHeading.description}
         />
         <CourseTabs />
       </div>
     </section>
   );
 }
+

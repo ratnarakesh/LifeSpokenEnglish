@@ -1,6 +1,7 @@
 import { ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { InstagramIcon, YouTubeIcon } from "@/components/ui/BrandIcons";
+import { brandCopy, contactCopy } from "@/lib/site-copy";
 import { ADDRESS, EMAIL, FOOTER_LINKS, LINKS, PHONES, SITE, TIMINGS, mailtoLink, telLink } from "@/lib/site";
 import { FullLogo } from "./Brand";
 
@@ -13,9 +14,7 @@ export function Footer() {
             <FullLogo className="h-auto w-28 sm:w-32" />
           </Link>
           <p className="mt-5 max-w-md text-sm leading-relaxed text-stone-400">
-            Practical, live Spoken English & Soft Skills training in {ADDRESS.locality},{" "}
-            {ADDRESS.city}, led personally by {SITE.founderAlias} ({SITE.founder}). Offline classroom
-            and Live Online batches.
+            {brandCopy.summary}
           </p>
           <div className="mt-5 flex gap-3">
             <a
@@ -40,7 +39,7 @@ export function Footer() {
         </div>
 
         <div>
-          <h3 className="text-sm font-semibold tracking-wider text-white uppercase">Explore</h3>
+          <h3 className="text-sm font-semibold tracking-wider text-white uppercase">{brandCopy.footer.exploreHeading}</h3>
           <ul className="mt-4 space-y-2 text-sm">
             {FOOTER_LINKS.map((link) => (
               <li key={link.href}>
@@ -53,10 +52,10 @@ export function Footer() {
         </div>
 
         <div>
-          <h3 className="text-sm font-semibold tracking-wider text-white uppercase">Contact</h3>
+          <h3 className="text-sm font-semibold tracking-wider text-white uppercase">{brandCopy.footer.contactHeading}</h3>
           <ul className="mt-4 space-y-3 text-sm text-stone-400">
             <li>
-              <span className="block text-xs text-stone-500">Mani&nbsp;Sir Direct: Calls & WhatsApp</span>
+              <span className="block text-xs text-stone-500">{contactCopy.phoneLabel}</span>
               <a href={telLink(PHONES.primary.e164)} className="font-medium text-stone-200 hover:text-ember-300">
                 {PHONES.primary.display}
               </a>
@@ -79,18 +78,16 @@ export function Footer() {
       </div>
       <div className="border-t border-stone-800/80">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 py-6 text-center text-xs text-stone-500 sm:px-6 md:flex-row md:text-left lg:px-8">
-          <p>
-            © {new Date().getFullYear()} {SITE.name}. All rights reserved.
-          </p>
+          <p>{brandCopy.footer.copyright}</p>
           <p className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
             <span className="inline-flex items-center gap-1.5 text-stone-400">
-              <ShieldCheck className="size-3.5 text-ember-400" /> No cookies. No tracking.
+              <ShieldCheck className="size-3.5 text-ember-400" /> {brandCopy.footer.cookiesGuarantee}
             </span>
             <Link href="/privacy" className="hover:text-ember-300">
-              Privacy Policy
+              {brandCopy.footer.privacyLabel}
             </Link>
             <Link href="/terms" className="hover:text-ember-300">
-              Terms of Use
+              {brandCopy.footer.termsLabel}
             </Link>
           </p>
         </div>

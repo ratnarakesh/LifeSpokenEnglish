@@ -5,10 +5,8 @@ import { TrialButton } from "@/components/modals/ModalTriggers";
 import { Reveal } from "@/components/ui/Reveal";
 import { GradientText } from "@/components/ui/SectionHeading";
 import { button } from "@/lib/cn";
-import { MANI_SIR } from "@/lib/content";
-import { SITE } from "@/lib/site";
-
 import { getFounderProfile } from "@/lib/cms";
+import { aboutPageCopy, founderCopy } from "@/lib/site-copy";
 
 export function MeetManiSir() {
   const founder = getFounderProfile();
@@ -46,19 +44,19 @@ export function MeetManiSir() {
               <Link href="/" className="hover:text-ember-300">
                 Home
               </Link>{" "}
-              / <span className="text-stone-300">About LIFE</span>
+              / <span className="text-stone-300">{aboutPageCopy.breadcrumb}</span>
             </nav>
             <h1
               id="about-title"
               className="mt-4 text-4xl leading-[1.05] font-extrabold tracking-tight text-balance text-white sm:text-5xl lg:text-6xl"
             >
-              Meet <GradientText>{MANI_SIR.alias}</GradientText>, the heart of LIFE
+              {aboutPageCopy.headlineLead} <GradientText>{founderCopy.alias}</GradientText>, the heart of LIFE
             </h1>
             <p className="mt-6 text-xl leading-relaxed font-semibold text-pretty text-stone-100 sm:text-2xl">
-              {MANI_SIR.lede}
+              {founderCopy.lede}
             </p>
             <div className="mt-5 space-y-4 leading-relaxed text-pretty text-stone-300 sm:text-lg">
-              {MANI_SIR.paragraphs.map((p) => (
+              {founderCopy.paragraphs.map((p) => (
                 <p key={p.slice(0, 24)}>{p}</p>
               ))}
             </div>
@@ -66,10 +64,10 @@ export function MeetManiSir() {
 
           <Reveal delay={0.1}>
             <h2 className="mt-8 text-sm font-semibold tracking-wider text-ember-300 uppercase">
-              Inside Mani&nbsp;Sir&apos;s classroom
+              {aboutPageCopy.classroomHeading}
             </h2>
             <ul className="mt-4 grid gap-3 sm:grid-cols-2">
-              {MANI_SIR.classroomRules.map((rule) => (
+              {founderCopy.teachingMethodology.classroomRules.map((rule) => (
                 <li key={rule.title} className="glass flex gap-3 rounded-2xl p-4">
                   <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-ember-400" />
                   <span>
@@ -83,10 +81,10 @@ export function MeetManiSir() {
 
           <Reveal delay={0.15} className="mt-8 flex flex-col gap-3 sm:flex-row">
             <TrialButton className={button("primary", "lg", "w-full sm:w-auto")}>
-              Learn with {SITE.founderAlias}: 10 Free Classes <ArrowRight className="size-5" />
+              {aboutPageCopy.ctaLearn} <ArrowRight className="size-5" />
             </TrialButton>
             <Link href="/gallery" className={button("secondary", "lg", "w-full sm:w-auto")}>
-              <PlayCircle className="size-5 text-ember-400" /> Watch his lessons
+              <PlayCircle className="size-5 text-ember-400" /> {aboutPageCopy.ctaWatch}
             </Link>
           </Reveal>
         </div>

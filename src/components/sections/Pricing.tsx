@@ -5,53 +5,39 @@ import { WhatsAppIcon } from "@/components/ui/BrandIcons";
 import { Reveal } from "@/components/ui/Reveal";
 import { GradientText, SectionHeading } from "@/components/ui/SectionHeading";
 import { button, cn } from "@/lib/cn";
-import { BATCH_POLICY } from "@/lib/content";
+import { courseCopy } from "@/lib/site-copy";
 import { whatsappLink } from "@/lib/site";
 
-const MENTORSHIP_MESSAGE =
-  "Hello Mani Sir, I am interested in 1-on-1 Personal Mentorship at LIFE Spoken English. Please share the available time slots.";
-
-const CUSTOM_MESSAGE =
-  "Hello Mani Sir, I would like to ask about a custom batch timing or a special requirement at LIFE Spoken English.";
-
-const STEPS = [
-  { title: "Register on WhatsApp", description: "Share your name and preferred mode. Takes 30 seconds." },
-  { title: "Attend 10 live classes", description: "Experience the full LIFE method, completely free." },
-  { title: "Continue monthly", description: "Happy? Pay month-to-month. Not satisfied? Walk away, no questions." },
-] as const;
-
 export function Pricing() {
+  const { feePolicies } = courseCopy;
+  const { trialCard, regularCard, mentorshipCard, customTiming, steps } = feePolicies;
+
   return (
     <section id="fees" className="relative py-20 sm:py-28">
       <div className="pointer-events-none absolute inset-0 -z-10 bg-mesh opacity-60" aria-hidden="true" />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          eyebrow="Fees & Trial Policy"
+          eyebrow={feePolicies.eyebrow}
           title={
             <>
-              Total transparency. <GradientText>Zero pressure.</GradientText>
+              {feePolicies.titleLead} <GradientText>{feePolicies.titleGradient}</GradientText>
             </>
           }
-          description="Student-friendly fees, just like school tuition. Try everything first, then pay month by month."
+          description={feePolicies.description}
         />
 
         <div className="mt-14 grid items-stretch gap-6 lg:grid-cols-3">
           <Reveal className="h-full">
             <PriceCard
               icon={<Gift className="size-6" />}
-              badge="Start Here"
-              name="10-Class Free Trial"
-              price="₹0"
-              priceNote="Completely Free"
-              features={[
-                "10 full live sessions",
-                "No advance payment",
-                "Zero card details or commitment",
-                "Drop out anytime if not satisfied",
-              ]}
+              badge={trialCard.badge}
+              name={trialCard.name}
+              price={trialCard.price}
+              priceNote={trialCard.priceNote}
+              features={trialCard.features}
               cta={
                 <TrialButton className={button("secondary", "md", "w-full")}>
-                  Claim Free Trial <ArrowRight className="size-4" />
+                  {trialCard.cta} <ArrowRight className="size-4" />
                 </TrialButton>
               }
             />
@@ -61,22 +47,15 @@ export function Pricing() {
             <PriceCard
               featured
               icon={<Sparkles className="size-6" />}
-              badge="Most Popular"
-              name="Regular Batch"
-              subtitle="Offline or Online"
-              price="₹3,000"
-              priceNote="1st month → ₹2,000 / month thereafter"
-              features={[
-                "Monday to Friday · 5 days / week",
-                "Flexible slots from 6:00 AM to 10:00 PM",
-                "Personalized weekend backup classes",
-                `${BATCH_POLICY.booklet.title} included`,
-                `Only ${BATCH_POLICY.capacityShort}`,
-                "Live doubt clearance",
-              ]}
+              badge={regularCard.badge}
+              name={regularCard.name}
+              subtitle={regularCard.subtitle}
+              price={regularCard.price}
+              priceNote={regularCard.priceNote}
+              features={regularCard.features}
               cta={
                 <TrialButton className={button("primary", "md", "w-full")}>
-                  Start with 10 Free Classes <ArrowRight className="size-4" />
+                  {regularCard.cta} <ArrowRight className="size-4" />
                 </TrialButton>
               }
             />
@@ -86,19 +65,14 @@ export function Pricing() {
             <PriceCard
               gold
               icon={<Crown className="size-6" />}
-              badge="Premium"
-              name="1-on-1 Personal Mentorship"
-              price="₹10,000"
-              priceNote="per month"
-              features={[
-                "Dedicated solo training with Mani\u00A0Sir",
-                "Flexible timing slots",
-                "Personalised curriculum",
-                "Tailored to your career goals",
-              ]}
+              badge={mentorshipCard.badge}
+              name={mentorshipCard.name}
+              price={mentorshipCard.price}
+              priceNote={mentorshipCard.priceNote}
+              features={mentorshipCard.features}
               cta={
                 <a
-                  href={whatsappLink(MENTORSHIP_MESSAGE)}
+                  href={whatsappLink(mentorshipCard.waMessage)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={button(
@@ -107,7 +81,7 @@ export function Pricing() {
                     "w-full border-amber-500/40! text-amber-100 hover:border-amber-400/70!",
                   )}
                 >
-                  <WhatsAppIcon className="size-4" /> Enquire on WhatsApp
+                  <WhatsAppIcon className="size-4" /> {mentorshipCard.cta}
                 </a>
               }
             />
@@ -118,22 +92,22 @@ export function Pricing() {
           <div className="flex flex-col items-center justify-between gap-4 rounded-2xl border border-sun-400/30 bg-sun-400/5 p-5 text-center sm:flex-row sm:text-left">
             <p className="flex items-start gap-3 text-sm leading-relaxed text-stone-200 sm:items-center">
               <Settings2 className="mt-0.5 size-5 shrink-0 text-sun-300 sm:mt-0" />
-              {BATCH_POLICY.customRequest}
+              {customTiming.text}
             </p>
             <a
-              href={whatsappLink(CUSTOM_MESSAGE)}
+              href={whatsappLink(customTiming.waMessage)}
               target="_blank"
               rel="noopener noreferrer"
               className={button("whatsapp", "sm", "shrink-0")}
             >
-              <WhatsAppIcon className="size-4" /> Ask on WhatsApp
+              <WhatsAppIcon className="size-4" /> {customTiming.cta}
             </a>
           </div>
         </Reveal>
 
         <Reveal className="mt-12">
           <ol className="glass grid gap-6 rounded-3xl p-6 sm:grid-cols-3 sm:p-8">
-            {STEPS.map((step, i) => (
+            {steps.map((step, i) => (
               <li key={step.title} className="flex gap-4">
                 <span className="grid size-10 shrink-0 place-items-center rounded-full bg-ember-500/15 font-bold text-ember-300 ring-1 ring-ember-500/40">
                   {i + 1}

@@ -5,7 +5,7 @@ import { AcronymCards } from "@/components/story/StoryMeaning";
 import { Reveal } from "@/components/ui/Reveal";
 import { GradientText } from "@/components/ui/SectionHeading";
 import { button } from "@/lib/cn";
-import { MANI_SIR, STORY } from "@/lib/content";
+import { founderCopy, storyCopy } from "@/lib/site-copy";
 
 import { getFounderProfile } from "@/lib/cms";
 
@@ -18,7 +18,7 @@ export function StoryTeaser() {
           <Link
             href="/about"
             className="group relative mx-auto block max-w-sm overflow-hidden rounded-[2rem] ring-1 ring-ember-500/40 lg:max-w-none"
-            aria-label="Read Mani Sir's story"
+            aria-label={storyCopy.teaser.ariaLabelRead}
           >
             <div className="relative aspect-[4/5]">
               <Image
@@ -40,29 +40,29 @@ export function StoryTeaser() {
         <div className="lg:col-span-7">
           <Reveal>
             <p className="inline-flex items-center gap-2 rounded-full border border-ember-500/30 bg-ember-500/10 px-3 py-1 text-xs font-semibold tracking-wider text-ember-300 uppercase">
-              Our Story
+              {storyCopy.teaser.eyebrow}
             </p>
             <h2
               id="teaser-title"
               className="mt-4 text-3xl leading-tight font-bold tracking-tight text-balance text-white sm:text-4xl lg:text-5xl"
             >
-              Meet Mani&nbsp;Sir and the meaning of <GradientText>LIFE</GradientText>
+              {storyCopy.teaser.headlineLead} <GradientText>LIFE</GradientText>
             </h2>
-            <p className="mt-5 text-lg leading-relaxed font-medium text-pretty text-stone-100 sm:text-xl">{MANI_SIR.lede}</p>
-            <p className="mt-3 leading-relaxed text-pretty text-stone-400 sm:text-lg">{STORY.promise}</p>
+            <p className="mt-5 text-lg leading-relaxed font-medium text-pretty text-stone-100 sm:text-xl">{founderCopy.lede}</p>
+            <p className="mt-3 leading-relaxed text-pretty text-stone-400 sm:text-lg">{storyCopy.promise}</p>
           </Reveal>
           <Reveal delay={0.1} className="mt-6">
             <AcronymCards size="sm" />
           </Reveal>
           <Reveal delay={0.15} className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <Link href="/about" className={button("primary", "md", "w-full sm:w-auto")}>
-              Read Our Journey <ArrowRight className="size-4" />
+              {storyCopy.teaser.ctaJourney} <ArrowRight className="size-4" />
             </Link>
             <Link href="/about#logo-story" className={button("secondary", "md", "w-full sm:w-auto")}>
-              <Bird className="size-4 text-sun-300" /> The Story Inside Our Logo
+              <Bird className="size-4 text-sun-300" /> {storyCopy.teaser.ctaLogoStory}
             </Link>
             <Link href="/gallery" className={button("secondary", "md", "w-full sm:w-auto")}>
-              <PlayCircle className="size-4 text-ember-400" /> Gallery
+              <PlayCircle className="size-4 text-ember-400" /> {storyCopy.teaser.ctaGallery}
             </Link>
           </Reveal>
         </div>

@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { WhatsAppIcon } from "@/components/ui/BrandIcons";
 import { button, cn } from "@/lib/cn";
+import { brandCopy } from "@/lib/site-copy";
 import { NAV_LINKS, PHONES, telLink, whatsappLink } from "@/lib/site";
 import { Brand } from "./Brand";
 
@@ -102,8 +103,8 @@ export function Navbar() {
             className={button("whatsapp", "sm", "whitespace-nowrap")}
           >
             <WhatsAppIcon className="size-4 shrink-0" />
-            <span className="xl:hidden 2xl:inline">Chat on WhatsApp</span>
-            <span className="hidden xl:inline 2xl:hidden">WhatsApp</span>
+            <span className="xl:hidden 2xl:inline">{brandCopy.whatsappCta.chat}</span>
+            <span className="hidden xl:inline 2xl:hidden">{brandCopy.whatsappCta.chatShort}</span>
           </a>
         </div>
 
@@ -141,7 +142,7 @@ export function Navbar() {
                   <Phone className="size-4 text-ember-400" /> Call: {PHONES.primary.display}
                 </a>
                 <a href={whatsappLink()} target="_blank" rel="noopener noreferrer" className={button("whatsapp", "md")}>
-                  <WhatsAppIcon className="size-4" /> Chat on WhatsApp
+                  <WhatsAppIcon className="size-4" /> {brandCopy.whatsappCta.chat}
                 </a>
               </li>
             </ul>

@@ -5,20 +5,21 @@ import { GlowCard } from "@/components/ui/GlowCard";
 import { Reveal } from "@/components/ui/Reveal";
 import { GradientText, SectionHeading } from "@/components/ui/SectionHeading";
 import { button } from "@/lib/cn";
-import { ADDRESS, DEFAULT_WA_MESSAGE, LINKS, PHONES, SITE, TIMINGS, telLink, whatsappLink } from "@/lib/site";
+import { brandCopy, contactCopy } from "@/lib/site-copy";
+import { ADDRESS, DEFAULT_WA_MESSAGE, LINKS, PHONES, TIMINGS, telLink, whatsappLink } from "@/lib/site";
 
 export function Contact() {
   return (
     <section id="contact" className="relative py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          eyebrow="Location & Contact"
+          eyebrow={contactCopy.eyebrow}
           title={
             <>
-              Visit us in <GradientText>Madhurawada, Vizag.</GradientText>
+              {contactCopy.titleLead} <GradientText>{contactCopy.titleGradient}</GradientText>
             </>
           }
-          description="Drop by the centre for a chat, or call to reserve your free trial seat in the next batch."
+          description={contactCopy.description}
         />
 
         <div className="mt-14 grid gap-6 lg:grid-cols-5">
@@ -30,7 +31,7 @@ export function Contact() {
                     <MapPin className="size-5" />
                   </span>
                   <address className="text-sm leading-relaxed text-stone-300 not-italic">
-                    <strong className="block text-base text-white">{SITE.name}</strong>
+                    <strong className="block text-base text-white">{brandCopy.name}</strong>
                     {ADDRESS.building}, {ADDRESS.street}
                     <br />
                     <span className="text-stone-400">({ADDRESS.landmark})</span>
@@ -44,7 +45,7 @@ export function Contact() {
                   rel="noopener noreferrer"
                   className={button("secondary", "sm", "mt-5")}
                 >
-                  <Navigation className="size-4 text-ember-400" /> Get Directions
+                  <Navigation className="size-4 text-ember-400" /> {contactCopy.directionsButton}
                 </a>
               </GlowCard>
             </Reveal>
@@ -52,7 +53,7 @@ export function Contact() {
             <Reveal delay={0.08}>
               <GlowCard className="space-y-5 p-5 sm:p-7">
                 <ContactRow
-                  label="Mani&nbsp;Sir Direct: Offline & Online Batches"
+                  label={contactCopy.phoneLabel}
                   phone={PHONES.primary}
                   waMessage={DEFAULT_WA_MESSAGE}
                 />
@@ -66,7 +67,7 @@ export function Contact() {
                     <Clock className="size-5" />
                   </span>
                   <div className="text-sm">
-                    <p className="text-base font-semibold text-white">Class Timings</p>
+                    <p className="text-base font-semibold text-white">{contactCopy.classTimingsHeading}</p>
                     <p className="mt-1 text-stone-300">
                       <span className="font-medium text-white">{TIMINGS.weekdays}:</span> {TIMINGS.weekdayDetail}
                     </p>
@@ -85,7 +86,7 @@ export function Contact() {
           <Reveal delay={0.1} className="lg:col-span-3">
             <div className="glass relative h-full min-h-[22rem] overflow-hidden rounded-3xl p-2">
               <MapEmbed
-                title="Map showing LIFE Spoken English Institute in Madhurawada, Visakhapatnam"
+                title={contactCopy.mapTitle}
                 className="min-h-[22rem] rounded-2xl"
               />
             </div>

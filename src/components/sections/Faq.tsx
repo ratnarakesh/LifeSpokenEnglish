@@ -1,24 +1,24 @@
 import { ChevronDown } from "lucide-react";
 import { Reveal } from "@/components/ui/Reveal";
 import { GradientText, SectionHeading } from "@/components/ui/SectionHeading";
-import { FAQS } from "@/lib/content";
+import { faqCopy } from "@/lib/site-copy";
 
 export function Faq() {
   return (
     <section id="faq" className="relative py-20 sm:py-28">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          eyebrow="Questions & Answers"
+          eyebrow={faqCopy.eyebrow}
           title={
             <>
-              Everything you asked, <GradientText>answered.</GradientText>
+              {faqCopy.titleLead} <GradientText>{faqCopy.titleGradient}</GradientText>
             </>
           }
-          description="Quick answers about the free trial, who LIFE is for, timings, and missed classes."
+          description={faqCopy.description}
         />
 
         <Reveal className="mt-12 grid gap-3">
-          {FAQS.map(({ question, answer }, i) => (
+          {faqCopy.items.map(({ question, answer }, i) => (
             <details
               key={question}
               open={i === 0}

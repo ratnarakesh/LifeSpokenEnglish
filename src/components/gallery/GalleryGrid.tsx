@@ -8,16 +8,17 @@ import { VideoButton } from "@/components/modals/ModalTriggers";
 import { VideoCard } from "@/components/story/VideoCard";
 import { cn } from "@/lib/cn";
 import { VIDEOS, type GalleryPhoto, type LifeVideo, type PhotoCategory, type VideoCategory } from "@/lib/content";
+import { galleryCopy } from "@/lib/site-copy";
 
 // Photo-only filters appear only when Contentful has items in that category; "Orientation" items join
 // the orientation videos under "Batches & Orientation".
 const FILTERS = [
-  { id: "all", label: "All" },
-  { id: "classroom", label: "Classroom" },
-  { id: "success", label: "Student Success" },
-  { id: "event", label: "Events" },
-  { id: "lesson", label: "Lessons" },
-  { id: "batch", label: "Batches & Orientation" },
+  { id: "all", label: galleryCopy.filters.all },
+  { id: "classroom", label: galleryCopy.filters.classroom },
+  { id: "success", label: galleryCopy.filters.success },
+  { id: "event", label: galleryCopy.filters.event },
+  { id: "lesson", label: galleryCopy.filters.lesson },
+  { id: "batch", label: galleryCopy.filters.batch },
 ] as const;
 
 type FilterId = (typeof FILTERS)[number]["id"];
@@ -68,7 +69,7 @@ export function GalleryGrid({ photos }: { photos: GalleryPhoto[] }) {
 
   return (
     <div>
-      <div role="group" aria-label="Filter gallery" className="flex flex-wrap justify-center gap-2">
+      <div role="group" aria-label={galleryCopy.filterAriaLabel} className="flex flex-wrap justify-center gap-2">
         {filters.map((f) => {
           const active = filter === f.id;
           return (
@@ -153,7 +154,7 @@ export function GalleryGrid({ photos }: { photos: GalleryPhoto[] }) {
                 {/* Top-right sleek glassmorphic pill badge: 100% visible on resting state, glowing on hover */}
                 <span className="absolute top-3 right-3 inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-black/60 px-2.5 py-1 text-xs font-medium text-white/90 backdrop-blur-md transition-all duration-300 group-hover:border-ember-400/50 group-hover:bg-linear-to-r group-hover:from-ember-400 group-hover:to-sun-400 group-hover:text-obsidian-950 group-hover:shadow-[0_0_20px_rgb(234_138_42/0.6)]">
                   <Play className="size-3 fill-current" />
-                  <span>Video</span>
+                  <span>{galleryCopy.videoBadge}</span>
                 </span>
 
                 {/* Centered play button: completely hidden (opacity-0 scale-90) by default to prevent obscuring artwork/text; reveals smoothly on hover/focus */}

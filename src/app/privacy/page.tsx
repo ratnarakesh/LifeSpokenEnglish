@@ -3,17 +3,19 @@ import Link from "next/link";
 import { LegalPage, LegalSection } from "@/components/legal/LegalPage";
 import { pageMetadata } from "@/lib/seo";
 import { ADDRESS, EMAIL, PHONES, SITE, WHATSAPP_URL, mailtoLink, telLink } from "@/lib/site";
+import { legalCopy } from "@/lib/site-copy";
 
-const description =
-  "How LIFE Spoken English & Soft Skills Institute handles your personal data: no cookies, no tracking, enquiries only via WhatsApp, and your rights under India's Digital Personal Data Protection Act, 2023.";
-
-export const metadata: Metadata = pageMetadata({ title: "Privacy Policy & Data Notice", description, path: "/privacy" });
+export const metadata: Metadata = pageMetadata({
+  title: legalCopy.privacy.title,
+  description: legalCopy.privacy.description,
+  path: "/privacy",
+});
 
 export default function PrivacyPage() {
   return (
     <LegalPage
-      title="Privacy Policy & Data Notice"
-      breadcrumb="Privacy Policy"
+      title={legalCopy.privacy.title}
+      breadcrumb={legalCopy.privacy.breadcrumb}
       intro={
         <p>
           We keep this simple: <strong className="text-white">this website uses no cookies, no analytics and no tracking.</strong>{" "}

@@ -6,6 +6,7 @@ import { GoogleIcon, InstagramIcon, YouTubeIcon } from "@/components/ui/BrandIco
 import { Reveal } from "@/components/ui/Reveal";
 import { GradientText, SectionHeading } from "@/components/ui/SectionHeading";
 import { button } from "@/lib/cn";
+import { videoShowcaseCopy } from "@/lib/site-copy";
 import { LINKS, SITE, VIDEO_ID } from "@/lib/site";
 
 type Social = { href: string; icon: ReactNode; label: string; handle: string; accent: string };
@@ -39,19 +40,19 @@ export function VideoShowcase() {
     <section id="video" className="relative py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          eyebrow="Video Tour"
+          eyebrow={videoShowcaseCopy.eyebrow}
           title={
             <>
-              Meet Mani&nbsp;Sir <GradientText>before your first class.</GradientText>
+              {videoShowcaseCopy.titleLead} <GradientText>{videoShowcaseCopy.titleGradient}</GradientText>
             </>
           }
-          description="Watch the official orientation to understand exactly how LIFE classes work, then follow along for daily English tips."
+          description={videoShowcaseCopy.description}
         />
 
         <div className="mt-14 grid gap-6 lg:grid-cols-3">
           <Reveal className="lg:col-span-2">
             <div className="glass rounded-3xl p-2 sm:p-3">
-              <YouTubeLite videoId={VIDEO_ID} title="LIFE Spoken English: Official Orientation by Mani&nbsp;Sir" />
+              <YouTubeLite videoId={VIDEO_ID} title={videoShowcaseCopy.orientationTitle} />
             </div>
           </Reveal>
 
@@ -91,7 +92,7 @@ export function VideoShowcase() {
         </div>
         <Reveal className="mt-10 text-center">
           <Link href="/gallery" className={button("secondary", "md")}>
-            <PlayCircle className="size-4 text-ember-400" /> See all lessons in the Gallery <ArrowRight className="size-4" />
+            <PlayCircle className="size-4 text-ember-400" /> {videoShowcaseCopy.galleryCta} <ArrowRight className="size-4" />
           </Link>
         </Reveal>
       </div>
