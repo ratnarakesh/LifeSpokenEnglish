@@ -5,12 +5,14 @@ import { WhatsAppIcon } from "@/components/ui/BrandIcons";
 import { Reveal } from "@/components/ui/Reveal";
 import { GradientText, SectionHeading } from "@/components/ui/SectionHeading";
 import { button, cn } from "@/lib/cn";
+import { getSiteSettings } from "@/lib/cms";
 import { courseCopy } from "@/lib/site-copy";
 import { whatsappLink } from "@/lib/site";
 
 export function Pricing() {
   const { feePolicies } = courseCopy;
   const { trialCard, regularCard, mentorshipCard, customTiming, steps } = feePolicies;
+  const settings = getSiteSettings();
 
   return (
     <section id="fees" className="relative py-20 sm:py-28">
@@ -119,6 +121,13 @@ export function Pricing() {
               </li>
             ))}
           </ol>
+        </Reveal>
+
+        <Reveal className="mt-8 text-center">
+          <p className="text-xs text-stone-400">
+            <span className="font-semibold text-stone-300">Trial Policy: </span>
+            {settings.trialTerms}
+          </p>
         </Reveal>
       </div>
     </section>

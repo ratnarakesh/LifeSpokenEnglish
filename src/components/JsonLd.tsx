@@ -1,4 +1,5 @@
-import { COURSES, FAQS } from "@/lib/content";
+import { getFaqItems } from "@/lib/cms";
+import { COURSES } from "@/lib/content";
 import { ADDRESS, EMAIL, GEO, LINKS, PHONES, SITE, VIDEO_ID, plainText } from "@/lib/site";
 
 const orgId = `${SITE.url}/#organization`;
@@ -107,13 +108,14 @@ export function JsonLd() {
 }
 
 export function FaqJsonLd() {
+  const faqItems = getFaqItems();
   return (
     <LdScript
       data={{
         "@context": "https://schema.org",
         "@type": "FAQPage",
         "@id": `${SITE.url}/#faq`,
-        mainEntity: FAQS.map(({ question, answer }) => ({
+        mainEntity: faqItems.map(({ question, answer }) => ({
           "@type": "Question",
           name: plainText(question),
           acceptedAnswer: { "@type": "Answer", text: plainText(answer) },

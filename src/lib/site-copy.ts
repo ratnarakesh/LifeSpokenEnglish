@@ -1,4 +1,4 @@
-import { ADDRESS, EMAIL, GEO, PHONES, SITE, TIMINGS } from "./site";
+import { ADDRESS, EMAIL, GEO, PHONES, SITE, TIMINGS } from "./site.ts";
 
 export type BrandCopy = {
   name: string;

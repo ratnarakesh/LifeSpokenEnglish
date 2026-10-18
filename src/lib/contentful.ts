@@ -39,10 +39,49 @@ export type CmsFounderProfile = {
 
 export type CmsAnnouncement = { message: string; badgeText: string | null };
 
+export type CmsSiteSettings = {
+  heroTitle: string;
+  heroSubtitle: string;
+  primaryPhone: string;
+  whatsappNumber: string;
+  address: string;
+  trialTerms: string;
+};
+
+export type CmsCourseTrack = {
+  id: string;
+  title: string;
+  trackId: string;
+  description: string;
+  highlights: string[];
+  order: number;
+};
+
+export type CmsFaqItem = {
+  id: string;
+  question: string;
+  answer: string;
+  category: string;
+  order: number;
+};
+
+export type CmsTestimonialItem = {
+  id: string;
+  name: string;
+  role: string;
+  quote: string;
+  rating: number;
+  order: number;
+};
+
 export type CmsContent = {
   photos: CmsGalleryItem[];
   announcement: CmsAnnouncement | null;
   founderProfile: CmsFounderProfile | null;
+  siteSettings: CmsSiteSettings | null;
+  courseTracks: CmsCourseTrack[];
+  faqItems: CmsFaqItem[];
+  testimonials: CmsTestimonialItem[];
 };
 
 const TIMEOUT_MS = 15_000;
@@ -138,6 +177,66 @@ function toFounderProfile(entry: { sys: { id: string }; fields: Fields } | undef
   };
 }
 
+function toSiteSettings(entry: { fields: Fields } | undefined): CmsSiteSettings | null {
+  if (!entry?.fields) return null;
+  const f = entry.fields;
+  return {
+    heroTitle: cleanText(f.heroTitle),
+    heroSubtitle: cleanText(f.heroSubtitle),
+    primaryPhone: cleanText(f.primaryPhone),
+    whatsappNumber: cleanText(f.whatsappNumber),
+    address: cleanText(f.address),
+    trialTerms: cleanText(f.trialTerms),
+  };
+}
+
+function toCourseTrack(entry: { sys: { id: string }; fields: Fields }): CmsCourseTrack | null {
+  const f = entry.fields;
+  const title = cleanText(f.title);
+  const trackId = cleanText(f.trackId);
+  if (!title || !trackId) return null;
+  const highlights = Array.isArray(f.highlights)
+    ? f.highlights.map((h) => cleanText(h)).filter(Boolean)
+    : [];
+  return {
+    id: entry.sys.id,
+    title,
+    trackId,
+    description: cleanText(f.description),
+    highlights,
+    order: typeof f.order === "number" ? f.order : 0,
+  };
+}
+
+function toFaqItem(entry: { sys: { id: string }; fields: Fields }): CmsFaqItem | null {
+  const f = entry.fields;
+  const question = cleanText(f.question);
+  const answer = cleanText(f.answer);
+  if (!question || !answer) return null;
+  return {
+    id: entry.sys.id,
+    question,
+    answer,
+    category: cleanText(f.category) || "General",
+    order: typeof f.order === "number" ? f.order : 0,
+  };
+}
+
+function toTestimonialItem(entry: { sys: { id: string }; fields: Fields }): CmsTestimonialItem | null {
+  const f = entry.fields;
+  const name = cleanText(f.name);
+  const quote = cleanText(f.quote);
+  if (!name || !quote) return null;
+  return {
+    id: entry.sys.id,
+    name,
+    role: cleanText(f.role),
+    quote,
+    rating: typeof f.rating === "number" ? f.rating : 5,
+    order: typeof f.order === "number" ? f.order : 0,
+  };
+}
+
 async function fetchAll(): Promise<CmsContent> {
   const client = createClient({
     space: process.env.CONTENTFUL_SPACE_ID!,
@@ -147,10 +246,14 @@ async function fetchAll(): Promise<CmsContent> {
     retryLimit: 2,
   }).withoutUnresolvableLinks;
 
-  const [gallery, announcements, founders] = await Promise.all([
+  const [gallery, announcements, founders, settings, courses, faqs, testimonials] = await Promise.all([
     client.getEntries({ content_type: "galleryItem", include: 1, limit: 200 }),
     client.getEntries({ content_type: "announcement", "fields.isActive": true, order: ["-sys.updatedAt"], limit: 1 }),
     client.getEntries({ content_type: "founderProfile", include: 1, limit: 1 }),
+    client.getEntries({ content_type: "siteSettings", limit: 1 }),
+    client.getEntries({ content_type: "courseTrack", order: ["fields.order"], limit: 20 }),
+    client.getEntries({ content_type: "faqItem", order: ["fields.order"], limit: 50 }),
+    client.getEntries({ content_type: "testimonialItem", order: ["fields.order"], limit: 50 }),
   ]);
 
   const photos = gallery.items
@@ -164,7 +267,32 @@ async function fetchAll(): Promise<CmsContent> {
 
   const founderProfile = toFounderProfile(founders.items[0] as unknown as { sys: { id: string }; fields: Fields } | undefined);
 
-  return { photos, announcement, founderProfile };
+  const siteSettings = toSiteSettings(settings.items[0] as unknown as { fields: Fields } | undefined);
+
+  const courseTracks = courses.items
+    .map((e) => toCourseTrack(e as unknown as { sys: { id: string }; fields: Fields }))
+    .filter((c): c is CmsCourseTrack => c !== null)
+    .sort((a, b) => a.order - b.order);
+
+  const faqItems = faqs.items
+    .map((e) => toFaqItem(e as unknown as { sys: { id: string }; fields: Fields }))
+    .filter((f): f is CmsFaqItem => f !== null)
+    .sort((a, b) => a.order - b.order);
+
+  const testimonialList = testimonials.items
+    .map((e) => toTestimonialItem(e as unknown as { sys: { id: string }; fields: Fields }))
+    .filter((t): t is CmsTestimonialItem => t !== null)
+    .sort((a, b) => a.order - b.order);
+
+  return {
+    photos,
+    announcement,
+    founderProfile,
+    siteSettings,
+    courseTracks,
+    faqItems,
+    testimonials: testimonialList,
+  };
 }
 
 /** Returns published CMS content, or null when keys are missing, the API errors, or it does not answer in time. */

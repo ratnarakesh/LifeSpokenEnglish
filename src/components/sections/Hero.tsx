@@ -5,12 +5,17 @@ import { GlowCard } from "@/components/ui/GlowCard";
 import { Reveal } from "@/components/ui/Reveal";
 import { GradientText } from "@/components/ui/SectionHeading";
 import { button } from "@/lib/cn";
+import { getSiteSettings } from "@/lib/cms";
 import { heroCopy } from "@/lib/site-copy";
 import { SITE } from "@/lib/site";
 
 const HIGHLIGHT_ICONS = [CalendarCheck, Wallet, Mic] as const;
 
 export function Hero() {
+  const settings = getSiteSettings();
+  const heroTitle = settings.heroTitle || heroCopy.headlineFull;
+  const subheadline = settings.heroSubtitle || heroCopy.subheadline;
+
   return (
     <section id="top" className="relative overflow-hidden pt-10 pb-20 sm:pt-14 lg:pt-16 lg:pb-28">
       <div className="pointer-events-none absolute inset-0 -z-10 bg-grid" aria-hidden="true" />
@@ -47,14 +52,26 @@ export function Hero() {
         </Reveal>
 
         <h1 className="mx-auto mt-7 max-w-5xl text-4xl leading-[1.08] font-extrabold tracking-tight text-balance text-white sm:text-6xl lg:text-7xl">
-          {heroCopy.headlineLead} <GradientText>{heroCopy.headlineGradient}</GradientText>
+          {heroTitle === heroCopy.headlineFull ? (
+            <>
+              {heroCopy.headlineLead} <GradientText>{heroCopy.headlineGradient}</GradientText>
+            </>
+          ) : (
+            heroTitle
+          )}
         </h1>
 
         <Reveal delay={0.1}>
           <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-pretty text-stone-400 sm:text-lg">
-            Practical, interactive Spoken English & Soft Skills training led personally by{" "}
-            <strong className="font-semibold text-stone-200">{SITE.founderAlias}</strong>. Learn without
-            fear or grammar intimidation in Visakhapatnam or via Live Online classes.
+            {subheadline.includes("Mani\u00A0Sir") || subheadline.includes("Mani Sir") ? (
+              <>
+                {subheadline.split(/Mani[\s\u00A0]+Sir/)[0]}
+                <strong className="font-semibold text-stone-200">{SITE.founderAlias}</strong>
+                {subheadline.split(/Mani[\s\u00A0]+Sir/).slice(1).join("Mani\u00A0Sir")}
+              </>
+            ) : (
+              subheadline
+            )}
           </p>
         </Reveal>
 

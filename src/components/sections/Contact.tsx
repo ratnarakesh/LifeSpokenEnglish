@@ -5,10 +5,16 @@ import { GlowCard } from "@/components/ui/GlowCard";
 import { Reveal } from "@/components/ui/Reveal";
 import { GradientText, SectionHeading } from "@/components/ui/SectionHeading";
 import { button } from "@/lib/cn";
+import { getSiteSettings } from "@/lib/cms";
 import { brandCopy, contactCopy } from "@/lib/site-copy";
 import { ADDRESS, DEFAULT_WA_MESSAGE, LINKS, PHONES, TIMINGS, telLink, whatsappLink } from "@/lib/site";
 
 export function Contact() {
+  const settings = getSiteSettings();
+  const phoneObj = {
+    ...PHONES.primary,
+    display: settings.primaryPhone || PHONES.primary.display,
+  };
   return (
     <section id="contact" className="relative py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -54,7 +60,7 @@ export function Contact() {
               <GlowCard className="space-y-5 p-5 sm:p-7">
                 <ContactRow
                   label={contactCopy.phoneLabel}
-                  phone={PHONES.primary}
+                  phone={phoneObj}
                   waMessage={DEFAULT_WA_MESSAGE}
                 />
               </GlowCard>

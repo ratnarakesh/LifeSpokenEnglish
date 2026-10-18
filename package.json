@@ -15,6 +15,7 @@
     "media:youtube": "node scripts/fetch-youtube-media.mjs",
     "media:photos": "node scripts/build-photos.mjs",
     "cms:setup": "node --env-file-if-exists=.env.local scripts/contentful-setup.mjs",
+    "cms:seed": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file-if-exists=.env.local scripts/seed-site-content.mjs",
     "cms:sync": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file-if-exists=.env.local scripts/sync-cms.mts"
   },
   "dependencies": {

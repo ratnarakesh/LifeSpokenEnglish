@@ -5,11 +5,26 @@ import { ArrowRight, BookMarked, CheckCircle2, Clock, Users } from "lucide-react
 import { useState, type CSSProperties } from "react";
 import { TrialButton } from "@/components/modals/ModalTriggers";
 import { button, cn } from "@/lib/cn";
+import type { CourseTrack } from "@/lib/cms";
 import { COURSES, type Course } from "@/lib/content";
 import { courseCopy } from "@/lib/site-copy";
 
-export function CourseTabs() {
-  const [value, setValue] = useState<Course["id"]>(COURSES[0].id);
+export function CourseTabs({ tracks }: { tracks?: CourseTrack[] }) {
+  const courseList =
+    tracks && tracks.length > 0
+      ? tracks.map((track) => {
+          const fallback = COURSES.find((c) => c.id === track.trackId) || COURSES[0];
+          return {
+            ...fallback,
+            id: (track.trackId as Course["id"]) || fallback.id,
+            name: track.title || fallback.name,
+            tagline: track.description || fallback.tagline,
+            focus: track.highlights && track.highlights.length > 0 ? track.highlights : fallback.focus,
+          };
+        })
+      : COURSES;
+
+  const [value, setValue] = useState<Course["id"]>(courseList[0]?.id ?? COURSES[0].id);
 
   return (
     <Tabs.Root value={value} onValueChange={(v) => setValue(v as Course["id"])} className="mt-14">
@@ -17,7 +32,7 @@ export function CourseTabs() {
         aria-label="Course tracks"
         className="glass mx-auto grid max-w-3xl grid-cols-3 gap-1 rounded-2xl p-1.5"
       >
-        {COURSES.map((course) => {
+        {courseList.map((course) => {
           const Icon = course.icon;
           const active = value === course.id;
           return (
@@ -38,7 +53,7 @@ export function CourseTabs() {
         })}
       </Tabs.List>
 
-      {COURSES.map((course) => (
+      {courseList.map((course) => (
         <Tabs.Content key={course.id} value={course.id} className="mt-8 focus-visible:outline-none">
           <CoursePanel course={course} />
         </Tabs.Content>

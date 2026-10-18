@@ -173,6 +173,10 @@ async function main() {
         photos,
         announcement: content.announcement,
         founderProfile,
+        siteSettings: content.siteSettings,
+        courseTracks: content.courseTracks,
+        faqItems: content.faqItems,
+        testimonials: content.testimonials,
       },
       null,
       2,
@@ -180,7 +184,7 @@ async function main() {
   );
 
   console.log(
-    `[cms] Synced ${photoCount} photo(s), ${videoCount} video(s); founder profile: ${founderProfile ? "active" : "none"}; announcement: ${content.announcement ? "active" : "none"}.`,
+    `[cms] Synced ${photoCount} photo(s), ${videoCount} video(s), ${content.courseTracks.length} course track(s), ${content.faqItems.length} FAQ(s), ${content.testimonials.length} testimonial(s); site settings: ${content.siteSettings ? "active" : "none"}; founder profile: ${founderProfile ? "active" : "none"}; announcement: ${content.announcement ? "active" : "none"}.`,
   );
 }
 

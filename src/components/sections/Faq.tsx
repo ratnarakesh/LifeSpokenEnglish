@@ -1,9 +1,12 @@
 import { ChevronDown } from "lucide-react";
 import { Reveal } from "@/components/ui/Reveal";
 import { GradientText, SectionHeading } from "@/components/ui/SectionHeading";
+import { getFaqItems } from "@/lib/cms";
 import { faqCopy } from "@/lib/site-copy";
 
 export function Faq() {
+  const faqItems = getFaqItems();
+
   return (
     <section id="faq" className="relative py-20 sm:py-28">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
@@ -18,7 +21,7 @@ export function Faq() {
         />
 
         <Reveal className="mt-12 grid gap-3">
-          {faqCopy.items.map(({ question, answer }, i) => (
+          {faqItems.map(({ question, answer }, i) => (
             <details
               key={question}
               open={i === 0}
