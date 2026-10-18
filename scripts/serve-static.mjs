@@ -97,9 +97,103 @@ createServer(async (req, res) => {
               "Practical, interactive Spoken English & Soft Skills training led personally by Mani\u00A0Sir. Learn without fear or grammar intimidation in Visakhapatnam or via Live Online classes.",
             primaryPhone: "+91 73374 12999",
             whatsappNumber: "+91 73374 12999",
+            address:
+              "First Floor, Beside HP Petrol Bunk, Car Shed Junction, PM Palem, Madhurawada, Visakhapatnam, Andhra Pradesh 530041",
             trialTerms:
               "10 full live classes completely free with zero advance payment. Stop at any time during the trial. ₹3,000 for the first month, then ₹2,000 per month.",
           },
+          founderProfile: {
+            name: "Mani\u00A0Sir",
+            title: "Founder, Director & Lead Trainer",
+            bio: "K. Maneendra Kumar, known to thousands of learners simply as Mani\u00A0Sir, founded LIFE in Madhurawada, Visakhapatnam with one simple belief: nobody is bad at English. Most people have just never been given a safe place to speak it.",
+            altText: "Mani\u00A0Sir in the LIFE Spoken English classroom, Madhurawada",
+          },
+          galleryItems: [
+            {
+              id: "mani-sir-classroom",
+              title: "Mani\u00A0Sir in the LIFE classroom, Madhurawada",
+              category: "Classroom",
+              mediaType: "Photo",
+              order: 1,
+            },
+            {
+              id: "video-4LtuKMa_cIQ",
+              title: "Wake up, Get up or Rise?",
+              category: "Lessons",
+              mediaType: "Video",
+              youtubeId: "4LtuKMa_cIQ",
+              youtubeUrl: "https://www.youtube.com/watch?v=4LtuKMa_cIQ",
+              order: 2,
+            },
+            {
+              id: "video-5WTLd30TzjE",
+              title: "In a fit of anger or rage (కోపంలో)",
+              category: "Lessons",
+              mediaType: "Video",
+              youtubeId: "5WTLd30TzjE",
+              youtubeUrl: "https://www.youtube.com/watch?v=5WTLd30TzjE",
+              order: 3,
+            },
+            {
+              id: "video-SwTh5KpmYJo",
+              title: "Common Errors 14: Can vs Able to",
+              category: "Lessons",
+              mediaType: "Video",
+              youtubeId: "SwTh5KpmYJo",
+              youtubeUrl: "https://www.youtube.com/watch?v=SwTh5KpmYJo",
+              order: 4,
+            },
+          ],
+          courseTracks: [
+            {
+              id: "life-course-everyday",
+              trackId: "everyday",
+              title: "Everyday Spoken English & Confidence",
+              description: "Overcome fear, hesitation and stage fright in daily conversations.",
+              highlights: [
+                "Interactive situational speaking practice",
+                "Overcoming hesitation and Mother Tongue Influence",
+              ],
+              order: 1,
+            },
+            {
+              id: "life-course-business",
+              trackId: "business",
+              title: "Corporate English & Professional Drafting",
+              description: "Command meetings, write clear emails and present with authority.",
+              highlights: ["Formal corporate email writing and reporting"],
+              order: 2,
+            },
+          ],
+          faqItems: [
+            {
+              id: "life-faq-1",
+              question: "Is the 10-day trial completely free?",
+              answer:
+                "Yes, 100% free with zero registration fee, advance payment or credit card requirement.",
+              category: "Trial & Fees",
+              order: 1,
+            },
+            {
+              id: "life-faq-2",
+              question: "What are the fees after the 10-day trial?",
+              answer:
+                "After your trial, the fee is ₹3,000 for the first month and ₹2,000 per month thereafter.",
+              category: "Trial & Fees",
+              order: 2,
+            },
+          ],
+          testimonials: [
+            {
+              id: "life-testimonial-1",
+              name: "Rajesh Kumar",
+              role: "Software Engineer, Visakhapatnam",
+              quote:
+                "Before joining LIFE, I couldn't speak two sentences in team standups without sweating.",
+              rating: 5,
+              order: 1,
+            },
+          ],
         }),
       );
     }
