@@ -727,7 +727,7 @@ export async function onRequestGet(context: EventContext): Promise<Response> {
           if (isPhoto) {
             imageUrl = imgAssetId
               ? assetUrlMap.get(imgAssetId) || "/media/people/mani-sir-classroom-v2.webp"
-              : "/media/people/mani-sir-classroom-v2.webp";
+              : assetUrlMap.get("life-mani-sir-classroom") || "/media/people/mani-sir-classroom-v2.webp";
           } else if (yId) {
             imageUrl = `https://img.youtube.com/vi/${yId}/hqdefault.jpg`;
           }
