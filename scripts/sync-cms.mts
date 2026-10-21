@@ -41,6 +41,12 @@ async function downloadYouTubeThumbnail(youtubeId: string, filename: string) {
   await writeFile(`${IMAGE_DIR}/${filename}`, buffer);
 }
 
+function getAssetHash(url: string | null | undefined): string {
+  if (!url) return "v2";
+  const match = url.match(/\/([a-f0-9]{16,40})\//i);
+  return match ? match[1].slice(0, 8) : "v2";
+}
+
 async function syncGalleryItem(item: CmsGalleryItem): Promise<{
   id: string;
   src: string;
@@ -53,15 +59,24 @@ async function syncGalleryItem(item: CmsGalleryItem): Promise<{
   youtubeId?: string | null;
   youtubeUrl?: string | null;
   file: string;
+  legacyFile: string;
 }> {
-  const file = `${item.id}-v2.webp`;
+  const hash = getAssetHash(item.assetUrl);
+  const file = `${item.id}-${hash}.webp`;
+  const legacyFile = `${item.id}-v2.webp`;
   const width = Math.min(item.width, MAX_WIDTH);
   const height = Math.round((item.height * width) / item.width);
 
   if (item.assetUrl) {
     await downloadAsset(item.assetUrl, file, width);
+    if (file !== legacyFile) {
+      await downloadAsset(item.assetUrl, legacyFile, width);
+    }
   } else if (item.youtubeId) {
     await downloadYouTubeThumbnail(item.youtubeId, file);
+    if (file !== legacyFile) {
+      await downloadYouTubeThumbnail(item.youtubeId, legacyFile);
+    }
   } else {
     throw new Error(`Item ${item.id} has neither assetUrl nor youtubeId`);
   }
@@ -78,6 +93,7 @@ async function syncGalleryItem(item: CmsGalleryItem): Promise<{
     youtubeId: item.youtubeId,
     youtubeUrl: item.youtubeUrl,
     file,
+    legacyFile,
   };
 }
 
@@ -90,12 +106,18 @@ async function syncFounderProfile(profile: CmsFounderProfile | null): Promise<{
   width: number;
   height: number;
   file?: string;
+  legacyFile?: string;
 } | null> {
   if (!profile) return null;
-  const file = "mani-sir-portrait-v2.webp";
+  const hash = getAssetHash(profile.portraitUrl);
+  const file = `mani-sir-portrait-${hash}.webp`;
+  const legacyFile = "mani-sir-portrait-v2.webp";
   const width = Math.min(profile.width, 1200);
   const height = Math.round((profile.height * width) / profile.width);
   await downloadAsset(profile.portraitUrl, file, width);
+  if (file !== legacyFile) {
+    await downloadAsset(profile.portraitUrl, legacyFile, width);
+  }
 
   return {
     name: profile.name,
@@ -106,6 +128,7 @@ async function syncFounderProfile(profile: CmsFounderProfile | null): Promise<{
     width,
     height,
     file,
+    legacyFile,
   };
 }
 
@@ -137,6 +160,7 @@ async function main() {
     content.photos.map(async (item) => {
       const synced = await syncGalleryItem(item);
       activeFiles.add(synced.file);
+      activeFiles.add(synced.legacyFile);
       return synced;
     }),
   );
@@ -146,19 +170,24 @@ async function main() {
   if (founder?.file) {
     activeFiles.add(founder.file);
   }
+  if (founder?.legacyFile) {
+    activeFiles.add(founder.legacyFile);
+  }
 
   // Prune any deleted/unpublished assets
   await pruneOrphanedFiles(activeFiles);
 
   const photos = galleryItems.map((item) => {
     const copy = { ...item };
-    delete (copy as { file?: string }).file;
+    delete (copy as { file?: string; legacyFile?: string }).file;
+    delete (copy as { file?: string; legacyFile?: string }).legacyFile;
     return copy;
   });
-  let founderProfile: Omit<NonNullable<typeof founder>, "file"> | null = null;
+  let founderProfile: Omit<NonNullable<typeof founder>, "file" | "legacyFile"> | null = null;
   if (founder) {
     const copy = { ...founder };
-    delete (copy as { file?: string }).file;
+    delete (copy as { file?: string; legacyFile?: string }).file;
+    delete (copy as { file?: string; legacyFile?: string }).legacyFile;
     founderProfile = copy;
   }
 

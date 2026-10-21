@@ -39,6 +39,7 @@ export interface AdminGalleryItem {
   mediaType: "Photo" | "Video";
   youtubeUrl?: string | null;
   youtubeId?: string | null;
+  imageUrl?: string | null;
   order: number;
 }
 
@@ -73,6 +74,7 @@ export interface AdminFounderProfile {
   title: string;
   bio: string;
   altText: string;
+  portraitUrl?: string | null;
 }
 
 export interface AdminLegalDocument {
@@ -145,6 +147,7 @@ export const DEFAULT_ADMIN_DATA: FullAdminData = {
     title: "Founder, Director & Lead Trainer",
     bio: "K. Maneendra Kumar, known to thousands of learners simply as Mani\u00A0Sir, founded LIFE in Madhurawada, Visakhapatnam with one simple belief: nobody is bad at English. Most people have just never been given a safe place to speak it.",
     altText: "Mani\u00A0Sir in the LIFE Spoken English classroom, Madhurawada",
+    portraitUrl: "/media/people/mani-sir-portrait-v2.webp",
   },
   galleryItems: [
     {
@@ -152,6 +155,7 @@ export const DEFAULT_ADMIN_DATA: FullAdminData = {
       title: "Mani\u00A0Sir in the LIFE classroom, Madhurawada",
       category: "Classroom",
       mediaType: "Photo",
+      imageUrl: "/media/people/mani-sir-classroom-v2.webp",
       order: 1,
     },
     {
@@ -161,6 +165,7 @@ export const DEFAULT_ADMIN_DATA: FullAdminData = {
       mediaType: "Video",
       youtubeId: "4LtuKMa_cIQ",
       youtubeUrl: "https://www.youtube.com/watch?v=4LtuKMa_cIQ",
+      imageUrl: "https://img.youtube.com/vi/4LtuKMa_cIQ/hqdefault.jpg",
       order: 2,
     },
     {
@@ -572,21 +577,45 @@ export async function onRequestGet(context: EventContext): Promise<Response> {
       settingsRes,
       annRes,
       founderRes,
+      founderLegacyRes,
       galleryRes,
       coursesRes,
       faqsRes,
       testimonialsRes,
       legalRes,
+      assetsRes,
     ] = await Promise.all([
       cmaFetch(base, token, "/entries/life-site-settings"),
       cmaFetch(base, token, "/entries/life-announcement-default"),
+      cmaFetch(base, token, "/entries/life-founder-profile"),
       cmaFetch(base, token, "/entries/life-founder-mani-sir"),
       cmaFetch(base, token, "/entries?content_type=galleryItem&limit=100"),
       cmaFetch(base, token, "/entries?content_type=courseTrack&order=fields.order&limit=20"),
       cmaFetch(base, token, "/entries?content_type=faqItem&order=fields.order&limit=100"),
       cmaFetch(base, token, "/entries?content_type=testimonialItem&order=fields.order&limit=100"),
       cmaFetch(base, token, "/entries?content_type=legalDocument&limit=10"),
+      cmaFetch(base, token, "/assets?limit=100"),
     ]);
+
+    const assetUrlMap = new Map<string, string>();
+    if (assetsRes.ok) {
+      const assetsJson = (await assetsRes.json()) as {
+        items?: Array<{
+          sys: { id: string };
+          fields?: { file?: Record<string, { url?: string }> };
+        }>;
+      };
+      if (Array.isArray(assetsJson.items)) {
+        for (const a of assetsJson.items) {
+          const f = a.fields?.file;
+          const loc = f ? Object.keys(f)[0] : undefined;
+          const raw = loc && f ? f[loc]?.url : undefined;
+          if (raw) {
+            assetUrlMap.set(a.sys.id, raw.startsWith("//") ? `https:${raw}` : raw);
+          }
+        }
+      }
+    }
 
     const result = { ...DEFAULT_ADMIN_DATA };
 
@@ -627,15 +656,19 @@ export async function onRequestGet(context: EventContext): Promise<Response> {
     }
 
     // 3. founderProfile
-    if (founderRes.ok) {
-      const json = (await founderRes.json()) as { fields?: Record<string, Record<string, unknown>> };
+    const activeFounderRes = founderRes.ok ? founderRes : founderLegacyRes;
+    if (activeFounderRes.ok) {
+      const json = (await activeFounderRes.json()) as { fields?: Record<string, Record<string, unknown>> };
       const f = json.fields ?? {};
       const locale = Object.keys(f.name ?? {})[0] ?? "en-US";
+      const pAssetId = (f.portraitImage?.[locale] as { sys?: { id?: string } } | undefined)?.sys?.id;
+      const portraitUrl = pAssetId ? assetUrlMap.get(pAssetId) || "/media/people/mani-sir-portrait-v2.webp" : "/media/people/mani-sir-portrait-v2.webp";
       result.founderProfile = {
         name: cleanText(f.name?.[locale]) || result.founderProfile.name,
         title: cleanText(f.title?.[locale]) || result.founderProfile.title,
         bio: cleanText(f.bio?.[locale]) || result.founderProfile.bio,
         altText: cleanText(f.altText?.[locale]) || result.founderProfile.altText,
+        portraitUrl,
       };
     }
 
@@ -649,14 +682,24 @@ export async function onRequestGet(context: EventContext): Promise<Response> {
           const f = item.fields ?? {};
           const locale = Object.keys(f.title ?? {})[0] ?? "en-US";
           const yUrl = cleanText(f.youtubeUrl?.[locale]) || null;
+          const yId = extractYouTubeId(yUrl);
+          const isPhoto = f.mediaType?.[locale] === "Photo";
+          const imgAssetId = (f.image?.[locale] as { sys?: { id?: string } } | undefined)?.sys?.id;
+          let imageUrl: string | null = null;
+          if (isPhoto) {
+            imageUrl = imgAssetId ? assetUrlMap.get(imgAssetId) || "/media/people/mani-sir-classroom-v2.webp" : "/media/people/mani-sir-classroom-v2.webp";
+          } else if (yId) {
+            imageUrl = `https://img.youtube.com/vi/${yId}/hqdefault.jpg`;
+          }
           return {
             id: item.sys.id,
             title: cleanText(f.title?.[locale]) || "Gallery Item",
             category: (f.category?.[locale] as AdminGalleryItem["category"]) || "Lessons",
-            mediaType: (f.mediaType?.[locale] === "Photo" ? "Photo" : "Video") as "Photo" | "Video",
+            mediaType: (isPhoto ? "Photo" : "Video") as "Photo" | "Video",
             youtubeUrl: yUrl,
-            youtubeId: extractYouTubeId(yUrl),
-            order: typeof f.order?.[locale] === "number" ? f.order[locale] : 99,
+            youtubeId: yId,
+            imageUrl,
+            order: typeof f.order?.[locale] === "number" ? (f.order[locale] as number) : 99,
           };
         }).sort((a, b) => a.order - b.order);
       }
@@ -926,12 +969,14 @@ export async function onRequestPost(context: EventContext): Promise<Response> {
 
       // 3. Update founderProfile
       if (body.founderProfile) {
-        await upsertEntry("life-founder-mani-sir", "founderProfile", {
+        const founderPayload = {
           ...(body.founderProfile.name && { name: cleanText(body.founderProfile.name) }),
           ...(body.founderProfile.title && { title: cleanText(body.founderProfile.title) }),
           ...(body.founderProfile.bio && { bio: cleanText(body.founderProfile.bio) }),
           ...(body.founderProfile.altText && { altText: cleanText(body.founderProfile.altText) }),
-        });
+        };
+        await upsertEntry("life-founder-profile", "founderProfile", founderPayload);
+        await upsertEntry("life-founder-mani-sir", "founderProfile", founderPayload);
       }
 
       // 4. Update gallery items (adding/editing videos)

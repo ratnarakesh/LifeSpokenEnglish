@@ -39,19 +39,15 @@ export async function onRequestPost(context: EventContext): Promise<Response> {
     const formData = await context.request.formData();
     const file = formData.get("file");
     const titleRaw = formData.get("title");
-    const target = formData.get("target"); // "founderPortrait" | "galleryPhoto"
+    const targetRaw = formData.get("target"); // "founderPortrait" | "galleryPhoto" | "replacePhoto"
+    const entryIdRaw = formData.get("entryId");
     const categoryRaw = formData.get("category");
     const orderRaw = formData.get("order");
+    const target = targetRaw === "founderPortrait" || targetRaw === "replacePhoto" ? targetRaw : "galleryPhoto";
+    const targetEntryId = typeof entryIdRaw === "string" && entryIdRaw.trim() ? entryIdRaw.trim() : "life-gallery-classroom";
 
     if (!file || typeof file === "string") {
       return jsonResponse({ error: "No image file provided" }, { status: 400 });
-    }
-
-    if (target !== "founderPortrait" && target !== "galleryPhoto") {
-      return jsonResponse(
-        { error: "Invalid upload target. Must be founderPortrait or galleryPhoto." },
-        { status: 400 },
-      );
     }
 
     const title = cleanText(titleRaw) || (target === "founderPortrait" ? "Mani\u00A0Sir Official Portrait" : "Classroom Photo");
@@ -102,7 +98,12 @@ export async function onRequestPost(context: EventContext): Promise<Response> {
 
     // 2. Create or Update Contentful Asset
     const base = `https://api.contentful.com/spaces/${space}/environments/${env}`;
-    const assetId = target === "founderPortrait" ? "life-mani-sir-portrait" : `life-gallery-asset-${Date.now()}`;
+    let assetId = `life-gallery-asset-${Date.now()}`;
+    if (target === "founderPortrait") {
+      assetId = "life-mani-sir-portrait";
+    } else if (target === "replacePhoto" && targetEntryId === "life-gallery-classroom") {
+      assetId = "life-mani-sir-classroom";
+    }
 
     const assetPayload = {
       fields: {
@@ -188,26 +189,55 @@ export async function onRequestPost(context: EventContext): Promise<Response> {
 
     // 6. Link to Founder Profile or Gallery Item
     if (target === "founderPortrait") {
-      const founderRes = await cmaFetch(base, token, "/entries/life-founder-mani-sir");
-      if (founderRes.ok) {
-        const founder = (await founderRes.json()) as {
+      const founderIds = ["life-founder-profile", "life-founder-mani-sir"];
+      for (const fId of founderIds) {
+        const founderRes = await cmaFetch(base, token, `/entries/${fId}`);
+        if (founderRes.ok) {
+          const founder = (await founderRes.json()) as {
+            sys: { version: number };
+            fields?: Record<string, unknown>;
+          };
+          const fields = founder.fields ?? {};
+          fields.portraitImage = {
+            "en-US": {
+              sys: { type: "Link", linkType: "Asset", id: assetId },
+            },
+          };
+          const updateFounder = await cmaFetch(base, token, `/entries/${fId}`, {
+            method: "PUT",
+            headers: { "X-Contentful-Version": founder.sys.version.toString() },
+            body: JSON.stringify({ fields }),
+          });
+          if (updateFounder.ok) {
+            const upJson = (await updateFounder.json()) as { sys: { version: number } };
+            await cmaFetch(base, token, `/entries/${fId}/published`, {
+              method: "PUT",
+              headers: { "X-Contentful-Version": upJson.sys.version.toString() },
+            });
+          }
+        }
+      }
+    } else if (target === "replacePhoto") {
+      const targetRes = await cmaFetch(base, token, `/entries/${targetEntryId}`);
+      if (targetRes.ok) {
+        const targetJson = (await targetRes.json()) as {
           sys: { version: number };
           fields?: Record<string, unknown>;
         };
-        const fields = founder.fields ?? {};
-        fields.portraitImage = {
+        const fields = targetJson.fields ?? {};
+        fields.image = {
           "en-US": {
             sys: { type: "Link", linkType: "Asset", id: assetId },
           },
         };
-        const updateFounder = await cmaFetch(base, token, "/entries/life-founder-mani-sir", {
+        const updateItemRes = await cmaFetch(base, token, `/entries/${targetEntryId}`, {
           method: "PUT",
-          headers: { "X-Contentful-Version": founder.sys.version.toString() },
+          headers: { "X-Contentful-Version": targetJson.sys.version.toString() },
           body: JSON.stringify({ fields }),
         });
-        if (updateFounder.ok) {
-          const upJson = (await updateFounder.json()) as { sys: { version: number } };
-          await cmaFetch(base, token, "/entries/life-founder-mani-sir/published", {
+        if (updateItemRes.ok) {
+          const upJson = (await updateItemRes.json()) as { sys: { version: number } };
+          await cmaFetch(base, token, `/entries/${targetEntryId}/published`, {
             method: "PUT",
             headers: { "X-Contentful-Version": upJson.sys.version.toString() },
           });

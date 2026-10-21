@@ -99,7 +99,11 @@ export type CmsContent = {
 
 const TIMEOUT_MS = 15_000;
 
-export const cmsConfigured = () => Boolean(process.env.CONTENTFUL_SPACE_ID && process.env.CONTENTFUL_ACCESS_TOKEN);
+export const cmsConfigured = () =>
+  Boolean(
+    process.env.CONTENTFUL_SPACE_ID &&
+      (process.env.CONTENTFUL_ACCESS_TOKEN || process.env.CONTENTFUL_MANAGEMENT_TOKEN),
+  );
 
 /** House style for editor-typed copy: no em/en dashes, and "Mani Sir" never wraps across lines. */
 export const cleanText = (text: unknown) =>
@@ -271,7 +275,21 @@ function toTestimonialItem(entry: { sys: { id: string }; fields: Fields }): CmsT
   };
 }
 
-async function fetchAll(): Promise<CmsContent> {
+function normalizeCmaFields(fields: unknown): Fields {
+  const out: Fields = {};
+  if (!fields || typeof fields !== "object") return out;
+  for (const [k, v] of Object.entries(fields as Record<string, unknown>)) {
+    if (v && typeof v === "object" && !Array.isArray(v)) {
+      const loc = Object.keys(v)[0];
+      out[k] = loc ? (v as Record<string, unknown>)[loc] : undefined;
+    } else {
+      out[k] = v;
+    }
+  }
+  return out;
+}
+
+async function fetchAllViaCda(): Promise<CmsContent> {
   const client = createClient({
     space: process.env.CONTENTFUL_SPACE_ID!,
     accessToken: process.env.CONTENTFUL_ACCESS_TOKEN!,
@@ -283,7 +301,7 @@ async function fetchAll(): Promise<CmsContent> {
   const [gallery, announcements, founders, settings, courses, faqs, testimonials, legalDocs] = await Promise.all([
     client.getEntries({ content_type: "galleryItem", include: 1, limit: 200 }),
     client.getEntries({ content_type: "announcement", "fields.isActive": true, order: ["-sys.updatedAt"], limit: 1 }),
-    client.getEntries({ content_type: "founderProfile", include: 1, limit: 1 }),
+    client.getEntries({ content_type: "founderProfile", include: 1, limit: 5 }),
     client.getEntries({ content_type: "siteSettings", limit: 1 }),
     client.getEntries({ content_type: "courseTrack", order: ["fields.order"], limit: 20 }),
     client.getEntries({ content_type: "faqItem", order: ["fields.order"], limit: 50 }),
@@ -300,7 +318,10 @@ async function fetchAll(): Promise<CmsContent> {
   const message = cleanText(top?.message);
   const announcement = message ? { message, badgeText: cleanText(top?.badgeText) || null } : null;
 
-  const founderProfile = toFounderProfile(founders.items[0] as unknown as { sys: { id: string }; fields: Fields } | undefined);
+  const founderItem = founders.items.find(
+    (it) => ((it as unknown as { fields: Fields }).fields?.portraitImage as AssetLike | undefined)?.fields?.file?.url,
+  ) ?? founders.items[0];
+  const founderProfile = toFounderProfile(founderItem as unknown as { sys: { id: string }; fields: Fields } | undefined);
 
   const siteSettings = toSiteSettings(settings.items[0] as unknown as { fields: Fields } | undefined);
 
@@ -335,17 +356,125 @@ async function fetchAll(): Promise<CmsContent> {
   };
 }
 
+async function fetchAllViaCma(): Promise<CmsContent> {
+  const space = process.env.CONTENTFUL_SPACE_ID!;
+  const token = process.env.CONTENTFUL_MANAGEMENT_TOKEN!;
+  const env = process.env.CONTENTFUL_ENVIRONMENT || "master";
+  const base = `https://api.contentful.com/spaces/${space}/environments/${env}`;
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/vnd.contentful.management.v1+json",
+  };
+
+  const [assetsRes, galleryRes, annRes, foundersRes, settingsRes, coursesRes, faqsRes, testsRes, legalRes] =
+    await Promise.all([
+      fetch(`${base}/assets?limit=100`, { headers }).then((r) => r.json()),
+      fetch(`${base}/entries?content_type=galleryItem&limit=100`, { headers }).then((r) => r.json()),
+      fetch(`${base}/entries?content_type=announcement&order=-sys.updatedAt&limit=1`, { headers }).then((r) => r.json()),
+      fetch(`${base}/entries?content_type=founderProfile&limit=5`, { headers }).then((r) => r.json()),
+      fetch(`${base}/entries?content_type=siteSettings&limit=1`, { headers }).then((r) => r.json()),
+      fetch(`${base}/entries?content_type=courseTrack&order=fields.order&limit=20`, { headers }).then((r) => r.json()),
+      fetch(`${base}/entries?content_type=faqItem&order=fields.order&limit=50`, { headers }).then((r) => r.json()),
+      fetch(`${base}/entries?content_type=testimonialItem&order=fields.order&limit=50`, { headers }).then((r) => r.json()),
+      fetch(`${base}/entries?content_type=legalDocument&limit=10`, { headers }).then((r) => r.json()).catch(() => ({ items: [] })),
+    ]);
+
+  const assetMap = new Map<string, AssetLike>();
+  const assetItems = (assetsRes as { items?: Array<{ sys: { id: string }; fields: Record<string, unknown> }> })?.items ?? [];
+  for (const a of assetItems) {
+    const norm = normalizeCmaFields(a.fields);
+    assetMap.set(a.sys.id, { fields: norm });
+  }
+
+  const galleryItems = (galleryRes as { items?: Array<{ sys: { id: string }; fields: Record<string, unknown> }> })?.items ?? [];
+  const photos = galleryItems
+    .map((e) => {
+      const norm = normalizeCmaFields(e.fields);
+      const imgLink = norm.image as { sys?: { id?: string } } | undefined;
+      const linkedAsset = imgLink?.sys?.id ? assetMap.get(imgLink.sys.id) : undefined;
+      return toGalleryItem({ sys: e.sys, fields: { ...norm, image: linkedAsset } });
+    })
+    .filter((p): p is CmsGalleryItem => p !== null)
+    .sort((a, b) => a.order - b.order);
+
+  const annItems = (annRes as { items?: Array<{ fields: Record<string, unknown> }> })?.items ?? [];
+  const topAnn = annItems[0] ? normalizeCmaFields(annItems[0].fields) : undefined;
+  const message = cleanText(topAnn?.message);
+  const announcement = message ? { message, badgeText: cleanText(topAnn?.badgeText) || null } : null;
+
+  const founderItems = (foundersRes as { items?: Array<{ sys: { id: string }; fields: Record<string, unknown> }> })?.items ?? [];
+  const normFounders = founderItems.map((e) => {
+    const norm = normalizeCmaFields(e.fields);
+    const pLink = norm.portraitImage as { sys?: { id?: string } } | undefined;
+    const linkedAsset = pLink?.sys?.id ? assetMap.get(pLink.sys.id) : undefined;
+    return { sys: e.sys, fields: { ...norm, portraitImage: linkedAsset } };
+  });
+  const bestFounder = normFounders.find((f) => (f.fields.portraitImage as AssetLike | undefined)?.fields?.file) ?? normFounders[0];
+  const founderProfile = toFounderProfile(bestFounder);
+
+  const settingItems = (settingsRes as { items?: Array<{ fields: Record<string, unknown> }> })?.items ?? [];
+  const siteSettings = settingItems[0] ? toSiteSettings({ fields: normalizeCmaFields(settingItems[0].fields) }) : null;
+
+  const courseItems = (coursesRes as { items?: Array<{ sys: { id: string }; fields: Record<string, unknown> }> })?.items ?? [];
+  const courseTracks = courseItems
+    .map((e) => toCourseTrack({ sys: e.sys, fields: normalizeCmaFields(e.fields) }))
+    .filter((c): c is CmsCourseTrack => c !== null)
+    .sort((a, b) => a.order - b.order);
+
+  const faqItemsRaw = (faqsRes as { items?: Array<{ sys: { id: string }; fields: Record<string, unknown> }> })?.items ?? [];
+  const faqItems = faqItemsRaw
+    .map((e) => toFaqItem({ sys: e.sys, fields: normalizeCmaFields(e.fields) }))
+    .filter((f): f is CmsFaqItem => f !== null)
+    .sort((a, b) => a.order - b.order);
+
+  const testItemsRaw = (testsRes as { items?: Array<{ sys: { id: string }; fields: Record<string, unknown> }> })?.items ?? [];
+  const testimonials = testItemsRaw
+    .map((e) => toTestimonialItem({ sys: e.sys, fields: normalizeCmaFields(e.fields) }))
+    .filter((t): t is CmsTestimonialItem => t !== null)
+    .sort((a, b) => a.order - b.order);
+
+  const legalItemsRaw = (legalRes as { items?: Array<{ sys: { id: string }; fields: Record<string, unknown> }> })?.items ?? [];
+  const legalDocuments = legalItemsRaw
+    .map((e) => toLegalDocument({ sys: e.sys, fields: normalizeCmaFields(e.fields) }))
+    .filter((l): l is CmsLegalDocument => l !== null);
+
+  return {
+    photos,
+    announcement,
+    founderProfile,
+    siteSettings,
+    courseTracks,
+    faqItems,
+    testimonials,
+    legalDocuments,
+  };
+}
+
 /** Returns published CMS content, or null when keys are missing, the API errors, or it does not answer in time. */
 export async function fetchCmsContent(): Promise<CmsContent | null> {
   if (!cmsConfigured()) return null;
   let timer: ReturnType<typeof setTimeout> | undefined;
   const timeout = new Promise<null>((resolve) => (timer = setTimeout(() => resolve(null), TIMEOUT_MS + 5_000)));
   try {
-    const result = await Promise.race([fetchAll(), timeout]);
+    const fetchFn = async () => {
+      if (process.env.CONTENTFUL_ACCESS_TOKEN) {
+        try {
+          console.log("[cms] Fetching via Contentful Delivery API (CDA)...");
+          return await fetchAllViaCda();
+        } catch (e) {
+          console.warn("[cms] CDA attempt failed, checking CMA fallback...", e);
+        }
+      }
+      if (process.env.CONTENTFUL_MANAGEMENT_TOKEN) {
+        console.log("[cms] Fetching via Contentful Management API (CMA)...");
+        return await fetchAllViaCma();
+      }
+      return null;
+    };
+    const result = await Promise.race([fetchFn(), timeout]);
     if (!result) console.warn("[cms] Contentful did not answer in time.");
     return result;
   } catch (error) {
-    // Log only the error type/status: SDK error messages can echo request details.
     const e = error as { name?: string; status?: number; sys?: { id?: string } };
     console.warn(`[cms] Contentful request failed (${e.name ?? "Error"}${e.status ? ` ${e.status}` : ""}).`);
     return null;

@@ -340,6 +340,11 @@ export function AdminClient() {
   const [portraitUploadSuccess, setPortraitUploadSuccess] = useState<string | null>(null);
   const [portraitUploadError, setPortraitUploadError] = useState<string | null>(null);
 
+  // Replace gallery photo state
+  const [replacingPhotoId, setReplacingPhotoId] = useState<string | null>(null);
+  const [replacePhotoSuccess, setReplacePhotoSuccess] = useState<string | null>(null);
+  const [replacePhotoError, setReplacePhotoError] = useState<string | null>(null);
+
   // Cloudflare Pages / Contentful configuration status
   const [isConfigured, setIsConfigured] = useState<boolean | null>(null);
 
@@ -397,7 +402,12 @@ export function AdminClient() {
         const data = (await res.json()) as Partial<FullAdminData>;
         if (data.announcement) setAnnouncement((prev) => ({ ...prev, ...data.announcement }));
         if (data.siteSettings) setSiteSettings((prev) => ({ ...prev, ...data.siteSettings }));
-        if (data.founderProfile) setFounderProfile((prev) => ({ ...prev, ...data.founderProfile }));
+        if (data.founderProfile) {
+          setFounderProfile((prev) => ({ ...prev, ...data.founderProfile }));
+          if (data.founderProfile.portraitUrl) {
+            setActivePortraitUrl(data.founderProfile.portraitUrl);
+          }
+        }
         if (Array.isArray(data.galleryItems)) setGalleryItems(data.galleryItems);
         if (Array.isArray(data.courseTracks)) setCourseTracks(data.courseTracks);
         if (Array.isArray(data.faqItems)) setFaqItems(data.faqItems);
@@ -569,6 +579,7 @@ export function AdminClient() {
           title: photoTitle.trim(),
           category: photoCategory,
           mediaType: "Photo",
+          imageUrl: data.assetUrl || photoPreview || "/media/people/mani-sir-classroom-v2.webp",
           order: photoOrder,
         };
         setGalleryItems((prev) => [...prev, newItem].sort((a, b) => a.order - b.order));
@@ -587,6 +598,47 @@ export function AdminClient() {
       setPhotoUploadError("Network connection error during photo upload.");
     } finally {
       setIsUploadingPhoto(false);
+    }
+  }
+
+  async function handleReplacePhoto(itemId: string, file: File) {
+    if (!file) return;
+    setReplacingPhotoId(itemId);
+    setReplacePhotoSuccess(null);
+    setReplacePhotoError(null);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("target", "replacePhoto");
+      formData.append("entryId", itemId);
+      formData.append(
+        "title",
+        galleryItems.find((it) => it.id === itemId)?.title || "Classroom Photo",
+      );
+
+      const res = await fetch("/api/admin/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (res.ok) {
+        const data = (await res.json()) as { assetUrl?: string; message?: string };
+        const newUrl = data.assetUrl || URL.createObjectURL(file);
+        setGalleryItems((prev) =>
+          prev.map((it) => (it.id === itemId ? { ...it, imageUrl: newUrl } : it)),
+        );
+        setReplacePhotoSuccess(
+          data.message || "Photo replaced successfully! Website is rebuilding...",
+        );
+        setTimeout(() => setReplacePhotoSuccess(null), 6000);
+      } else {
+        const err = (await res.json()) as { error?: string };
+        setReplacePhotoError(err.error || "Failed to replace photo. Please try again.");
+      }
+    } catch {
+      setReplacePhotoError("Network connection error during photo upload.");
+    } finally {
+      setReplacingPhotoId(null);
     }
   }
 
@@ -1415,9 +1467,25 @@ export function AdminClient() {
 
           {/* Existing Gallery Items Grid */}
           <div className="space-y-3">
-            <h3 className="text-sm font-semibold tracking-wider text-stone-400 uppercase">
-              Existing Gallery Items ({galleryItems.length})
-            </h3>
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-semibold tracking-wider text-stone-400 uppercase">
+                Existing Gallery Items ({galleryItems.length})
+              </h3>
+            </div>
+
+            {replacePhotoSuccess && (
+              <div className="flex items-center gap-1.5 rounded-xl border border-emerald-500/30 bg-emerald-950/40 p-3 text-xs text-emerald-400">
+                <CheckCircle2 className="h-4 w-4 shrink-0" />
+                <span>{replacePhotoSuccess}</span>
+              </div>
+            )}
+
+            {replacePhotoError && (
+              <p className="rounded-xl border border-red-500/30 bg-red-950/40 p-3 text-xs text-red-400">
+                {replacePhotoError}
+              </p>
+            )}
+
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {galleryItems.map((item) => (
                 <div
@@ -1439,6 +1507,40 @@ export function AdminClient() {
                         <Trash2 className="h-4 w-4" />
                       </button>
                     </div>
+
+                    {item.imageUrl && (
+                      <div className="relative mb-3 overflow-hidden rounded-lg border border-stone-800 bg-obsidian-950">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={item.imageUrl}
+                          alt={item.title}
+                          className="h-36 w-full object-cover transition duration-300 hover:scale-105"
+                          loading="lazy"
+                        />
+                        {item.mediaType === "Photo" && (
+                          <div className="absolute bottom-2 right-2 flex items-center gap-1.5">
+                            <label
+                              htmlFor={`replace-photo-${item.id}`}
+                              className="cursor-pointer rounded-lg bg-obsidian-950/90 px-2.5 py-1 text-[11px] font-semibold text-ember-300 shadow backdrop-blur hover:bg-ember-500 hover:text-white transition flex items-center gap-1"
+                            >
+                              <Camera className="h-3 w-3" />
+                              {replacingPhotoId === item.id ? "Replacing..." : "Replace Photo"}
+                            </label>
+                            <input
+                              type="file"
+                              id={`replace-photo-${item.id}`}
+                              accept="image/*"
+                              className="hidden"
+                              disabled={replacingPhotoId === item.id}
+                              onChange={(e) => {
+                                const f = e.target.files?.[0];
+                                if (f) handleReplacePhoto(item.id, f);
+                              }}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    )}
 
                     <div className="space-y-2">
                       <input
@@ -1757,9 +1859,13 @@ export function AdminClient() {
                     alt={founderProfile.name}
                     className="h-full w-full object-cover"
                   />
-                  {portraitPreview && (
+                  {portraitPreview ? (
                     <span className="absolute bottom-1 left-1 rounded bg-amber-500/90 px-1 py-0.5 text-[9px] font-bold text-obsidian-950 uppercase">
                       Preview
+                    </span>
+                  ) : (
+                    <span className="absolute bottom-1 left-1 rounded bg-emerald-500/90 px-1 py-0.5 text-[9px] font-bold text-obsidian-950 uppercase">
+                      Live
                     </span>
                   )}
                 </div>
