@@ -15,9 +15,27 @@ const IMAGE_DIR = "public/media/cms";
 const SNAPSHOT = "src/lib/cms.generated.json";
 const MAX_WIDTH = 1600;
 
+async function writeBuildDiagnostic(status: string, details?: Record<string, unknown>) {
+  try {
+    const diag = {
+      timestamp: new Date().toISOString(),
+      nodeVersion: process.version,
+      hasSpaceId: Boolean(process.env.CONTENTFUL_SPACE_ID),
+      hasAccessToken: Boolean(process.env.CONTENTFUL_ACCESS_TOKEN),
+      hasManagementToken: Boolean(process.env.CONTENTFUL_MANAGEMENT_TOKEN),
+      status,
+      ...details,
+    };
+    await writeFile("public/cms-build-status.json", JSON.stringify(diag, null, 2));
+  } catch {
+    // Ignore error writing diagnostic
+  }
+}
+
 async function fallbackToLocal(reason: string) {
   await rm(SNAPSHOT, { force: true });
   await rm(IMAGE_DIR, { recursive: true, force: true });
+  await writeBuildDiagnostic("fallback", { reason });
   console.log(`[cms] ${reason} Using local content from src/lib/content.ts.`);
 }
 
@@ -213,9 +231,18 @@ async function main() {
     )}\n`,
   );
 
+  await writeBuildDiagnostic("success", {
+    photoCount,
+    videoCount,
+    founderProfile: founderProfile ? "active" : "none",
+  });
+
   console.log(
     `[cms] Synced ${photoCount} photo(s), ${videoCount} video(s), ${content.courseTracks.length} course track(s), ${content.faqItems.length} FAQ(s), ${content.testimonials.length} testimonial(s), ${content.legalDocuments.length} legal doc(s); site settings: ${content.siteSettings ? "active" : "none"}; founder profile: ${founderProfile ? "active" : "none"}; announcement: ${content.announcement ? "active" : "none"}.`,
   );
 }
 
-main().catch((error: Error) => fallbackToLocal(`Sync failed (${error.message}).`));
+main().catch(async (error: Error) => {
+  await writeBuildDiagnostic("error", { message: error.message });
+  return fallbackToLocal(`Sync failed (${error.message}).`);
+});
