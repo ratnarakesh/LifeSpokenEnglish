@@ -92,6 +92,7 @@ export interface FullAdminData {
   testimonials: AdminTestimonialItem[];
   founderProfile: AdminFounderProfile;
   legalDocuments: AdminLegalDocument[];
+  isConfigured?: boolean;
 }
 
 export function extractYouTubeId(urlOrId: unknown): string | null {
@@ -561,7 +562,7 @@ export async function onRequestGet(context: EventContext): Promise<Response> {
   const env = context.env.CONTENTFUL_ENVIRONMENT || "master";
 
   if (!space || !token) {
-    return jsonResponse(DEFAULT_ADMIN_DATA);
+    return jsonResponse({ ...DEFAULT_ADMIN_DATA, isConfigured: false });
   }
 
   try {
@@ -747,9 +748,9 @@ export async function onRequestGet(context: EventContext): Promise<Response> {
       }
     }
 
-    return jsonResponse(result);
+    return jsonResponse({ ...result, isConfigured: true });
   } catch {
-    return jsonResponse(DEFAULT_ADMIN_DATA);
+    return jsonResponse({ ...DEFAULT_ADMIN_DATA, isConfigured: false });
   }
 }
 
@@ -781,8 +782,17 @@ export async function onRequestPost(context: EventContext): Promise<Response> {
     const token = context.env.CONTENTFUL_MANAGEMENT_TOKEN;
     const env = context.env.CONTENTFUL_ENVIRONMENT || "master";
 
-    if (space && token) {
-      const base = `https://api.contentful.com/spaces/${space}/environments/${env}`;
+    if (!space || !token) {
+      return jsonResponse(
+        {
+          error:
+            "Cloudflare Environment Variables missing: CONTENTFUL_SPACE_ID and CONTENTFUL_MANAGEMENT_TOKEN must be added in Cloudflare Pages (Settings > Environment variables) to save live updates to Contentful.",
+        },
+        { status: 500 },
+      );
+    }
+
+    const base = `https://api.contentful.com/spaces/${space}/environments/${env}`;
 
       // Helper to upsert and publish a single CMA entry
       const upsertEntry = async (
@@ -982,14 +992,22 @@ export async function onRequestPost(context: EventContext): Promise<Response> {
 
       // Trigger Cloudflare Pages static rebuild
       if (context.env.CLOUDFLARE_DEPLOY_HOOK_URL) {
-        await fetch(context.env.CLOUDFLARE_DEPLOY_HOOK_URL, { method: "POST" });
+        try {
+          await fetch(context.env.CLOUDFLARE_DEPLOY_HOOK_URL, { method: "POST" });
+        } catch (e) {
+          console.warn("Deploy hook trigger warning:", e);
+        }
+        return jsonResponse({
+          success: true,
+          message: "Changes saved! Your website is rebuilding and will update in ~60 seconds.",
+        });
       }
-    }
 
-    return jsonResponse({
-      success: true,
-      message: "Changes saved! Your website is rebuilding and will update in ~60 seconds.",
-    });
+      return jsonResponse({
+        success: true,
+        message:
+          "Changes saved to Contentful! (Note: CLOUDFLARE_DEPLOY_HOOK_URL is missing in Cloudflare Pages; please trigger a manual deployment to update the site).",
+      });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Failed to update content";
     return jsonResponse({ error: message }, { status: 500 });

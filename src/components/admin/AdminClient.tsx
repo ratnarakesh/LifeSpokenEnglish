@@ -340,6 +340,9 @@ export function AdminClient() {
   const [portraitUploadSuccess, setPortraitUploadSuccess] = useState<string | null>(null);
   const [portraitUploadError, setPortraitUploadError] = useState<string | null>(null);
 
+  // Cloudflare Pages / Contentful configuration status
+  const [isConfigured, setIsConfigured] = useState<boolean | null>(null);
+
   // New FAQ form state
   const [newFaqQuestion, setNewFaqQuestion] = useState("");
   const [newFaqAnswer, setNewFaqAnswer] = useState("");
@@ -401,6 +404,9 @@ export function AdminClient() {
         if (Array.isArray(data.testimonials)) setTestimonials(data.testimonials);
         if (Array.isArray(data.legalDocuments) && data.legalDocuments.length > 0) {
           setLegalDocuments(data.legalDocuments);
+        }
+        if (typeof data.isConfigured === "boolean") {
+          setIsConfigured(data.isConfigured);
         }
       }
     } catch {
@@ -927,6 +933,25 @@ export function AdminClient() {
           Legal &amp; Policies ({legalDocuments.length})
         </button>
       </div>
+
+      {/* Cloudflare Pages Environment Missing Warning Banner */}
+      {isConfigured === false && (
+        <div className="mb-6 rounded-2xl border border-amber-500/40 bg-amber-500/10 p-4 text-xs text-amber-200">
+          <div className="flex items-center gap-2 font-semibold text-amber-300">
+            <HelpCircle className="h-4 w-4 shrink-0 text-amber-400" />
+            <span>Cloudflare Pages Environment Variables Required for Live Updates</span>
+          </div>
+          <p className="mt-1 text-stone-300">
+            Changes saved here cannot be written to Contentful or trigger website rebuilds until you add the following variables in your <strong>Cloudflare Dashboard &rarr; Workers &amp; Pages &rarr; Settings &rarr; Environment variables</strong>:
+          </p>
+          <div className="mt-2 flex flex-wrap gap-2 font-mono text-[11px]">
+            <span className="rounded bg-obsidian-950 px-2 py-1 text-ember-300 border border-stone-800">CONTENTFUL_SPACE_ID</span>
+            <span className="rounded bg-obsidian-950 px-2 py-1 text-ember-300 border border-stone-800">CONTENTFUL_MANAGEMENT_TOKEN</span>
+            <span className="rounded bg-obsidian-950 px-2 py-1 text-ember-300 border border-stone-800">CONTENTFUL_ACCESS_TOKEN</span>
+            <span className="rounded bg-obsidian-950 px-2 py-1 text-ember-300 border border-stone-800">CLOUDFLARE_DEPLOY_HOOK_URL</span>
+          </div>
+        </div>
+      )}
 
       {/* Save Feedback Banner */}
       {saveStatus && (

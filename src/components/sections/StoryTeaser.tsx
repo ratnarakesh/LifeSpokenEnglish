@@ -46,7 +46,7 @@ export function StoryTeaser() {
               id="teaser-title"
               className="mt-4 text-3xl leading-tight font-bold tracking-tight text-balance text-white sm:text-4xl lg:text-5xl"
             >
-              {storyCopy.teaser.headlineLead} <GradientText>LIFE</GradientText>
+              Meet <GradientText>Mani&nbsp;Sir</GradientText> and the meaning of <GradientText>LIFE</GradientText>.
             </h2>
             <p className="mt-5 text-lg leading-relaxed font-medium text-pretty text-stone-100 sm:text-xl">{founderCopy.lede}</p>
             <p className="mt-3 leading-relaxed text-pretty text-stone-400 sm:text-lg">{storyCopy.promise}</p>

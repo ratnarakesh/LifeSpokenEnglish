@@ -85,6 +85,7 @@ createServer(async (req, res) => {
       res.writeHead(200, { "Content-Type": "application/json" });
       return res.end(
         JSON.stringify({
+          isConfigured: true,
           announcement: {
             message: "New batches are starting soon. Book your 10 free trial classes with Mani\u00A0Sir today.",
             ctaText: "New Batch",
