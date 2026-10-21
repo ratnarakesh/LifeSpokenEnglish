@@ -691,8 +691,10 @@ export async function onRequestGet(context: EventContext): Promise<Response> {
           const locale = Object.keys(f.title ?? {})[0] ?? "en-US";
           const yUrl = cleanText(f.youtubeUrl?.[locale]) || null;
           const yId = extractYouTubeId(yUrl);
-          const isPhoto = f.mediaType?.[locale] === "Photo";
-          const imgAssetId = (f.image?.[locale] as { sys?: { id?: string } } | undefined)?.sys?.id;
+          const rawMediaType = f.mediaType ? Object.values(f.mediaType)[0] : "Video";
+          const isPhoto = rawMediaType === "Photo";
+          const imgAsset = f.image ? (Object.values(f.image)[0] as { sys?: { id?: string } } | undefined) : undefined;
+          const imgAssetId = imgAsset?.sys?.id;
           let imageUrl: string | null = null;
           if (isPhoto) {
             imageUrl = imgAssetId ? assetUrlMap.get(imgAssetId) || "/media/people/mani-sir-classroom-v2.webp" : "/media/people/mani-sir-classroom-v2.webp";
