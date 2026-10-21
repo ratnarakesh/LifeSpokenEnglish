@@ -295,8 +295,8 @@ export const PHOTOS: GalleryPhoto[] = [
   {
     id: "mani-sir-classroom",
     src: "/media/people/mani-sir-classroom-v2.webp",
-    width: 1024,
-    height: 763,
+    width: 767,
+    height: 1024,
     alt: "Mani\u00A0Sir teaching in the LIFE Spoken English & Soft Skills classroom in Madhurawada",
     caption: "Mani\u00A0Sir in the LIFE classroom, Madhurawada",
     category: "Classroom",
