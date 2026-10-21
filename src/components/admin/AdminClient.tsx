@@ -2,6 +2,7 @@
 
 import {
   BookOpen,
+  Camera,
   CheckCircle2,
   ChevronDown,
   ChevronUp,
@@ -19,6 +20,7 @@ import {
   Sparkles,
   Star,
   Trash2,
+  UploadCloud,
   User,
   Video,
 } from "lucide-react";
@@ -319,6 +321,25 @@ export function AdminClient() {
   const [newVideoTitle, setNewVideoTitle] = useState("");
   const [newVideoCategory, setNewVideoCategory] = useState<AdminGalleryItem["category"]>("Lessons");
 
+  // Gallery Photo upload state
+  const [galleryAddMode, setGalleryAddMode] = useState<"video" | "photo">("video");
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [photoTitle, setPhotoTitle] = useState("");
+  const [photoCategory, setPhotoCategory] = useState<AdminGalleryItem["category"]>("Classroom");
+  const [photoOrder, setPhotoOrder] = useState<number>(1);
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
+  const [photoUploadSuccess, setPhotoUploadSuccess] = useState<string | null>(null);
+  const [photoUploadError, setPhotoUploadError] = useState<string | null>(null);
+
+  // Founder Portrait upload state
+  const [portraitFile, setPortraitFile] = useState<File | null>(null);
+  const [portraitPreview, setPortraitPreview] = useState<string | null>(null);
+  const [activePortraitUrl, setActivePortraitUrl] = useState<string>("/media/people/mani-sir-portrait-v2.webp");
+  const [isUploadingPortrait, setIsUploadingPortrait] = useState(false);
+  const [portraitUploadSuccess, setPortraitUploadSuccess] = useState<string | null>(null);
+  const [portraitUploadError, setPortraitUploadError] = useState<string | null>(null);
+
   // New FAQ form state
   const [newFaqQuestion, setNewFaqQuestion] = useState("");
   const [newFaqAnswer, setNewFaqAnswer] = useState("");
@@ -513,6 +534,90 @@ export function AdminClient() {
     setGalleryItems((prev) => prev.filter((item) => item.id !== id));
     if (!id.startsWith("new-")) {
       setDeletedGalleryIds((prev) => [...prev, id]);
+    }
+  }
+
+  // Photo & Portrait Upload Handlers
+  async function handleUploadPhoto() {
+    if (!photoFile || !photoTitle.trim()) return;
+    setIsUploadingPhoto(true);
+    setPhotoUploadSuccess(null);
+    setPhotoUploadError(null);
+    try {
+      const formData = new FormData();
+      formData.append("file", photoFile);
+      formData.append("title", photoTitle.trim());
+      formData.append("target", "galleryPhoto");
+      formData.append("category", photoCategory);
+      formData.append("order", photoOrder.toString());
+
+      const res = await fetch("/api/admin/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (res.ok) {
+        const data = (await res.json()) as { assetUrl?: string; message?: string };
+        const newItem: AdminGalleryItem = {
+          id: `photo-${Date.now()}`,
+          title: photoTitle.trim(),
+          category: photoCategory,
+          mediaType: "Photo",
+          order: photoOrder,
+        };
+        setGalleryItems((prev) => [...prev, newItem].sort((a, b) => a.order - b.order));
+        setPhotoUploadSuccess(
+          data.message || "Classroom photo uploaded and added to gallery successfully!",
+        );
+        setPhotoFile(null);
+        setPhotoPreview(null);
+        setPhotoTitle("");
+        setPhotoOrder((prev) => prev + 1);
+      } else {
+        const err = (await res.json()) as { error?: string };
+        setPhotoUploadError(err.error || "Failed to upload photo. Please try again.");
+      }
+    } catch {
+      setPhotoUploadError("Network connection error during photo upload.");
+    } finally {
+      setIsUploadingPhoto(false);
+    }
+  }
+
+  async function handleUploadPortrait() {
+    if (!portraitFile) return;
+    setIsUploadingPortrait(true);
+    setPortraitUploadSuccess(null);
+    setPortraitUploadError(null);
+    try {
+      const formData = new FormData();
+      formData.append("file", portraitFile);
+      formData.append("title", "Mani\u00A0Sir Official Portrait");
+      formData.append("target", "founderPortrait");
+
+      const res = await fetch("/api/admin/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (res.ok) {
+        const data = (await res.json()) as { assetUrl?: string; message?: string };
+        if (data.assetUrl) {
+          setActivePortraitUrl(data.assetUrl);
+        }
+        setPortraitUploadSuccess(
+          data.message || "Official portrait updated successfully! Website is rebuilding.",
+        );
+        setPortraitFile(null);
+        setPortraitPreview(null);
+      } else {
+        const err = (await res.json()) as { error?: string };
+        setPortraitUploadError(err.error || "Failed to upload portrait. Please try again.");
+      }
+    } catch {
+      setPortraitUploadError("Network connection error during portrait upload.");
+    } finally {
+      setIsUploadingPortrait(false);
     }
   }
 
@@ -1044,74 +1149,243 @@ export function AdminClient() {
       {/* TAB 2: VIDEOS & GALLERY */}
       {activeTab === "gallery" && (
         <div className="space-y-6">
-          {/* Add New Video Form */}
+          {/* Add New Item Form */}
           <section className="rounded-2xl border border-stone-800 bg-obsidian-900/90 p-5 shadow-lg backdrop-blur-md">
             <div className="flex items-center gap-2 border-b border-stone-800 pb-3 text-stone-200">
               <Plus className="h-5 w-5 text-ember-400" />
-              <h2 className="text-base font-semibold">Add New Video Lesson</h2>
+              <h2 className="text-base font-semibold">
+                {galleryAddMode === "video" ? "Add New Video Lesson" : "Upload Classroom & Event Photo"}
+              </h2>
             </div>
 
-            <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div className="sm:col-span-2">
-                <label className="block text-xs font-semibold text-stone-300">
-                  YouTube Video Link or ID
-                </label>
-                <input
-                  type="text"
-                  value={newVideoUrl}
-                  onChange={(e) => setNewVideoUrl(e.target.value)}
-                  placeholder="https://www.youtube.com/watch?v=... or 11-char ID"
-                  className="mt-1 w-full rounded-xl border border-stone-700 bg-obsidian-950 px-3.5 py-2.5 text-sm text-stone-100 placeholder:text-stone-600 focus:border-ember-500 focus:outline-none"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-stone-300">
-                  Video Lesson Title
-                </label>
-                <input
-                  type="text"
-                  value={newVideoTitle}
-                  onChange={(e) => setNewVideoTitle(e.target.value)}
-                  placeholder="e.g. Everyday Situational Dialogue Practice"
-                  className="mt-1 w-full rounded-xl border border-stone-700 bg-obsidian-950 px-3.5 py-2.5 text-sm text-stone-100 placeholder:text-stone-600 focus:border-ember-500 focus:outline-none"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-stone-300">
-                  Category
-                </label>
-                <select
-                  value={newVideoCategory}
-                  onChange={(e) =>
-                    setNewVideoCategory(e.target.value as AdminGalleryItem["category"])
-                  }
-                  className="mt-1 w-full rounded-xl border border-stone-700 bg-obsidian-950 px-3.5 py-2.5 text-sm text-stone-100 focus:border-ember-500 focus:outline-none"
-                >
-                  <option value="Lessons">Lessons</option>
-                  <option value="Orientation">Orientation</option>
-                  <option value="Classroom">Classroom</option>
-                  <option value="Student Success">Student Success</option>
-                  <option value="Event">Event</option>
-                </select>
-              </div>
-
-              <div className="sm:col-span-2">
-                <button
-                  type="button"
-                  onClick={handleAddVideo}
-                  disabled={!newVideoTitle.trim() || !newVideoUrl.trim()}
-                  className={cn(
-                    button("primary", "sm"),
-                    "w-full sm:w-auto font-semibold",
-                  )}
-                >
-                  <Plus className="mr-1.5 h-4 w-4" />
-                  Add Video to Gallery
-                </button>
-              </div>
+            {/* Segmented Toggle: [ Add Video Lesson ] | [ Upload Photo ] */}
+            <div className="mt-4 flex max-w-xs rounded-xl border border-stone-800 bg-obsidian-950 p-1">
+              <button
+                type="button"
+                onClick={() => setGalleryAddMode("video")}
+                className={cn(
+                  "flex flex-1 items-center justify-center gap-1.5 rounded-lg py-1.5 px-3 text-xs font-semibold transition",
+                  galleryAddMode === "video"
+                    ? "bg-ember-500 text-obsidian-950 shadow-sm"
+                    : "text-stone-400 hover:text-stone-200",
+                )}
+              >
+                <Video className="h-3.5 w-3.5" />
+                Add Video Lesson
+              </button>
+              <button
+                type="button"
+                onClick={() => setGalleryAddMode("photo")}
+                className={cn(
+                  "flex flex-1 items-center justify-center gap-1.5 rounded-lg py-1.5 px-3 text-xs font-semibold transition",
+                  galleryAddMode === "photo"
+                    ? "bg-ember-500 text-obsidian-950 shadow-sm"
+                    : "text-stone-400 hover:text-stone-200",
+                )}
+              >
+                <Camera className="h-3.5 w-3.5" />
+                Upload Photo
+              </button>
             </div>
+
+            {galleryAddMode === "video" ? (
+              /* Add Video Lesson Form */
+              <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div className="sm:col-span-2">
+                  <label className="block text-xs font-semibold text-stone-300">
+                    YouTube Video Link or ID
+                  </label>
+                  <input
+                    type="text"
+                    value={newVideoUrl}
+                    onChange={(e) => setNewVideoUrl(e.target.value)}
+                    placeholder="https://www.youtube.com/watch?v=... or 11-char ID"
+                    className="mt-1 w-full rounded-xl border border-stone-700 bg-obsidian-950 px-3.5 py-2.5 text-sm text-stone-100 placeholder:text-stone-600 focus:border-ember-500 focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-stone-300">
+                    Video Lesson Title
+                  </label>
+                  <input
+                    type="text"
+                    value={newVideoTitle}
+                    onChange={(e) => setNewVideoTitle(e.target.value)}
+                    placeholder="e.g. Everyday Situational Dialogue Practice"
+                    className="mt-1 w-full rounded-xl border border-stone-700 bg-obsidian-950 px-3.5 py-2.5 text-sm text-stone-100 placeholder:text-stone-600 focus:border-ember-500 focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-stone-300">
+                    Category
+                  </label>
+                  <select
+                    value={newVideoCategory}
+                    onChange={(e) =>
+                      setNewVideoCategory(e.target.value as AdminGalleryItem["category"])
+                    }
+                    className="mt-1 w-full rounded-xl border border-stone-700 bg-obsidian-950 px-3.5 py-2.5 text-sm text-stone-100 focus:border-ember-500 focus:outline-none"
+                  >
+                    <option value="Lessons">Lessons</option>
+                    <option value="Orientation">Orientation</option>
+                    <option value="Classroom">Classroom</option>
+                    <option value="Student Success">Student Success</option>
+                    <option value="Event">Event</option>
+                  </select>
+                </div>
+
+                <div className="sm:col-span-2">
+                  <button
+                    type="button"
+                    onClick={handleAddVideo}
+                    disabled={!newVideoTitle.trim() || !newVideoUrl.trim()}
+                    className={cn(
+                      button("primary", "sm"),
+                      "w-full sm:w-auto font-semibold",
+                    )}
+                  >
+                    <Plus className="mr-1.5 h-4 w-4" />
+                    Add Video to Gallery
+                  </button>
+                </div>
+              </div>
+            ) : (
+              /* Upload Photo Form */
+              <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div className="sm:col-span-2 space-y-2">
+                  <label className="block text-xs font-semibold text-stone-300">
+                    Classroom / Event Photo File
+                  </label>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                    {photoPreview && (
+                      <div className="relative h-24 w-32 shrink-0 overflow-hidden rounded-xl border border-stone-700 bg-stone-900 shadow-inner">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={photoPreview}
+                          alt="Classroom preview"
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                    )}
+                    <div className="space-y-1.5 flex-1">
+                      <label
+                        htmlFor="gallery-photo-input"
+                        className={cn(
+                          button("secondary", "sm"),
+                          "cursor-pointer text-xs font-semibold inline-flex items-center gap-1.5",
+                        )}
+                      >
+                        <Camera className="h-3.5 w-3.5 text-ember-400" />
+                        {photoFile ? "Change Photo File" : "Choose Image File"}
+                      </label>
+                      <input
+                        id="gallery-photo-input"
+                        type="file"
+                        accept=".jpg,.jpeg,.png,.webp"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            setPhotoFile(file);
+                            setPhotoPreview(URL.createObjectURL(file));
+                            setPhotoUploadSuccess(null);
+                            setPhotoUploadError(null);
+                          }
+                        }}
+                        className="sr-only"
+                      />
+                      {photoFile && (
+                        <p className="text-[11px] font-mono text-stone-400">
+                          Selected: {photoFile.name} ({(photoFile.size / 1024).toFixed(1)} KB)
+                        </p>
+                      )}
+                      <p className="text-[11px] text-stone-500">
+                        Supports JPEG, PNG, or WebP. Automatically converted to high-speed WebP.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="sm:col-span-2">
+                  <label className="block text-xs font-semibold text-stone-300">
+                    Caption / Title
+                  </label>
+                  <input
+                    type="text"
+                    value={photoTitle}
+                    onChange={(e) => setPhotoTitle(e.target.value)}
+                    placeholder="e.g. Mani Sir mentoring students in classroom practice session"
+                    className="mt-1 w-full rounded-xl border border-stone-700 bg-obsidian-950 px-3.5 py-2.5 text-sm text-stone-100 placeholder:text-stone-600 focus:border-ember-500 focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-stone-300">
+                    Category
+                  </label>
+                  <select
+                    value={photoCategory}
+                    onChange={(e) =>
+                      setPhotoCategory(e.target.value as AdminGalleryItem["category"])
+                    }
+                    className="mt-1 w-full rounded-xl border border-stone-700 bg-obsidian-950 px-3.5 py-2.5 text-sm text-stone-100 focus:border-ember-500 focus:outline-none"
+                  >
+                    <option value="Classroom">Classroom</option>
+                    <option value="Event">Event</option>
+                    <option value="Student Success">Student Success</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-stone-300">
+                    Display Order
+                  </label>
+                  <input
+                    type="number"
+                    min={1}
+                    value={photoOrder}
+                    onChange={(e) => setPhotoOrder(parseInt(e.target.value, 10) || 1)}
+                    className="mt-1 w-full rounded-xl border border-stone-700 bg-obsidian-950 px-3.5 py-2.5 text-sm text-stone-100 focus:border-ember-500 focus:outline-none"
+                  />
+                </div>
+
+                {photoUploadSuccess && (
+                  <div className="sm:col-span-2 flex items-center gap-1.5 text-xs text-emerald-400">
+                    <CheckCircle2 className="h-4 w-4 shrink-0" />
+                    <span>{photoUploadSuccess}</span>
+                  </div>
+                )}
+
+                {photoUploadError && (
+                  <p className="sm:col-span-2 text-xs text-red-400">{photoUploadError}</p>
+                )}
+
+                <div className="sm:col-span-2">
+                  <button
+                    type="button"
+                    onClick={handleUploadPhoto}
+                    disabled={!photoFile || !photoTitle.trim() || isUploadingPhoto}
+                    className={cn(
+                      button("primary", "sm"),
+                      "w-full sm:w-auto font-semibold",
+                    )}
+                  >
+                    {isUploadingPhoto ? (
+                      <>
+                        <RefreshCw className="mr-1.5 h-4 w-4 animate-spin" />
+                        Uploading Photo...
+                      </>
+                    ) : (
+                      <>
+                        <UploadCloud className="mr-1.5 h-4 w-4" />
+                        Upload &amp; Add to Gallery
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
           </section>
 
           {/* Existing Gallery Items Grid */}
@@ -1443,6 +1717,117 @@ export function AdminClient() {
             <div className="flex items-center gap-2 border-b border-stone-800 pb-3 text-stone-200">
               <User className="h-5 w-5 text-ember-400" />
               <h2 className="text-base font-semibold">Founder Profile &amp; Bio</h2>
+            </div>
+
+            {/* Official Portrait Photo Management */}
+            <div className="mt-4 rounded-xl border border-stone-800 bg-obsidian-950/80 p-4">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-stone-300">
+                Official Founder Portrait Photo
+              </label>
+              <div className="mt-3 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <div className="relative h-32 w-28 shrink-0 overflow-hidden rounded-xl border border-stone-700 bg-stone-900 shadow-inner">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={portraitPreview || activePortraitUrl}
+                    alt={founderProfile.name}
+                    className="h-full w-full object-cover"
+                  />
+                  {portraitPreview && (
+                    <span className="absolute bottom-1 left-1 rounded bg-amber-500/90 px-1 py-0.5 text-[9px] font-bold text-obsidian-950 uppercase">
+                      Preview
+                    </span>
+                  )}
+                </div>
+
+                <div className="space-y-2 flex-1">
+                  <p className="text-xs text-stone-400">
+                    Update Mani&nbsp;Sir&apos;s official portrait shown on the homepage and about page.
+                    Supports JPEG, PNG, or WebP up to 10MB.
+                  </p>
+
+                  <div className="flex flex-wrap items-center gap-2">
+                    <label
+                      htmlFor="founder-portrait-input"
+                      className={cn(
+                        button(portraitFile ? "secondary" : "primary", "sm"),
+                        "cursor-pointer text-xs font-semibold inline-flex items-center gap-1.5",
+                      )}
+                    >
+                      <Camera className="h-3.5 w-3.5 text-ember-400" />
+                      {portraitFile ? "Choose Different Photo" : "Upload New Portrait Photo"}
+                    </label>
+                    <input
+                      id="founder-portrait-input"
+                      type="file"
+                      accept=".jpg,.jpeg,.png,.webp"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          setPortraitFile(file);
+                          setPortraitPreview(URL.createObjectURL(file));
+                          setPortraitUploadSuccess(null);
+                          setPortraitUploadError(null);
+                        }
+                      }}
+                      className="sr-only"
+                    />
+
+                    {portraitFile && (
+                      <button
+                        type="button"
+                        onClick={handleUploadPortrait}
+                        disabled={isUploadingPortrait}
+                        className={cn(
+                          button("primary", "sm"),
+                          "text-xs font-semibold inline-flex items-center gap-1.5",
+                        )}
+                      >
+                        {isUploadingPortrait ? (
+                          <>
+                            <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+                            Uploading Portrait...
+                          </>
+                        ) : (
+                          <>
+                            <UploadCloud className="h-3.5 w-3.5" />
+                            Upload New Portrait Photo
+                          </>
+                        )}
+                      </button>
+                    )}
+
+                    {portraitFile && !isUploadingPortrait && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setPortraitFile(null);
+                          setPortraitPreview(null);
+                        }}
+                        className="text-xs text-stone-500 hover:text-stone-300 underline"
+                      >
+                        Cancel
+                      </button>
+                    )}
+                  </div>
+
+                  {portraitFile && (
+                    <p className="text-[11px] font-mono text-stone-400">
+                      Selected: {portraitFile.name} ({(portraitFile.size / 1024).toFixed(1)} KB)
+                    </p>
+                  )}
+
+                  {portraitUploadSuccess && (
+                    <div className="flex items-center gap-1.5 text-xs text-emerald-400">
+                      <CheckCircle2 className="h-4 w-4 shrink-0" />
+                      <span>{portraitUploadSuccess}</span>
+                    </div>
+                  )}
+
+                  {portraitUploadError && (
+                    <p className="text-xs text-red-400">{portraitUploadError}</p>
+                  )}
+                </div>
+              </div>
             </div>
 
             <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
