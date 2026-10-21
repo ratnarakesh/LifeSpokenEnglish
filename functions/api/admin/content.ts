@@ -26,6 +26,10 @@ export interface AdminSiteSettings {
   whatsappNumber: string;
   address: string;
   trialTerms: string;
+  promises?: string[];
+  workingHours?: string;
+  batchTimings?: string;
+  logoStory?: string;
 }
 
 export interface AdminGalleryItem {
@@ -71,6 +75,14 @@ export interface AdminFounderProfile {
   altText: string;
 }
 
+export interface AdminLegalDocument {
+  id: string;
+  slug: string;
+  title: string;
+  lastUpdated: string;
+  content: string;
+}
+
 export interface FullAdminData {
   announcement: AdminAnnouncement;
   siteSettings: AdminSiteSettings;
@@ -79,6 +91,7 @@ export interface FullAdminData {
   faqItems: AdminFaqItem[];
   testimonials: AdminTestimonialItem[];
   founderProfile: AdminFounderProfile;
+  legalDocuments: AdminLegalDocument[];
 }
 
 export function extractYouTubeId(urlOrId: unknown): string | null {
@@ -108,6 +121,23 @@ export const DEFAULT_ADMIN_DATA: FullAdminData = {
       "First Floor, Beside HP Petrol Bunk, Car Shed Junction, PM Palem, Madhurawada, Visakhapatnam, Andhra Pradesh 530041",
     trialTerms:
       "10 full live classes completely free with zero advance payment. Stop at any time during the trial. ₹3,000 for the first month, then ₹2,000 per month.",
+    promises: [
+      "10 Days Free Demo Classes: Attend 10 full sessions before you decide.",
+      "Monthly Fee Payment Option: Pay small monthly instalments like school tuition. No heavy upfront burden.",
+      "100% Face-to-Face Live Teaching: Interactive two-way speaking practice. Never boring recorded videos.",
+      "Real-Life Situational Learning: Practical examples from your daily life, job and career, not dry bookish grammar rules.",
+      "Free Repeat Batch Guarantee: Finished the course and want more polish? Repeat the next batch for ₹0.",
+      "Flexible Weekend Backup: Students who miss weekday sessions receive personalized on-demand makeup classes on Saturday and Sunday directly with Mani\u00A0Sir.",
+      "Complete Soft Skills & Drafting: Master professional email writing, formal drafting and corporate etiquette.",
+      "Equal Teaching & Speaking Drills: 50% concept explanation + 50% active speaking practice, every session.",
+      "Vernacular-Friendly (Telugu -> English): Designed to remove the fear of English for Telugu-medium learners.",
+      "Open Learning Environment: Basic track students can freely ask questions from advanced modules too.",
+    ],
+    workingHours: "Monday to Friday: 6:00 AM to 10:00 PM, weekends for personal backup sessions",
+    batchTimings:
+      "Morning: 6:00 AM - 7:00 AM, 7:00 AM - 8:00 AM, 8:00 AM - 9:00 AM\nEvening: 5:00 PM - 6:00 PM, 6:00 PM - 7:00 PM, 7:00 PM - 8:00 PM, 8:00 PM - 9:00 PM\nOnline Live: Throughout the day\nWeekend: Saturday & Sunday on-demand personal backup sessions",
+    logoStory:
+      "Like an eagle renewing its wings on the mountaintop, every learner at LIFE sheds their old hesitation and rises into fluent, confident expression. L.I.F.E. stands for Live It For Eternity: English not as an academic subject, but as a living life skill you will carry forever.",
   },
   founderProfile: {
     name: "Mani\u00A0Sir",
@@ -307,6 +337,200 @@ export const DEFAULT_ADMIN_DATA: FullAdminData = {
       order: 3,
     },
   ],
+  legalDocuments: [
+    {
+      id: "life-legal-privacy-policy",
+      slug: "privacy-policy",
+      title: "Privacy Policy & Data Notice",
+      lastUpdated: "11 October 2026",
+      content: JSON.stringify({
+        intro:
+          "We keep this simple: this website uses no cookies, no analytics and no tracking. We only receive your details when you choose to message or call us. This notice explains what we collect, why, and your rights under the Digital Personal Data Protection Act, 2023 and the Information Technology Act, 2000.",
+        sections: [
+          {
+            id: "who",
+            title: "1. Who we are",
+            paragraphs: [
+              "LIFE Spoken English & Soft Skills Training Institute (\"LIFE\", \"we\"), run by K. Maneendra Kumar (Mani\u00A0Sir), First Floor, Beside HP Petrol Bunk, Car Shed Junction, PM Palem, Madhurawada, Visakhapatnam, Andhra Pradesh - 530041. For the personal data described here, LIFE is the Data Fiduciary.",
+            ],
+          },
+          {
+            id: "collect",
+            title: "2. What we collect, and when",
+            paragraphs: [
+              "We do not collect passwords, payment card details, health information or any other sensitive data on this website.",
+            ],
+            bullets: [
+              "Booking form: your name, mobile number, learner category, course of interest and preferred mode. The form does not send or store anything on our website. When you tap \"Register\", it opens WhatsApp with a ready-made message, and we receive it only if you press send.",
+              "Calls and WhatsApp messages you send us directly, and anything you choose to share in them.",
+              "Enrolled learners: the details needed to run your classes, such as name, contact number, batch and attendance.",
+            ],
+          },
+          {
+            id: "purpose",
+            title: "3. Why we use it",
+            paragraphs: [
+              "We never sell your data, never add you to advertising lists, and do not share it with anyone except where the law requires.",
+            ],
+            bullets: [
+              "To reply to your enquiry and arrange your 10 free trial classes.",
+              "To share batch timings, schedule backup sessions and run your course.",
+              "To keep basic records required by law.",
+            ],
+          },
+          {
+            id: "cookies",
+            title: "4. Cookies and tracking",
+            paragraphs: [
+              "This website sets no cookies and uses no analytics, advertising pixels, fingerprinting or session recording. Because of this, there is no cookie banner to accept.",
+              "To open instantly and work offline, your browser keeps a copy of the website's own files using its standard cache and a service worker. These files contain no personal information, and you can clear them at any time from your browser settings.",
+            ],
+          },
+          {
+            id: "third-party",
+            title: "5. Third-party services (only when you choose)",
+            paragraphs: [
+              "Until you use one of these, your browser does not contact these services from our website.",
+            ],
+            bullets: [
+              "WhatsApp (Meta): used when you tap a WhatsApp button. WhatsApp's own privacy policy applies to messages you send.",
+              "YouTube (Google): videos load from the privacy-enhanced youtube-nocookie.com player, and only after you press play.",
+              "Google Maps: the map loads only when you tap \"Load interactive map\" or open Google Maps.",
+              "Instagram and YouTube channel links open those platforms, where their policies apply.",
+            ],
+          },
+          {
+            id: "children",
+            title: "6. Learners under 18",
+            paragraphs: [
+              "LIFE welcomes school students. If the learner is under 18, the enquiry should be made by a parent or legal guardian, or with their permission. Before enrolling a minor, we confirm consent directly with the parent or guardian, as required by the Digital Personal Data Protection Act, 2023. We do not use children's data for tracking, profiling or advertising.",
+            ],
+          },
+          {
+            id: "retention",
+            title: "7. How long we keep it",
+            paragraphs: [
+              "Enquiry details are kept only as long as needed to answer you and, if you join, for the duration of your course and any records the law requires. You can ask us to delete your details at any time.",
+            ],
+          },
+          {
+            id: "rights",
+            title: "8. Your rights",
+            paragraphs: [
+              "Under the Digital Personal Data Protection Act, 2023, you can:",
+            ],
+            bullets: [
+              "ask what personal data we hold about you and how we use it;",
+              "ask us to correct, complete, update or erase it;",
+              "withdraw your consent at any time (this does not affect anything done before);",
+              "nominate another person to exercise these rights for you;",
+              "raise a grievance with us, and if you are not satisfied, complain to the Data Protection Board of India.",
+            ],
+          },
+          {
+            id: "contact",
+            title: "9. Contact and grievances",
+            paragraphs: [
+              "For any privacy question, request to exercise your rights, or grievance, contact our Grievance / Privacy contact:",
+              "We will respond as early as possible and within the time limits set by law.",
+            ],
+            bullets: [
+              "Name: Mani\u00A0Sir (K. Maneendra Kumar), Founder",
+              "Email: lifebymanisir@gmail.com",
+              "Phone: +91 73374 12999 (call or WhatsApp)",
+              "Address: First Floor, Beside HP Petrol Bunk, Car Shed Junction, PM Palem, Madhurawada, Visakhapatnam - 530041",
+            ],
+          },
+          {
+            id: "security",
+            title: "10. Security and changes",
+            paragraphs: [
+              "The website is served securely over HTTPS and stores no personal data on its servers. Records we keep are protected with reasonable security safeguards. If this notice changes, we will update the date above. See also our Terms of Use.",
+            ],
+          },
+        ],
+      }),
+    },
+    {
+      id: "life-legal-terms-of-use",
+      slug: "terms-of-use",
+      title: "Terms of Use & Class Policies",
+      lastUpdated: "11 October 2026",
+      content: JSON.stringify({
+        intro:
+          "By using this website you agree to these terms. They also summarise how classes at LIFE Spoken English work, so there are no surprises.",
+        sections: [
+          {
+            id: "website",
+            title: "1. Using this website",
+            paragraphs: [
+              "This website gives information about LIFE's courses and lets you contact us. Please use it lawfully and do not attempt to disrupt it or misuse its content.",
+            ],
+          },
+          {
+            id: "information",
+            title: "2. Course information and fees",
+            paragraphs: [
+              "We keep course details, timings and fees accurate and up to date, but they may change. The details confirmed by Mani\u00A0Sir on call or WhatsApp at the time you join apply.",
+              "For any question about fees, payments or refunds, please speak to Mani\u00A0Sir directly before paying.",
+            ],
+            bullets: [
+              "10-Class Free Trial: 10 live sessions with no fee and no advance payment. You may stop at any time during the trial.",
+              "Regular Batch: ₹3,000 for the first month, then ₹2,000 per month, paid month by month.",
+              "1-on-1 Personal Mentorship: ₹10,000 per month.",
+              "Custom schedule requests: discuss your preferred timing directly with Mani\u00A0Sir.",
+            ],
+          },
+          {
+            id: "refunds",
+            title: "3. Refund policy",
+            paragraphs: [
+              "10-Class Free Trial allows 100% risk-free evaluation. Once a monthly batch fee is paid, fees are non-refundable for that active calendar month due to the strict 15 - 20 student seat limit. Batch pauses or transfers for genuine emergencies may be granted at Mani\u00A0Sir's sole discretion.",
+            ],
+          },
+          {
+            id: "classes",
+            title: "4. Batches, timings and backup sessions",
+            paragraphs: [],
+            bullets: [
+              "Strict 15 - 20 student seat limit per batch.",
+              "Classes run Monday to Friday, 6:00 AM to 10:00 PM. Weekends: Saturday & Sunday for personal backup sessions.",
+              "Students who miss weekday sessions can take personalized on-demand makeup classes on Saturday and Sunday, arranged directly with Mani\u00A0Sir.",
+              "Learners under 18 join with the consent of a parent or legal guardian.",
+            ],
+          },
+          {
+            id: "results",
+            title: "5. Outcome disclaimer",
+            paragraphs: [
+              "LIFE Spoken English provides practical spoken communication and soft skills mentorship. We do not offer or guarantee job placements, employment contracts, or academic degrees. Individual fluency outcomes depend entirely on learner practice, attendance, and commitment.",
+            ],
+          },
+          {
+            id: "content",
+            title: "6. Our content",
+            paragraphs: [
+              "The LIFE name and logo, the printed workbook, class material and videos belong to LIFE. Please do not copy or reuse them commercially without permission. Sharing links to our pages and videos is always welcome.",
+            ],
+          },
+          {
+            id: "links",
+            title: "7. Other websites",
+            paragraphs: [
+              "Links to WhatsApp, YouTube, Instagram and Google Maps take you to services run by other companies under their own terms and privacy policies.",
+            ],
+          },
+          {
+            id: "law",
+            title: "8. Governing law and contact",
+            paragraphs: [
+              "These terms are governed by the laws of India. For any question, concern or grievance, contact Mani\u00A0Sir at lifebymanisir@gmail.com or on +91 73374 12999. See our Privacy Policy for how we handle personal data.",
+            ],
+          },
+        ],
+      }),
+    },
+  ],
 };
 
 async function cmaFetch(
@@ -351,6 +575,7 @@ export async function onRequestGet(context: EventContext): Promise<Response> {
       coursesRes,
       faqsRes,
       testimonialsRes,
+      legalRes,
     ] = await Promise.all([
       cmaFetch(base, token, "/entries/life-site-settings"),
       cmaFetch(base, token, "/entries/life-announcement-default"),
@@ -359,6 +584,7 @@ export async function onRequestGet(context: EventContext): Promise<Response> {
       cmaFetch(base, token, "/entries?content_type=courseTrack&order=fields.order&limit=20"),
       cmaFetch(base, token, "/entries?content_type=faqItem&order=fields.order&limit=100"),
       cmaFetch(base, token, "/entries?content_type=testimonialItem&order=fields.order&limit=100"),
+      cmaFetch(base, token, "/entries?content_type=legalDocument&limit=10"),
     ]);
 
     const result = { ...DEFAULT_ADMIN_DATA };
@@ -368,6 +594,10 @@ export async function onRequestGet(context: EventContext): Promise<Response> {
       const json = (await settingsRes.json()) as { fields?: Record<string, Record<string, unknown>> };
       const f = json.fields ?? {};
       const locale = Object.keys(f.heroTitle ?? {})[0] ?? "en-US";
+      const rawPromises = f.promises?.[locale];
+      const promises = Array.isArray(rawPromises)
+        ? rawPromises.map((p) => cleanText(p)).filter(Boolean)
+        : result.siteSettings.promises;
       result.siteSettings = {
         heroTitle: cleanText(f.heroTitle?.[locale]) || result.siteSettings.heroTitle,
         heroSubtitle: cleanText(f.heroSubtitle?.[locale]) || result.siteSettings.heroSubtitle,
@@ -375,6 +605,10 @@ export async function onRequestGet(context: EventContext): Promise<Response> {
         whatsappNumber: cleanText(f.whatsappNumber?.[locale]) || result.siteSettings.whatsappNumber,
         address: cleanText(f.address?.[locale]) || result.siteSettings.address,
         trialTerms: cleanText(f.trialTerms?.[locale]) || result.siteSettings.trialTerms,
+        promises,
+        workingHours: cleanText(f.workingHours?.[locale]) || result.siteSettings.workingHours,
+        batchTimings: cleanText(f.batchTimings?.[locale]) || result.siteSettings.batchTimings,
+        logoStory: cleanText(f.logoStory?.[locale]) || result.siteSettings.logoStory,
       };
     }
 
@@ -493,6 +727,26 @@ export async function onRequestGet(context: EventContext): Promise<Response> {
       }
     }
 
+    // 8. legalDocuments
+    if (legalRes.ok) {
+      const json = (await legalRes.json()) as {
+        items?: Array<{ sys: { id: string }; fields: Record<string, Record<string, unknown>> }>;
+      };
+      if (Array.isArray(json.items) && json.items.length > 0) {
+        result.legalDocuments = json.items.map((item) => {
+          const f = item.fields ?? {};
+          const locale = Object.keys(f.title ?? {})[0] ?? "en-US";
+          return {
+            id: item.sys.id,
+            slug: cleanText(f.slug?.[locale]),
+            title: cleanText(f.title?.[locale]),
+            lastUpdated: cleanText(f.lastUpdated?.[locale]),
+            content: typeof f.content?.[locale] === "string" ? (f.content[locale] as string) : "",
+          };
+        });
+      }
+    }
+
     return jsonResponse(result);
   } catch {
     return jsonResponse(DEFAULT_ADMIN_DATA);
@@ -520,6 +774,7 @@ export async function onRequestPost(context: EventContext): Promise<Response> {
       deletedFaqIds?: string[];
       testimonials?: AdminTestimonialItem[];
       deletedTestimonialIds?: string[];
+      legalDocuments?: AdminLegalDocument[];
     };
 
     const space = context.env.CONTENTFUL_SPACE_ID;
@@ -605,6 +860,12 @@ export async function onRequestPost(context: EventContext): Promise<Response> {
           ...(body.siteSettings.whatsappNumber && { whatsappNumber: cleanText(body.siteSettings.whatsappNumber) }),
           ...(body.siteSettings.address && { address: cleanText(body.siteSettings.address) }),
           ...(body.siteSettings.trialTerms && { trialTerms: cleanText(body.siteSettings.trialTerms) }),
+          ...(Array.isArray(body.siteSettings.promises) && {
+            promises: body.siteSettings.promises.map((p) => cleanText(p)).filter(Boolean),
+          }),
+          ...(body.siteSettings.workingHours && { workingHours: cleanText(body.siteSettings.workingHours) }),
+          ...(body.siteSettings.batchTimings && { batchTimings: cleanText(body.siteSettings.batchTimings) }),
+          ...(body.siteSettings.logoStory && { logoStory: cleanText(body.siteSettings.logoStory) }),
         });
       }
 
@@ -703,6 +964,19 @@ export async function onRequestPost(context: EventContext): Promise<Response> {
       if (Array.isArray(body.deletedTestimonialIds)) {
         for (const id of body.deletedTestimonialIds) {
           await deleteEntry(id);
+        }
+      }
+
+      // 8. Update legalDocuments
+      if (Array.isArray(body.legalDocuments)) {
+        for (const doc of body.legalDocuments) {
+          const docId = doc.id || `life-legal-${doc.slug}`;
+          await upsertEntry(docId, "legalDocument", {
+            slug: cleanText(doc.slug),
+            title: cleanText(doc.title),
+            lastUpdated: cleanText(doc.lastUpdated),
+            content: typeof doc.content === "string" ? doc.content : JSON.stringify(doc.content),
+          });
         }
       }
 

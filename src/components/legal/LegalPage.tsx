@@ -7,10 +7,11 @@ type LegalPageProps = {
   title: string;
   intro: ReactNode;
   breadcrumb: string;
+  lastUpdated?: string;
   children: ReactNode;
 };
 
-export function LegalPage({ title, intro, breadcrumb, children }: LegalPageProps) {
+export function LegalPage({ title, intro, breadcrumb, lastUpdated, children }: LegalPageProps) {
   return (
     <section aria-labelledby="legal-title" className="relative pt-10 pb-24 sm:pt-16">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
@@ -23,7 +24,7 @@ export function LegalPage({ title, intro, breadcrumb, children }: LegalPageProps
         <h1 id="legal-title" className="mt-4 text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
           {title}
         </h1>
-        <p className="mt-3 text-sm text-stone-500">Last updated: {LEGAL_UPDATED}</p>
+        <p className="mt-3 text-sm text-stone-500">Last updated: {lastUpdated || LEGAL_UPDATED}</p>
         <div className="mt-6 text-base leading-relaxed text-pretty text-stone-300 sm:text-lg">{intro}</div>
         <div className="legal-prose mt-10 space-y-10">{children}</div>
       </div>

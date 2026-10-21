@@ -6,6 +6,7 @@ import {
   ChevronDown,
   ChevronUp,
   Delete,
+  FileText,
   HelpCircle,
   Lock,
   LogOut,
@@ -31,12 +32,20 @@ import type {
   AdminFaqItem,
   AdminFounderProfile,
   AdminGalleryItem,
+  AdminLegalDocument,
   AdminSiteSettings,
   AdminTestimonialItem,
   FullAdminData,
 } from "../../../functions/api/admin/content";
 
-type AdminTab = "announcements" | "gallery" | "courses" | "faqs" | "reviews";
+type AdminTab =
+  | "announcements"
+  | "gallery"
+  | "courses"
+  | "faqs"
+  | "reviews"
+  | "story"
+  | "legal";
 
 const DEFAULT_ANNOUNCEMENT: AdminAnnouncement = {
   isActive: true,
@@ -54,7 +63,219 @@ const DEFAULT_SETTINGS: AdminSiteSettings = {
     "First Floor, Beside HP Petrol Bunk, Car Shed Junction, PM Palem, Madhurawada, Visakhapatnam, Andhra Pradesh 530041",
   trialTerms:
     "10 full live classes completely free with zero advance payment. Stop at any time during the trial. ₹3,000 for the first month, then ₹2,000 per month.",
+  promises: [
+    "10 Days Free Demo Classes: Attend 10 full sessions before you decide.",
+    "Monthly Fee Payment Option: Pay small monthly instalments like school tuition. No heavy upfront burden.",
+    "100% Face-to-Face Live Teaching: Interactive two-way speaking practice. Never boring recorded videos.",
+    "Real-Life Situational Learning: Practical examples from your daily life, job and career, not dry bookish grammar rules.",
+    "Free Repeat Batch Guarantee: Finished the course and want more polish? Repeat the next batch for ₹0.",
+    "Flexible Weekend Backup: Students who miss weekday sessions receive personalized on-demand makeup classes on Saturday and Sunday directly with Mani\u00A0Sir.",
+    "Complete Soft Skills & Drafting: Master professional email writing, formal drafting and corporate etiquette.",
+    "Equal Teaching & Speaking Drills: 50% concept explanation + 50% active speaking practice, every session.",
+    "Vernacular-Friendly (Telugu -> English): Designed to remove the fear of English for Telugu-medium learners.",
+    "Open Learning Environment: Basic track students can freely ask questions from advanced modules too.",
+  ],
+  workingHours: "Monday to Friday: 6:00 AM to 10:00 PM, weekends for personal backup sessions",
+  batchTimings:
+    "Morning: 6:00 AM - 7:00 AM, 7:00 AM - 8:00 AM, 8:00 AM - 9:00 AM\nEvening: 5:00 PM - 6:00 PM, 6:00 PM - 7:00 PM, 7:00 PM - 8:00 PM, 8:00 PM - 9:00 PM\nOnline Live: Throughout the day\nWeekend: Saturday & Sunday on-demand personal backup sessions",
+  logoStory:
+    "Like an eagle renewing its wings on the mountaintop, every learner at LIFE sheds their old hesitation and rises into fluent, confident expression. L.I.F.E. stands for Live It For Eternity: English not as an academic subject, but as a living life skill you will carry forever.",
 };
+
+const DEFAULT_LEGAL_DOCS: AdminLegalDocument[] = [
+  {
+    id: "life-legal-privacy-policy",
+    slug: "privacy-policy",
+    title: "Privacy Policy & Data Notice",
+    lastUpdated: "11 October 2026",
+    content: JSON.stringify({
+      intro:
+        "We keep this simple: this website uses no cookies, no analytics and no tracking. We only receive your details when you choose to message or call us. This notice explains what we collect, why, and your rights under the Digital Personal Data Protection Act, 2023 and the Information Technology Act, 2000.",
+      sections: [
+        {
+          id: "who",
+          title: "1. Who we are",
+          paragraphs: [
+            "LIFE Spoken English & Soft Skills Training Institute (\"LIFE\", \"we\"), run by K. Maneendra Kumar (Mani\u00A0Sir), First Floor, Beside HP Petrol Bunk, Car Shed Junction, PM Palem, Madhurawada, Visakhapatnam, Andhra Pradesh - 530041. For the personal data described here, LIFE is the Data Fiduciary.",
+          ],
+        },
+        {
+          id: "collect",
+          title: "2. What we collect, and when",
+          paragraphs: [
+            "We do not collect passwords, payment card details, health information or any other sensitive data on this website.",
+          ],
+          bullets: [
+            "Booking form: your name, mobile number, learner category, course of interest and preferred mode. The form does not send or store anything on our website. When you tap \"Register\", it opens WhatsApp with a ready-made message, and we receive it only if you press send.",
+            "Calls and WhatsApp messages you send us directly, and anything you choose to share in them.",
+            "Enrolled learners: the details needed to run your classes, such as name, contact number, batch and attendance.",
+          ],
+        },
+        {
+          id: "purpose",
+          title: "3. Why we use it",
+          paragraphs: [
+            "We never sell your data, never add you to advertising lists, and do not share it with anyone except where the law requires.",
+          ],
+          bullets: [
+            "To reply to your enquiry and arrange your 10 free trial classes.",
+            "To share batch timings, schedule backup sessions and run your course.",
+            "To keep basic records required by law.",
+          ],
+        },
+        {
+          id: "cookies",
+          title: "4. Cookies and tracking",
+          paragraphs: [
+            "This website sets no cookies and uses no analytics, advertising pixels, fingerprinting or session recording. Because of this, there is no cookie banner to accept.",
+            "To open instantly and work offline, your browser keeps a copy of the website's own files using its standard cache and a service worker. These files contain no personal information, and you can clear them at any time from your browser settings.",
+          ],
+        },
+        {
+          id: "third-party",
+          title: "5. Third-party services (only when you choose)",
+          paragraphs: [
+            "Until you use one of these, your browser does not contact these services from our website.",
+          ],
+          bullets: [
+            "WhatsApp (Meta): used when you tap a WhatsApp button. WhatsApp's own privacy policy applies to messages you send.",
+            "YouTube (Google): videos load from the privacy-enhanced youtube-nocookie.com player, and only after you press play.",
+            "Google Maps: the map loads only when you tap \"Load interactive map\" or open Google Maps.",
+            "Instagram and YouTube channel links open those platforms, where their policies apply.",
+          ],
+        },
+        {
+          id: "children",
+          title: "6. Learners under 18",
+          paragraphs: [
+            "LIFE welcomes school students. If the learner is under 18, the enquiry should be made by a parent or legal guardian, or with their permission. Before enrolling a minor, we confirm consent directly with the parent or guardian, as required by the Digital Personal Data Protection Act, 2023. We do not use children's data for tracking, profiling or advertising.",
+          ],
+        },
+        {
+          id: "retention",
+          title: "7. How long we keep it",
+          paragraphs: [
+            "Enquiry details are kept only as long as needed to answer you and, if you join, for the duration of your course and any records the law requires. You can ask us to delete your details at any time.",
+          ],
+        },
+        {
+          id: "rights",
+          title: "8. Your rights",
+          paragraphs: [
+            "Under the Digital Personal Data Protection Act, 2023, you can:",
+          ],
+          bullets: [
+            "ask what personal data we hold about you and how we use it;",
+            "ask us to correct, complete, update or erase it;",
+            "withdraw your consent at any time (this does not affect anything done before);",
+            "nominate another person to exercise these rights for you;",
+            "raise a grievance with us, and if you are not satisfied, complain to the Data Protection Board of India.",
+          ],
+        },
+        {
+          id: "contact",
+          title: "9. Contact and grievances",
+          paragraphs: [
+            "For any privacy question, request to exercise your rights, or grievance, contact our Grievance / Privacy contact:",
+            "We will respond as early as possible and within the time limits set by law.",
+          ],
+          bullets: [
+            "Name: Mani\u00A0Sir (K. Maneendra Kumar), Founder",
+            "Email: lifebymanisir@gmail.com",
+            "Phone: +91 73374 12999 (call or WhatsApp)",
+            "Address: First Floor, Beside HP Petrol Bunk, Car Shed Junction, PM Palem, Madhurawada, Visakhapatnam - 530041",
+          ],
+        },
+        {
+          id: "security",
+          title: "10. Security and changes",
+          paragraphs: [
+            "The website is served securely over HTTPS and stores no personal data on its servers. Records we keep are protected with reasonable security safeguards. If this notice changes, we will update the date above. See also our Terms of Use.",
+          ],
+        },
+      ],
+    }),
+  },
+  {
+    id: "life-legal-terms-of-use",
+    slug: "terms-of-use",
+    title: "Terms of Use & Class Policies",
+    lastUpdated: "11 October 2026",
+    content: JSON.stringify({
+      intro:
+        "By using this website you agree to these terms. They also summarise how classes at LIFE Spoken English work, so there are no surprises.",
+      sections: [
+        {
+          id: "website",
+          title: "1. Using this website",
+          paragraphs: [
+            "This website gives information about LIFE's courses and lets you contact us. Please use it lawfully and do not attempt to disrupt it or misuse its content.",
+          ],
+        },
+        {
+          id: "information",
+          title: "2. Course information and fees",
+          paragraphs: [
+            "We keep course details, timings and fees accurate and up to date, but they may change. The details confirmed by Mani\u00A0Sir on call or WhatsApp at the time you join apply.",
+            "For any question about fees, payments or refunds, please speak to Mani\u00A0Sir directly before paying.",
+          ],
+          bullets: [
+            "10-Class Free Trial: 10 live sessions with no fee and no advance payment. You may stop at any time during the trial.",
+            "Regular Batch: ₹3,000 for the first month, then ₹2,000 per month, paid month by month.",
+            "1-on-1 Personal Mentorship: ₹10,000 per month.",
+            "Custom schedule requests: discuss your preferred timing directly with Mani\u00A0Sir.",
+          ],
+        },
+        {
+          id: "refunds",
+          title: "3. Refund policy",
+          paragraphs: [
+            "10-Class Free Trial allows 100% risk-free evaluation. Once a monthly batch fee is paid, fees are non-refundable for that active calendar month due to the strict 15 - 20 student seat limit. Batch pauses or transfers for genuine emergencies may be granted at Mani\u00A0Sir's sole discretion.",
+          ],
+        },
+        {
+          id: "classes",
+          title: "4. Batches, timings and backup sessions",
+          paragraphs: [],
+          bullets: [
+            "Strict 15 - 20 student seat limit per batch.",
+            "Classes run Monday to Friday, 6:00 AM to 10:00 PM. Weekends: Saturday & Sunday for personal backup sessions.",
+            "Students who miss weekday sessions can take personalized on-demand makeup classes on Saturday and Sunday, arranged directly with Mani\u00A0Sir.",
+            "Learners under 18 join with the consent of a parent or legal guardian.",
+          ],
+        },
+        {
+          id: "results",
+          title: "5. Outcome disclaimer",
+          paragraphs: [
+            "LIFE Spoken English provides practical spoken communication and soft skills mentorship. We do not offer or guarantee job placements, employment contracts, or academic degrees. Individual fluency outcomes depend entirely on learner practice, attendance, and commitment.",
+          ],
+        },
+        {
+          id: "content",
+          title: "6. Our content",
+          paragraphs: [
+            "The LIFE name and logo, the printed workbook, class material and videos belong to LIFE. Please do not copy or reuse them commercially without permission. Sharing links to our pages and videos is always welcome.",
+          ],
+        },
+        {
+          id: "links",
+          title: "7. Other websites",
+          paragraphs: [
+            "Links to WhatsApp, YouTube, Instagram and Google Maps take you to services run by other companies under their own terms and privacy policies.",
+          ],
+        },
+        {
+          id: "law",
+          title: "8. Governing law and contact",
+          paragraphs: [
+            "These terms are governed by the laws of India. For any question, concern or grievance, contact Mani\u00A0Sir at lifebymanisir@gmail.com or on +91 73374 12999. See our Privacy Policy for how we handle personal data.",
+          ],
+        },
+      ],
+    }),
+  },
+];
 
 const DEFAULT_FOUNDER: AdminFounderProfile = {
   name: "Mani\u00A0Sir",
@@ -88,6 +309,7 @@ export function AdminClient() {
   const [deletedFaqIds, setDeletedFaqIds] = useState<string[]>([]);
   const [testimonials, setTestimonials] = useState<AdminTestimonialItem[]>([]);
   const [deletedTestimonialIds, setDeletedTestimonialIds] = useState<string[]>([]);
+  const [legalDocuments, setLegalDocuments] = useState<AdminLegalDocument[]>(DEFAULT_LEGAL_DOCS);
 
   // FAQ Accordion expanded IDs
   const [expandedFaqId, setExpandedFaqId] = useState<string | null>(null);
@@ -107,6 +329,21 @@ export function AdminClient() {
   const [newReviewRole, setNewReviewRole] = useState("");
   const [newReviewQuote, setNewReviewQuote] = useState("");
   const [newReviewRating, setNewReviewRating] = useState(5);
+
+  function handlePromiseChange(index: number, value: string) {
+    setSiteSettings((prev) => {
+      const currentPromises =
+        prev.promises && prev.promises.length > 0 ? [...prev.promises] : [...DEFAULT_SETTINGS.promises!];
+      currentPromises[index] = value;
+      return { ...prev, promises: currentPromises };
+    });
+  }
+
+  function handleLegalDocChange(slug: string, field: keyof AdminLegalDocument, value: string) {
+    setLegalDocuments((prev) =>
+      prev.map((doc) => (doc.slug === slug ? { ...doc, [field]: value } : doc)),
+    );
+  }
 
   // Check auth session on mount
   useEffect(() => {
@@ -141,6 +378,9 @@ export function AdminClient() {
         if (Array.isArray(data.courseTracks)) setCourseTracks(data.courseTracks);
         if (Array.isArray(data.faqItems)) setFaqItems(data.faqItems);
         if (Array.isArray(data.testimonials)) setTestimonials(data.testimonials);
+        if (Array.isArray(data.legalDocuments) && data.legalDocuments.length > 0) {
+          setLegalDocuments(data.legalDocuments);
+        }
       }
     } catch {
       // Content fallback already in place
@@ -209,6 +449,7 @@ export function AdminClient() {
         deletedFaqIds,
         testimonials,
         deletedTestimonialIds,
+        legalDocuments,
       };
 
       const res = await fetch("/api/admin/content", {
@@ -551,6 +792,34 @@ export function AdminClient() {
         >
           <Star className="h-4 w-4" />
           Reviews &amp; Founder
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab("story")}
+          className={cn(
+            "flex shrink-0 items-center gap-2 rounded-lg px-3.5 py-2 text-xs font-semibold transition sm:text-sm",
+            activeTab === "story"
+              ? "bg-ember-500/20 text-ember-300 ring-1 ring-ember-500/40"
+              : "text-stone-400 hover:text-stone-200",
+          )}
+        >
+          <Sparkles className="h-4 w-4" />
+          Story &amp; Promises
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab("legal")}
+          className={cn(
+            "flex shrink-0 items-center gap-2 rounded-lg px-3.5 py-2 text-xs font-semibold transition sm:text-sm",
+            activeTab === "legal"
+              ? "bg-ember-500/20 text-ember-300 ring-1 ring-ember-500/40"
+              : "text-stone-400 hover:text-stone-200",
+          )}
+        >
+          <ShieldCheck className="h-4 w-4" />
+          Legal &amp; Policies ({legalDocuments.length})
         </button>
       </div>
 
@@ -1323,6 +1592,216 @@ export function AdminClient() {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* TAB 6: STORY & PROMISES */}
+      {activeTab === "story" && (
+        <div className="space-y-6">
+          <div className="rounded-2xl border border-stone-800 bg-obsidian-950 p-6 shadow-xl">
+            <h2 className="text-lg font-bold text-white flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-ember-400" />
+              The 10 Core Commitment Promises
+            </h2>
+            <p className="mt-1 text-xs text-stone-400">
+              The ten commitments highlighted on the homepage that eliminate every barrier between students and fluent spoken English. Format: Title: Description
+            </p>
+
+            <div className="mt-5 space-y-3">
+              {(siteSettings.promises && siteSettings.promises.length > 0
+                ? siteSettings.promises
+                : DEFAULT_SETTINGS.promises!
+              ).map((promise, idx) => (
+                <div key={idx} className="flex items-start gap-3">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-ember-500/10 text-xs font-bold text-ember-400 ring-1 ring-ember-500/20">
+                    {String(idx + 1).padStart(2, "0")}
+                  </span>
+                  <input
+                    type="text"
+                    value={promise}
+                    onChange={(e) => handlePromiseChange(idx, e.target.value)}
+                    className="w-full rounded-xl border border-stone-800 bg-obsidian-900 px-3.5 py-2 text-xs text-white placeholder-stone-600 focus:border-ember-500 focus:ring-1 focus:ring-ember-500"
+                    placeholder={`Promise ${idx + 1}`}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-stone-800 bg-obsidian-950 p-6 shadow-xl">
+            <h2 className="text-lg font-bold text-white flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-sun-400" />
+              Logo Story &amp; LIFE Meaning
+            </h2>
+            <p className="mt-1 text-xs text-stone-400">
+              The parable of the young eagle learning to fly, and what L.I.F.E. (Live It For Eternity) stands for.
+            </p>
+            <div className="mt-4">
+              <label htmlFor="logoStory" className="block text-xs font-semibold text-stone-300">
+                Logo Story &amp; Brand Philosophy
+              </label>
+              <textarea
+                id="logoStory"
+                rows={4}
+                value={siteSettings.logoStory ?? ""}
+                onChange={(e) =>
+                  setSiteSettings((prev) => ({ ...prev, logoStory: e.target.value }))
+                }
+                className="mt-1.5 w-full rounded-xl border border-stone-800 bg-obsidian-900 p-3 text-xs text-white placeholder-stone-600 focus:border-ember-500 focus:ring-1 focus:ring-ember-500"
+                placeholder="Enter logo story and brand philosophy..."
+              />
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-stone-800 bg-obsidian-950 p-6 shadow-xl">
+            <h2 className="text-lg font-bold text-white flex items-center gap-2">
+              <Phone className="h-5 w-5 text-ember-400" />
+              Operating Hours &amp; Batch Timings
+            </h2>
+            <p className="mt-1 text-xs text-stone-400">
+              Mani&nbsp;Sir&apos;s daily classroom and online live batch schedule slots across the week.
+            </p>
+
+            <div className="mt-4 space-y-4">
+              <div>
+                <label htmlFor="workingHours" className="block text-xs font-semibold text-stone-300">
+                  Operating Hours Summary
+                </label>
+                <input
+                  id="workingHours"
+                  type="text"
+                  value={siteSettings.workingHours ?? ""}
+                  onChange={(e) =>
+                    setSiteSettings((prev) => ({ ...prev, workingHours: e.target.value }))
+                  }
+                  className="mt-1.5 w-full rounded-xl border border-stone-800 bg-obsidian-900 px-3.5 py-2 text-xs text-white placeholder-stone-600 focus:border-ember-500 focus:ring-1 focus:ring-ember-500"
+                  placeholder="e.g. Monday to Friday: 6:00 AM to 10:00 PM"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="batchTimings" className="block text-xs font-semibold text-stone-300">
+                  Daily Batch Timings (Morning, Evening, Online &amp; Weekend)
+                </label>
+                <textarea
+                  id="batchTimings"
+                  rows={4}
+                  value={siteSettings.batchTimings ?? ""}
+                  onChange={(e) =>
+                    setSiteSettings((prev) => ({ ...prev, batchTimings: e.target.value }))
+                  }
+                  className="mt-1.5 w-full rounded-xl border border-stone-800 bg-obsidian-900 p-3 text-xs text-white placeholder-stone-600 focus:border-ember-500 focus:ring-1 focus:ring-ember-500"
+                  placeholder="Morning slots, evening slots, and weekend backup details..."
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* TAB 7: LEGAL & POLICIES */}
+      {activeTab === "legal" && (
+        <div className="space-y-6">
+          <div className="rounded-2xl border border-stone-800 bg-obsidian-950 p-6 shadow-xl">
+            <h2 className="text-lg font-bold text-white flex items-center gap-2">
+              <ShieldCheck className="h-5 w-5 text-emerald-400" />
+              Legal Policies &amp; DPDP Compliance
+            </h2>
+            <p className="mt-1 text-xs text-stone-400">
+              Manage your legal documents, terms of use, privacy policies, and grievance contacts required by the Digital Personal Data Protection Act, 2023.
+            </p>
+          </div>
+
+          {legalDocuments.map((doc) => (
+            <div key={doc.slug} className="rounded-2xl border border-stone-800 bg-obsidian-950 p-6 shadow-xl">
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-stone-800 pb-4">
+                <div>
+                  <h3 className="text-base font-bold text-white flex items-center gap-2">
+                    <FileText className="h-4 w-4 text-ember-400" />
+                    {doc.title || doc.slug}
+                  </h3>
+                  <span className="font-mono text-xs text-stone-500">
+                    URL: /{doc.slug === "privacy-policy" ? "privacy" : doc.slug === "terms-of-use" ? "terms" : doc.slug}
+                  </span>
+                </div>
+                <a
+                  href={`/${doc.slug === "privacy-policy" ? "privacy" : doc.slug === "terms-of-use" ? "terms" : doc.slug}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs font-semibold text-ember-400 hover:underline"
+                >
+                  View Live Page &rarr;
+                </a>
+              </div>
+
+              <div className="mt-4 space-y-4">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <label htmlFor={`doc-title-${doc.slug}`} className="block text-xs font-semibold text-stone-300">
+                      Document Title
+                    </label>
+                    <input
+                      id={`doc-title-${doc.slug}`}
+                      type="text"
+                      value={doc.title}
+                      onChange={(e) => handleLegalDocChange(doc.slug, "title", e.target.value)}
+                      className="mt-1.5 w-full rounded-xl border border-stone-800 bg-obsidian-900 px-3.5 py-2 text-xs text-white placeholder-stone-600 focus:border-ember-500 focus:ring-1 focus:ring-ember-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor={`doc-date-${doc.slug}`} className="block text-xs font-semibold text-stone-300">
+                      Last Updated Notice
+                    </label>
+                    <input
+                      id={`doc-date-${doc.slug}`}
+                      type="text"
+                      value={doc.lastUpdated}
+                      onChange={(e) => handleLegalDocChange(doc.slug, "lastUpdated", e.target.value)}
+                      className="mt-1.5 w-full rounded-xl border border-stone-800 bg-obsidian-900 px-3.5 py-2 text-xs text-white placeholder-stone-600 focus:border-ember-500 focus:ring-1 focus:ring-ember-500"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor={`doc-content-${doc.slug}`} className="block text-xs font-semibold text-stone-300">
+                    Policy Content / Clauses (Markdown or Structured Text)
+                  </label>
+                  <textarea
+                    id={`doc-content-${doc.slug}`}
+                    rows={8}
+                    value={doc.content}
+                    onChange={(e) => handleLegalDocChange(doc.slug, "content", e.target.value)}
+                    className="mt-1.5 w-full font-mono rounded-xl border border-stone-800 bg-obsidian-900 p-3 text-xs text-white placeholder-stone-600 focus:border-ember-500 focus:ring-1 focus:ring-ember-500"
+                  />
+                  <p className="mt-1 text-[11px] text-stone-500">
+                    Full clauses, refund policies, disclaimers, and grievance officer details.
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+
+          <div className="rounded-2xl border border-stone-800 bg-obsidian-950 p-6 shadow-xl">
+            <h3 className="text-base font-bold text-white flex items-center gap-2">
+              <ShieldCheck className="h-4 w-4 text-ember-400" />
+              Trial &amp; Refund Guarantee Terms
+            </h3>
+            <p className="mt-1 text-xs text-stone-400">
+              The 10-day trial rules and fee terms displayed across booking forms and footer guarantee notes.
+            </p>
+            <div className="mt-4">
+              <textarea
+                rows={3}
+                value={siteSettings.trialTerms}
+                onChange={(e) =>
+                  setSiteSettings((prev) => ({ ...prev, trialTerms: e.target.value }))
+                }
+                className="w-full rounded-xl border border-stone-800 bg-obsidian-900 p-3 text-xs text-white placeholder-stone-600 focus:border-ember-500 focus:ring-1 focus:ring-ember-500"
+                placeholder="10 full live classes completely free..."
+              />
             </div>
           </div>
         </div>

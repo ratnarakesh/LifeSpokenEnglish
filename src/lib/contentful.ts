@@ -46,6 +46,18 @@ export type CmsSiteSettings = {
   whatsappNumber: string;
   address: string;
   trialTerms: string;
+  promises?: string[];
+  workingHours?: string;
+  batchTimings?: string;
+  logoStory?: string;
+};
+
+export type CmsLegalDocument = {
+  id: string;
+  slug: string;
+  title: string;
+  lastUpdated: string;
+  content: string;
 };
 
 export type CmsCourseTrack = {
@@ -82,6 +94,7 @@ export type CmsContent = {
   courseTracks: CmsCourseTrack[];
   faqItems: CmsFaqItem[];
   testimonials: CmsTestimonialItem[];
+  legalDocuments: CmsLegalDocument[];
 };
 
 const TIMEOUT_MS = 15_000;
@@ -180,6 +193,9 @@ function toFounderProfile(entry: { sys: { id: string }; fields: Fields } | undef
 function toSiteSettings(entry: { fields: Fields } | undefined): CmsSiteSettings | null {
   if (!entry?.fields) return null;
   const f = entry.fields;
+  const rawPromises = Array.isArray(f.promises)
+    ? f.promises.map((p) => cleanText(p)).filter(Boolean)
+    : [];
   return {
     heroTitle: cleanText(f.heroTitle),
     heroSubtitle: cleanText(f.heroSubtitle),
@@ -187,6 +203,24 @@ function toSiteSettings(entry: { fields: Fields } | undefined): CmsSiteSettings 
     whatsappNumber: cleanText(f.whatsappNumber),
     address: cleanText(f.address),
     trialTerms: cleanText(f.trialTerms),
+    promises: rawPromises.length ? rawPromises : undefined,
+    workingHours: cleanText(f.workingHours) || undefined,
+    batchTimings: cleanText(f.batchTimings) || undefined,
+    logoStory: cleanText(f.logoStory) || undefined,
+  };
+}
+
+function toLegalDocument(entry: { sys: { id: string }; fields: Fields }): CmsLegalDocument | null {
+  const f = entry.fields;
+  const slug = cleanText(f.slug);
+  const title = cleanText(f.title);
+  if (!slug || !title) return null;
+  return {
+    id: entry.sys.id,
+    slug,
+    title,
+    lastUpdated: cleanText(f.lastUpdated) || "11 October 2026",
+    content: cleanText(f.content),
   };
 }
 
@@ -246,7 +280,7 @@ async function fetchAll(): Promise<CmsContent> {
     retryLimit: 2,
   }).withoutUnresolvableLinks;
 
-  const [gallery, announcements, founders, settings, courses, faqs, testimonials] = await Promise.all([
+  const [gallery, announcements, founders, settings, courses, faqs, testimonials, legalDocs] = await Promise.all([
     client.getEntries({ content_type: "galleryItem", include: 1, limit: 200 }),
     client.getEntries({ content_type: "announcement", "fields.isActive": true, order: ["-sys.updatedAt"], limit: 1 }),
     client.getEntries({ content_type: "founderProfile", include: 1, limit: 1 }),
@@ -254,6 +288,7 @@ async function fetchAll(): Promise<CmsContent> {
     client.getEntries({ content_type: "courseTrack", order: ["fields.order"], limit: 20 }),
     client.getEntries({ content_type: "faqItem", order: ["fields.order"], limit: 50 }),
     client.getEntries({ content_type: "testimonialItem", order: ["fields.order"], limit: 50 }),
+    client.getEntries({ content_type: "legalDocument", limit: 10 }).catch(() => ({ items: [] })),
   ]);
 
   const photos = gallery.items
@@ -284,6 +319,10 @@ async function fetchAll(): Promise<CmsContent> {
     .filter((t): t is CmsTestimonialItem => t !== null)
     .sort((a, b) => a.order - b.order);
 
+  const legalDocuments = legalDocs.items
+    .map((e) => toLegalDocument(e as unknown as { sys: { id: string }; fields: Fields }))
+    .filter((l): l is CmsLegalDocument => l !== null);
+
   return {
     photos,
     announcement,
@@ -292,6 +331,7 @@ async function fetchAll(): Promise<CmsContent> {
     courseTracks,
     faqItems,
     testimonials: testimonialList,
+    legalDocuments,
   };
 }
 

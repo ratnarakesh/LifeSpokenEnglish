@@ -3,12 +3,14 @@ import { FullLogo } from "@/components/layout/Brand";
 import { GlowCard } from "@/components/ui/GlowCard";
 import { Reveal } from "@/components/ui/Reveal";
 import { GradientText } from "@/components/ui/SectionHeading";
+import { getLogoStory } from "@/lib/cms";
 import { storyCopy } from "@/lib/site-copy";
 
 const SYMBOL_ICONS: LucideIcon[] = [Bird, Wind, Sunrise, InfinityIcon, Sprout];
 
 export function LogoStory() {
   const { logoStory } = storyCopy;
+  const cmsStory = getLogoStory();
   const [first, ...rest] = logoStory.parable;
   return (
     <section id="logo-story" aria-labelledby="logo-story-title" className="relative overflow-hidden py-20 sm:py-28">
@@ -48,7 +50,7 @@ export function LogoStory() {
           </Reveal>
           <Reveal delay={0.12}>
             <p className="mt-6 rounded-2xl border border-ember-500/40 bg-ember-500/10 p-5 text-base leading-relaxed font-semibold text-ember-50 sm:text-lg">
-              {logoStory.moral}
+              {cmsStory || logoStory.moral}
             </p>
           </Reveal>
         </div>

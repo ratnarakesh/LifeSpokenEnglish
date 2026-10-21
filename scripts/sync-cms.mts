@@ -177,6 +177,7 @@ async function main() {
         courseTracks: content.courseTracks,
         faqItems: content.faqItems,
         testimonials: content.testimonials,
+        legalDocuments: content.legalDocuments,
       },
       null,
       2,
@@ -184,7 +185,7 @@ async function main() {
   );
 
   console.log(
-    `[cms] Synced ${photoCount} photo(s), ${videoCount} video(s), ${content.courseTracks.length} course track(s), ${content.faqItems.length} FAQ(s), ${content.testimonials.length} testimonial(s); site settings: ${content.siteSettings ? "active" : "none"}; founder profile: ${founderProfile ? "active" : "none"}; announcement: ${content.announcement ? "active" : "none"}.`,
+    `[cms] Synced ${photoCount} photo(s), ${videoCount} video(s), ${content.courseTracks.length} course track(s), ${content.faqItems.length} FAQ(s), ${content.testimonials.length} testimonial(s), ${content.legalDocuments.length} legal doc(s); site settings: ${content.siteSettings ? "active" : "none"}; founder profile: ${founderProfile ? "active" : "none"}; announcement: ${content.announcement ? "active" : "none"}.`,
   );
 }
 

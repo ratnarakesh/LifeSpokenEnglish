@@ -1,10 +1,21 @@
 import { GlowCard } from "@/components/ui/GlowCard";
 import { Reveal } from "@/components/ui/Reveal";
 import { GradientText, SectionHeading } from "@/components/ui/SectionHeading";
-import { PROMISES } from "@/lib/content";
+import { getPromises } from "@/lib/cms";
+import { PROMISES as FALLBACK_PROMISES } from "@/lib/content";
 import { storyCopy } from "@/lib/site-copy";
 
 export function Promises() {
+  const dynamicPromises = getPromises();
+  const promises = dynamicPromises.map((p, i) => {
+    const fallback = FALLBACK_PROMISES[i % FALLBACK_PROMISES.length];
+    return {
+      title: p.title || fallback.title,
+      description: p.description || fallback.description,
+      icon: fallback.icon,
+    };
+  });
+
   return (
     <section id="promises" className="relative py-20 sm:py-28">
       <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[40rem] bg-mesh opacity-70" aria-hidden="true" />
@@ -20,9 +31,8 @@ export function Promises() {
           description={storyCopy.promisesHeading.description}
         />
 
-
         <ol className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-          {PROMISES.map(({ icon: Icon, title, description }, i) => (
+          {promises.map(({ icon: Icon, title, description }, i) => (
             <li key={title} className={i >= 9 ? "lg:col-start-2 xl:col-start-auto" : undefined}>
               <Reveal delay={(i % 5) * 0.06} className="h-full">
                 <GlowCard className="group flex h-full flex-col p-6">

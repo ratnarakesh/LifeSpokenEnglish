@@ -101,6 +101,23 @@ createServer(async (req, res) => {
               "First Floor, Beside HP Petrol Bunk, Car Shed Junction, PM Palem, Madhurawada, Visakhapatnam, Andhra Pradesh 530041",
             trialTerms:
               "10 full live classes completely free with zero advance payment. Stop at any time during the trial. ₹3,000 for the first month, then ₹2,000 per month.",
+            promises: [
+              "10 Days Free Demo Classes: Attend 10 full sessions before you decide.",
+              "Monthly Fee Payment Option: Pay small monthly instalments like school tuition. No heavy upfront burden.",
+              "100% Face-to-Face Live Teaching: Interactive two-way speaking practice. Never boring recorded videos.",
+              "Real-Life Situational Learning: Practical examples from your daily life, job and career, not dry bookish grammar rules.",
+              "Free Repeat Batch Guarantee: Finished the course and want more polish? Repeat the next batch for ₹0.",
+              "Flexible Weekend Backup: Students who miss weekday sessions receive personalized on-demand makeup classes on Saturday and Sunday directly with Mani\u00A0Sir.",
+              "Complete Soft Skills & Drafting: Master professional email writing, formal drafting and corporate etiquette.",
+              "Equal Teaching & Speaking Drills: 50% concept explanation + 50% active speaking practice, every session.",
+              "Vernacular-Friendly (Telugu -> English): Designed to remove the fear of English for Telugu-medium learners.",
+              "Open Learning Environment: Basic track students can freely ask questions from advanced modules too.",
+            ],
+            workingHours: "Monday to Friday: 6:00 AM to 10:00 PM, weekends for personal backup sessions",
+            batchTimings:
+              "Morning: 6:00 AM - 7:00 AM, 7:00 AM - 8:00 AM, 8:00 AM - 9:00 AM\nEvening: 5:00 PM - 6:00 PM, 6:00 PM - 7:00 PM, 7:00 PM - 8:00 PM, 8:00 PM - 9:00 PM\nOnline Live: Throughout the day\nWeekend: Saturday & Sunday on-demand personal backup sessions",
+            logoStory:
+              "Like an eagle renewing its wings on the mountaintop, every learner at LIFE sheds their old hesitation and rises into fluent, confident expression. L.I.F.E. stands for Live It For Eternity: English not as an academic subject, but as a living life skill you will carry forever.",
           },
           founderProfile: {
             name: "Mani\u00A0Sir",
@@ -192,6 +209,24 @@ createServer(async (req, res) => {
                 "Before joining LIFE, I couldn't speak two sentences in team standups without sweating.",
               rating: 5,
               order: 1,
+            },
+          ],
+          legalDocuments: [
+            {
+              id: "life-legal-privacy-policy",
+              slug: "privacy-policy",
+              title: "Privacy Policy & Data Notice",
+              lastUpdated: "11 October 2026",
+              content:
+                "We keep this simple: this website uses no cookies, no analytics and no tracking. We only receive your details when you choose to message or call us.",
+            },
+            {
+              id: "life-legal-terms-of-use",
+              slug: "terms-of-use",
+              title: "Terms of Use & Class Policies",
+              lastUpdated: "11 October 2026",
+              content:
+                "By using this website you agree to these terms. They also summarise how classes at LIFE Spoken English work, so there are no surprises.",
             },
           ],
         }),
