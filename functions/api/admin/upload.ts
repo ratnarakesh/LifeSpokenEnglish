@@ -101,7 +101,10 @@ export async function onRequestPost(context: EventContext): Promise<Response> {
     let assetId = `life-gallery-asset-${Date.now()}`;
     if (target === "founderPortrait") {
       assetId = "life-mani-sir-portrait";
-    } else if (target === "replacePhoto" && targetEntryId === "life-gallery-classroom") {
+    } else if (
+      target === "replacePhoto" &&
+      (targetEntryId === "life-gallery-classroom" || targetEntryId === "mani-sir-classroom")
+    ) {
       assetId = "life-mani-sir-classroom";
     }
 
@@ -218,29 +221,35 @@ export async function onRequestPost(context: EventContext): Promise<Response> {
         }
       }
     } else if (target === "replacePhoto") {
-      const targetRes = await cmaFetch(base, token, `/entries/${targetEntryId}`);
-      if (targetRes.ok) {
-        const targetJson = (await targetRes.json()) as {
-          sys: { version: number };
-          fields?: Record<string, unknown>;
-        };
-        const fields = targetJson.fields ?? {};
-        fields.image = {
-          "en-US": {
-            sys: { type: "Link", linkType: "Asset", id: assetId },
-          },
-        };
-        const updateItemRes = await cmaFetch(base, token, `/entries/${targetEntryId}`, {
-          method: "PUT",
-          headers: { "X-Contentful-Version": targetJson.sys.version.toString() },
-          body: JSON.stringify({ fields }),
-        });
-        if (updateItemRes.ok) {
-          const upJson = (await updateItemRes.json()) as { sys: { version: number } };
-          await cmaFetch(base, token, `/entries/${targetEntryId}/published`, {
+      const entryIdsToUpdate =
+        targetEntryId === "life-gallery-classroom" || targetEntryId === "mani-sir-classroom"
+          ? ["life-gallery-classroom", "mani-sir-classroom"]
+          : [targetEntryId];
+      for (const eId of entryIdsToUpdate) {
+        const targetRes = await cmaFetch(base, token, `/entries/${eId}`);
+        if (targetRes.ok) {
+          const targetJson = (await targetRes.json()) as {
+            sys: { version: number };
+            fields?: Record<string, unknown>;
+          };
+          const fields = targetJson.fields ?? {};
+          fields.image = {
+            "en-US": {
+              sys: { type: "Link", linkType: "Asset", id: assetId },
+            },
+          };
+          const updateItemRes = await cmaFetch(base, token, `/entries/${eId}`, {
             method: "PUT",
-            headers: { "X-Contentful-Version": upJson.sys.version.toString() },
+            headers: { "X-Contentful-Version": targetJson.sys.version.toString() },
+            body: JSON.stringify({ fields }),
           });
+          if (updateItemRes.ok) {
+            const upJson = (await updateItemRes.json()) as { sys: { version: number } };
+            await cmaFetch(base, token, `/entries/${eId}/published`, {
+              method: "PUT",
+              headers: { "X-Contentful-Version": upJson.sys.version.toString() },
+            });
+          }
         }
       }
     } else if (target === "galleryPhoto") {
@@ -281,9 +290,13 @@ export async function onRequestPost(context: EventContext): Promise<Response> {
       }
     }
 
+    const cacheBustedUrl = processedUrl
+      ? `${processedUrl}?t=${Date.now()}`
+      : `/media/people/mani-sir-portrait-v2.webp`;
+
     return jsonResponse({
       success: true,
-      assetUrl: processedUrl || "/media/people/mani-sir-portrait-v2.webp",
+      assetUrl: cacheBustedUrl,
       message: "Photo uploaded and published successfully! Rebuilding site...",
     });
   } catch (err: unknown) {

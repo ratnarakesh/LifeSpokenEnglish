@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "prebuild": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file-if-exists=.env.local scripts/sync-cms.mts",
-    "build": "next build",
+    "build": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file-if-exists=.env.local scripts/sync-cms.mts && next build",
     "start": "next start",
     "lint": "eslint",
     "preview": "node scripts/serve-static.mjs out 8000",

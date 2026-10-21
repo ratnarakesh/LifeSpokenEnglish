@@ -1,0 +1,9 @@
+{
+  "timestamp": "2026-10-21T18:55:17.852Z",
+  "nodeVersion": "v25.2.1",
+  "hasSpaceId": true,
+  "hasAccessToken": true,
+  "hasManagementToken": true,
+  "status": "fallback",
+  "reason": "CMS sync disabled (CMS_SYNC=off)."
+}

@@ -573,29 +573,16 @@ export async function onRequestGet(context: EventContext): Promise<Response> {
   try {
     const base = `https://api.contentful.com/spaces/${space}/environments/${env}`;
 
-    const [
-      settingsRes,
-      annRes,
-      founderRes,
-      founderLegacyRes,
-      galleryRes,
-      coursesRes,
-      faqsRes,
-      testimonialsRes,
-      legalRes,
-      assetsRes,
-    ] = await Promise.all([
-      cmaFetch(base, token, "/entries/life-site-settings"),
-      cmaFetch(base, token, "/entries/life-announcement-default"),
-      cmaFetch(base, token, "/entries/life-founder-profile"),
-      cmaFetch(base, token, "/entries/life-founder-mani-sir"),
-      cmaFetch(base, token, "/entries?content_type=galleryItem&limit=100"),
-      cmaFetch(base, token, "/entries?content_type=courseTrack&order=fields.order&limit=20"),
-      cmaFetch(base, token, "/entries?content_type=faqItem&order=fields.order&limit=100"),
-      cmaFetch(base, token, "/entries?content_type=testimonialItem&order=fields.order&limit=100"),
-      cmaFetch(base, token, "/entries?content_type=legalDocument&limit=10"),
+    const [entriesRes, rawAssetsRes] = await Promise.all([
+      cmaFetch(base, token, "/entries?limit=1000"),
       cmaFetch(base, token, "/assets?limit=100"),
     ]);
+
+    let assetsRes = rawAssetsRes;
+    if (assetsRes.status === 429) {
+      await new Promise((r) => setTimeout(r, 600));
+      assetsRes = await cmaFetch(base, token, "/assets?limit=100");
+    }
 
     const assetUrlMap = new Map<string, string>();
     if (assetsRes.ok) {
@@ -617,12 +604,48 @@ export async function onRequestGet(context: EventContext): Promise<Response> {
       }
     }
 
+    const entryMap = new Map<
+      string,
+      {
+        sys: { id: string; contentType?: { sys?: { id?: string } } };
+        fields?: Record<string, Record<string, unknown>>;
+      }
+    >();
+    const entriesByContentType = new Map<
+      string,
+      Array<{
+        sys: { id: string };
+        fields?: Record<string, Record<string, unknown>>;
+      }>
+    >();
+
+    if (entriesRes.ok) {
+      const entriesJson = (await entriesRes.json()) as {
+        items?: Array<{
+          sys: { id: string; contentType?: { sys?: { id?: string } } };
+          fields?: Record<string, Record<string, unknown>>;
+        }>;
+      };
+      if (Array.isArray(entriesJson.items)) {
+        for (const item of entriesJson.items) {
+          entryMap.set(item.sys.id, item);
+          const ct = item.sys.contentType?.sys?.id;
+          if (ct) {
+            const list = entriesByContentType.get(ct) || [];
+            list.push(item);
+            entriesByContentType.set(ct, list);
+          }
+        }
+      }
+    }
+
     const result = { ...DEFAULT_ADMIN_DATA };
 
     // 1. siteSettings
-    if (settingsRes.ok) {
-      const json = (await settingsRes.json()) as { fields?: Record<string, Record<string, unknown>> };
-      const f = json.fields ?? {};
+    const settingsEntry =
+      entryMap.get("life-site-settings") || entriesByContentType.get("siteSettings")?.[0];
+    if (settingsEntry) {
+      const f = settingsEntry.fields ?? {};
       const locale = Object.keys(f.heroTitle ?? {})[0] ?? "en-US";
       const rawPromises = f.promises?.[locale];
       const promises = Array.isArray(rawPromises)
@@ -643,9 +666,10 @@ export async function onRequestGet(context: EventContext): Promise<Response> {
     }
 
     // 2. announcement
-    if (annRes.ok) {
-      const json = (await annRes.json()) as { fields?: Record<string, Record<string, unknown>> };
-      const f = json.fields ?? {};
+    const annEntry =
+      entryMap.get("life-announcement-default") || entriesByContentType.get("announcement")?.[0];
+    if (annEntry) {
+      const f = annEntry.fields ?? {};
       const locale = Object.keys(f.message ?? {})[0] ?? "en-US";
       result.announcement = {
         message: cleanText(f.message?.[locale]) || result.announcement.message,
@@ -656,13 +680,17 @@ export async function onRequestGet(context: EventContext): Promise<Response> {
     }
 
     // 3. founderProfile
-    const activeFounderRes = founderRes.ok ? founderRes : founderLegacyRes;
-    if (activeFounderRes.ok) {
-      const json = (await activeFounderRes.json()) as { fields?: Record<string, Record<string, unknown>> };
-      const f = json.fields ?? {};
+    const founderEntry =
+      entryMap.get("life-founder-profile") ||
+      entryMap.get("life-founder-mani-sir") ||
+      entriesByContentType.get("founderProfile")?.[0];
+    if (founderEntry) {
+      const f = founderEntry.fields ?? {};
       const locale = Object.keys(f.name ?? {})[0] ?? "en-US";
       const pAssetId = (f.portraitImage?.[locale] as { sys?: { id?: string } } | undefined)?.sys?.id;
-      const portraitUrl = pAssetId ? assetUrlMap.get(pAssetId) || "/media/people/mani-sir-portrait-v2.webp" : "/media/people/mani-sir-portrait-v2.webp";
+      const portraitUrl = pAssetId
+        ? assetUrlMap.get(pAssetId) || "/media/people/mani-sir-portrait-v2.webp"
+        : "/media/people/mani-sir-portrait-v2.webp";
       result.founderProfile = {
         name: cleanText(f.name?.[locale]) || result.founderProfile.name,
         title: cleanText(f.title?.[locale]) || result.founderProfile.title,
@@ -676,28 +704,30 @@ export async function onRequestGet(context: EventContext): Promise<Response> {
         assetMapSize: assetUrlMap.size,
         assetMapKeys: Array.from(assetUrlMap.keys()),
         pAssetId,
-        founderId: activeFounderRes === founderRes ? "life-founder-profile" : "life-founder-mani-sir",
+        founderId: founderEntry.sys.id,
       };
     }
 
     // 4. galleryItems
-    if (galleryRes.ok) {
-      const json = (await galleryRes.json()) as {
-        items?: Array<{ sys: { id: string }; fields: Record<string, Record<string, unknown>> }>;
-      };
-      if (Array.isArray(json.items) && json.items.length > 0) {
-        result.galleryItems = json.items.map((item) => {
+    const rawGalleryItems = entriesByContentType.get("galleryItem");
+    if (Array.isArray(rawGalleryItems) && rawGalleryItems.length > 0) {
+      result.galleryItems = rawGalleryItems
+        .map((item) => {
           const f = item.fields ?? {};
           const locale = Object.keys(f.title ?? {})[0] ?? "en-US";
           const yUrl = cleanText(f.youtubeUrl?.[locale]) || null;
           const yId = extractYouTubeId(yUrl);
           const rawMediaType = f.mediaType ? Object.values(f.mediaType)[0] : "Video";
           const isPhoto = rawMediaType === "Photo";
-          const imgAsset = f.image ? (Object.values(f.image)[0] as { sys?: { id?: string } } | undefined) : undefined;
+          const imgAsset = f.image
+            ? (Object.values(f.image)[0] as { sys?: { id?: string } } | undefined)
+            : undefined;
           const imgAssetId = imgAsset?.sys?.id;
           let imageUrl: string | null = null;
           if (isPhoto) {
-            imageUrl = imgAssetId ? assetUrlMap.get(imgAssetId) || "/media/people/mani-sir-classroom-v2.webp" : "/media/people/mani-sir-classroom-v2.webp";
+            imageUrl = imgAssetId
+              ? assetUrlMap.get(imgAssetId) || "/media/people/mani-sir-classroom-v2.webp"
+              : "/media/people/mani-sir-classroom-v2.webp";
           } else if (yId) {
             imageUrl = `https://img.youtube.com/vi/${yId}/hqdefault.jpg`;
           }
@@ -711,17 +741,15 @@ export async function onRequestGet(context: EventContext): Promise<Response> {
             imageUrl,
             order: typeof f.order?.[locale] === "number" ? (f.order[locale] as number) : 99,
           };
-        }).sort((a, b) => a.order - b.order);
-      }
+        })
+        .sort((a, b) => a.order - b.order);
     }
 
     // 5. courseTracks
-    if (coursesRes.ok) {
-      const json = (await coursesRes.json()) as {
-        items?: Array<{ sys: { id: string }; fields: Record<string, Record<string, unknown>> }>;
-      };
-      if (Array.isArray(json.items) && json.items.length > 0) {
-        result.courseTracks = json.items.map((item) => {
+    const rawCourseTracks = entriesByContentType.get("courseTrack");
+    if (Array.isArray(rawCourseTracks) && rawCourseTracks.length > 0) {
+      result.courseTracks = rawCourseTracks
+        .map((item) => {
           const f = item.fields ?? {};
           const locale = Object.keys(f.title ?? {})[0] ?? "en-US";
           const rawHighlights = f.highlights?.[locale];
@@ -734,19 +762,17 @@ export async function onRequestGet(context: EventContext): Promise<Response> {
             trackId: cleanText(f.trackId?.[locale]) || item.sys.id,
             description: cleanText(f.description?.[locale]),
             highlights,
-            order: typeof f.order?.[locale] === "number" ? f.order[locale] : 0,
+            order: typeof f.order?.[locale] === "number" ? (f.order[locale] as number) : 0,
           };
-        }).sort((a, b) => a.order - b.order);
-      }
+        })
+        .sort((a, b) => a.order - b.order);
     }
 
     // 6. faqItems
-    if (faqsRes.ok) {
-      const json = (await faqsRes.json()) as {
-        items?: Array<{ sys: { id: string }; fields: Record<string, Record<string, unknown>> }>;
-      };
-      if (Array.isArray(json.items) && json.items.length > 0) {
-        result.faqItems = json.items.map((item) => {
+    const rawFaqItems = entriesByContentType.get("faqItem");
+    if (Array.isArray(rawFaqItems) && rawFaqItems.length > 0) {
+      result.faqItems = rawFaqItems
+        .map((item) => {
           const f = item.fields ?? {};
           const locale = Object.keys(f.question ?? {})[0] ?? "en-US";
           return {
@@ -754,19 +780,17 @@ export async function onRequestGet(context: EventContext): Promise<Response> {
             question: cleanText(f.question?.[locale]),
             answer: cleanText(f.answer?.[locale]),
             category: cleanText(f.category?.[locale]) || "General",
-            order: typeof f.order?.[locale] === "number" ? f.order[locale] : 0,
+            order: typeof f.order?.[locale] === "number" ? (f.order[locale] as number) : 0,
           };
-        }).sort((a, b) => a.order - b.order);
-      }
+        })
+        .sort((a, b) => a.order - b.order);
     }
 
     // 7. testimonials
-    if (testimonialsRes.ok) {
-      const json = (await testimonialsRes.json()) as {
-        items?: Array<{ sys: { id: string }; fields: Record<string, Record<string, unknown>> }>;
-      };
-      if (Array.isArray(json.items) && json.items.length > 0) {
-        result.testimonials = json.items.map((item) => {
+    const rawTestimonials = entriesByContentType.get("testimonialItem");
+    if (Array.isArray(rawTestimonials) && rawTestimonials.length > 0) {
+      result.testimonials = rawTestimonials
+        .map((item) => {
           const f = item.fields ?? {};
           const locale = Object.keys(f.name ?? {})[0] ?? "en-US";
           return {
@@ -774,31 +798,27 @@ export async function onRequestGet(context: EventContext): Promise<Response> {
             name: cleanText(f.name?.[locale]),
             role: cleanText(f.role?.[locale]),
             quote: cleanText(f.quote?.[locale]),
-            rating: typeof f.rating?.[locale] === "number" ? f.rating[locale] : 5,
-            order: typeof f.order?.[locale] === "number" ? f.order[locale] : 0,
+            rating: typeof f.rating?.[locale] === "number" ? (f.rating[locale] as number) : 5,
+            order: typeof f.order?.[locale] === "number" ? (f.order[locale] as number) : 0,
           };
-        }).sort((a, b) => a.order - b.order);
-      }
+        })
+        .sort((a, b) => a.order - b.order);
     }
 
     // 8. legalDocuments
-    if (legalRes.ok) {
-      const json = (await legalRes.json()) as {
-        items?: Array<{ sys: { id: string }; fields: Record<string, Record<string, unknown>> }>;
-      };
-      if (Array.isArray(json.items) && json.items.length > 0) {
-        result.legalDocuments = json.items.map((item) => {
-          const f = item.fields ?? {};
-          const locale = Object.keys(f.title ?? {})[0] ?? "en-US";
-          return {
-            id: item.sys.id,
-            slug: cleanText(f.slug?.[locale]),
-            title: cleanText(f.title?.[locale]),
-            lastUpdated: cleanText(f.lastUpdated?.[locale]),
-            content: typeof f.content?.[locale] === "string" ? (f.content[locale] as string) : "",
-          };
-        });
-      }
+    const rawLegalDocuments = entriesByContentType.get("legalDocument");
+    if (Array.isArray(rawLegalDocuments) && rawLegalDocuments.length > 0) {
+      result.legalDocuments = rawLegalDocuments.map((item) => {
+        const f = item.fields ?? {};
+        const locale = Object.keys(f.title ?? {})[0] ?? "en-US";
+        return {
+          id: item.sys.id,
+          slug: cleanText(f.slug?.[locale]),
+          title: cleanText(f.title?.[locale]),
+          lastUpdated: cleanText(f.lastUpdated?.[locale]),
+          content: typeof f.content?.[locale] === "string" ? (f.content[locale] as string) : "",
+        };
+      });
     }
 
     return jsonResponse({ ...result, isConfigured: true });
