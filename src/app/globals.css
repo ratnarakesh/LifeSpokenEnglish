@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-obsidian-950: #0b0806;
   --color-obsidian-900: #120d0a;
@@ -59,6 +61,123 @@ html {
 body {
   background-color: var(--color-obsidian-950);
   color: var(--color-stone-300);
+}
+
+/* Light mode theme definition */
+html.light {
+  color-scheme: light;
+}
+
+html.light body {
+  background-color: #f8fafc;
+  color: #334155;
+}
+
+html.light h1,
+html.light h2,
+html.light h3,
+html.light h4,
+html.light h5,
+html.light h6 {
+  color: #0f172a;
+}
+
+html.light .text-stone-100 { color: #0f172a; }
+html.light .text-stone-200 { color: #1e293b; }
+html.light .text-stone-300 { color: #334155; }
+html.light .text-stone-400 { color: #475569; }
+html.light .text-stone-500 { color: #64748b; }
+
+html.light .text-white:not([data-keep-white]):not(.keep-white) {
+  color: #0f172a;
+}
+
+html.light a[class*="from-ember-500"],
+html.light button[class*="from-ember-500"],
+html.light a[class*="bg-[#25D366]"],
+html.light button[class*="bg-[#25D366]"] {
+  color: #0b0806 !important;
+}
+
+html.light .bg-obsidian-950 {
+  background-color: #f8fafc;
+}
+
+html.light .bg-obsidian-950\/75,
+html.light .bg-obsidian-950\/85 {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+html.light .bg-obsidian-950\/40,
+html.light .bg-obsidian-950\/50,
+html.light .bg-obsidian-950\/60,
+html.light .bg-obsidian-900 {
+  background-color: #ffffff;
+}
+
+html.light .bg-stone-900 {
+  background-color: #ffffff;
+}
+
+html.light .bg-stone-800,
+html.light .bg-stone-800\/40,
+html.light .bg-stone-800\/50,
+html.light .bg-stone-800\/60,
+html.light .bg-stone-800\/80 {
+  background-color: #f1f5f9;
+}
+
+html.light .border-stone-800,
+html.light .border-stone-800\/80 {
+  border-color: #e2e8f0;
+}
+
+html.light .border-stone-700,
+html.light .border-stone-700\/80,
+html.light .border-stone-700\/60 {
+  border-color: #cbd5e1;
+}
+
+html.light .ring-stone-800,
+html.light .ring-stone-700 {
+  --tw-ring-color: #e2e8f0;
+}
+
+html.light .glass {
+  background-color: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
+}
+
+html.light .glow-card {
+  background-color: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 4px 20px -4px rgba(15, 23, 42, 0.06);
+}
+
+html.light .glow-card:hover {
+  box-shadow: 0 10px 30px -4px rgba(234, 138, 42, 0.15);
+}
+
+html.light .bg-mesh {
+  background:
+    radial-gradient(60rem 40rem at 10% -10%, rgb(234 138 42 / 0.1), transparent 60%),
+    radial-gradient(50rem 35rem at 95% 0%, rgb(251 216 58 / 0.1), transparent 60%),
+    radial-gradient(40rem 30rem at 50% 110%, rgb(245 158 11 / 0.05), transparent 60%);
+}
+
+html.light .bg-grid {
+  background-image:
+    linear-gradient(rgb(100 116 139 / 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(100 116 139 / 0.08) 1px, transparent 1px);
+}
+
+@media print {
+  .print\:hidden {
+    display: none !important;
+  }
 }
 
 ::selection {

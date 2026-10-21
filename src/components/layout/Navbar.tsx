@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { WhatsAppIcon } from "@/components/ui/BrandIcons";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { button, cn } from "@/lib/cn";
 import { brandCopy } from "@/lib/site-copy";
 import { NAV_LINKS, PHONES, telLink, whatsappLink } from "@/lib/site";
@@ -87,6 +88,7 @@ export function Navbar() {
         </ul>
 
         <div className="ml-auto hidden shrink-0 items-center gap-2 lg:flex xl:ml-0">
+          <ThemeToggle />
           <a
             href={telLink()}
             aria-label={`Call ${PHONES.primary.display}`}
@@ -108,16 +110,19 @@ export function Navbar() {
           </a>
         </div>
 
-        <button
-          type="button"
-          onClick={() => setMenuOpen((o) => !o)}
-          className="grid size-11 shrink-0 place-items-center rounded-xl text-stone-200 ring-1 ring-stone-800 transition hover:bg-stone-800/60 xl:hidden"
-          aria-expanded={menuOpen}
-          aria-controls="mobile-menu"
-          aria-label={menuOpen ? "Close menu" : "Open menu"}
-        >
-          {menuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
-        </button>
+        <div className="flex items-center gap-2 xl:hidden">
+          <ThemeToggle className="lg:hidden" />
+          <button
+            type="button"
+            onClick={() => setMenuOpen((o) => !o)}
+            className="grid size-11 shrink-0 place-items-center rounded-xl text-stone-200 ring-1 ring-stone-800 transition hover:bg-stone-800/60"
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+          >
+            {menuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+          </button>
+        </div>
       </nav>
 
       {menuOpen && (
@@ -144,6 +149,9 @@ export function Navbar() {
                 <a href={whatsappLink()} target="_blank" rel="noopener noreferrer" className={button("whatsapp", "md")}>
                   <WhatsAppIcon className="size-4" /> {brandCopy.whatsappCta.chat}
                 </a>
+              </li>
+              <li className="mt-2 border-t border-stone-800/80 pt-2">
+                <ThemeToggle showLabel className="w-full justify-start ring-0" />
               </li>
             </ul>
           </div>

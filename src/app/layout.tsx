@@ -39,6 +39,13 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en-IN" className={`${jakarta.variable} antialiased`}>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('life-theme');if(t==='light'){document.documentElement.classList.add('light');document.documentElement.classList.remove('dark');document.documentElement.style.colorScheme='light';}else{document.documentElement.classList.add('dark');document.documentElement.classList.remove('light');document.documentElement.style.colorScheme='dark';}}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body className="min-h-dvh font-sans">
         <SiteShell>{children}</SiteShell>
         <ServiceWorkerRegister />
