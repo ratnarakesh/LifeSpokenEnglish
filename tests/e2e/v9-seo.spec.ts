@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 
-const SITE_URL = "https://lifespokenenglish.pages.dev";
+const SITE_URL = "https://lifespokenenglish.com";
 const DASHES = /[\u2013\u2014]/;
 const SUFFIX = " | LIFE Spoken English by Mani Sir - Madhurawada, Vizag";
 const HOME_TITLE = "LIFE Spoken English & Soft Skills | Mani Sir - Madhurawada, Visakhapatnam";

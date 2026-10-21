@@ -1,5 +1,5 @@
-// Live Cloudflare Pages address; override with NEXT_PUBLIC_SITE_URL once a custom domain is connected.
-const DEFAULT_SITE_URL = "https://lifespokenenglish.pages.dev";
+// Live custom domain on Cloudflare; override with NEXT_PUBLIC_SITE_URL if needed.
+const DEFAULT_SITE_URL = "https://lifespokenenglish.com";
 
 // Visible copy writes "Mani Sir" with a non-breaking space (\u00A0 in strings, &nbsp; in JSX) so it never wraps
 // across lines. Use plainText() for machine-read output (JSON-LD, metadata).
