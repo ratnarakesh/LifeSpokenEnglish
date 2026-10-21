@@ -156,10 +156,10 @@ export async function onRequestPost(context: EventContext): Promise<Response> {
       headers: { "X-Contentful-Version": assetVersion.toString() },
     });
 
-    // 4. Poll until processed (up to 15 seconds)
+    // 4. Poll until processed (up to 5 attempts with 1.5s delay)
     let processedUrl: string | null = null;
-    for (let i = 0; i < 15; i++) {
-      await new Promise((r) => setTimeout(r, 1000));
+    for (let i = 0; i < 5; i++) {
+      await new Promise((r) => setTimeout(r, 1500));
       const pollRes = await cmaFetch(base, token, `/assets/${assetId}`);
       if (pollRes.ok) {
         const pollJson = (await pollRes.json()) as {

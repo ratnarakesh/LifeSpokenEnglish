@@ -794,72 +794,108 @@ export async function onRequestPost(context: EventContext): Promise<Response> {
 
     const base = `https://api.contentful.com/spaces/${space}/environments/${env}`;
 
-      // Helper to upsert and publish a single CMA entry
-      const upsertEntry = async (
-        id: string,
-        contentTypeId: string,
-        fields: Record<string, unknown>,
-      ) => {
-        const getRes = await cmaFetch(base, token, `/entries/${id}`);
-        const locale = "en-US";
-        const localizedFields = Object.fromEntries(
-          Object.entries(fields).map(([k, v]) => [k, { [locale]: v }]),
-        );
-
-        if (getRes.ok) {
-          const current = (await getRes.json()) as { sys: { version: number }; fields?: Record<string, unknown> };
-          const putRes = await cmaFetch(base, token, `/entries/${id}`, {
-            method: "PUT",
-            headers: { "X-Contentful-Version": String(current.sys.version) },
-            body: JSON.stringify({ fields: { ...current.fields, ...localizedFields } }),
-          });
-          if (putRes.ok) {
-            const putJson = (await putRes.json()) as { sys: { version: number } };
-            await cmaFetch(base, token, `/entries/${id}/published`, {
-              method: "PUT",
-              headers: { "X-Contentful-Version": String(putJson.sys.version) },
-            });
-          }
-        } else if (getRes.status === 404) {
-          const putRes = await cmaFetch(base, token, `/entries/${id}`, {
-            method: "PUT",
-            headers: { "X-Contentful-Content-Type": contentTypeId },
-            body: JSON.stringify({ fields: localizedFields }),
-          });
-          if (putRes.ok) {
-            const putJson = (await putRes.json()) as { sys: { version: number } };
-            await cmaFetch(base, token, `/entries/${id}/published`, {
-              method: "PUT",
-              headers: { "X-Contentful-Version": String(putJson.sys.version) },
+    // 0. Pre-fetch all existing entries in ONE single subrequest to prevent Cloudflare subrequest limits
+    const existingMap = new Map<
+      string,
+      { version: number; fields: Record<string, Record<string, unknown>> }
+    >();
+    try {
+      const allEntriesRes = await cmaFetch(base, token, "/entries?limit=100");
+      if (allEntriesRes.ok) {
+        const json = (await allEntriesRes.json()) as {
+          items?: Array<{
+            sys: { id: string; version: number };
+            fields?: Record<string, Record<string, unknown>>;
+          }>;
+        };
+        if (Array.isArray(json.items)) {
+          for (const item of json.items) {
+            existingMap.set(item.sys.id, {
+              version: item.sys.version,
+              fields: item.fields || {},
             });
           }
         }
-      };
+      }
+    } catch {
+      // Fall back if batch fetch fails
+    }
 
-      // Helper to unpublish and delete a single CMA entry
-      const deleteEntry = async (id: string) => {
-        const getRes = await cmaFetch(base, token, `/entries/${id}`);
-        if (!getRes.ok) return;
-        const current = (await getRes.json()) as { sys: { version: number; publishedVersion?: number } };
-        if (current.sys.publishedVersion) {
-          const unpubRes = await cmaFetch(base, token, `/entries/${id}/published`, {
-            method: "DELETE",
-            headers: { "X-Contentful-Version": String(current.sys.version) },
-          });
-          if (unpubRes.ok) {
-            const unpubJson = (await unpubRes.json()) as { sys: { version: number } };
-            await cmaFetch(base, token, `/entries/${id}`, {
-              method: "DELETE",
-              headers: { "X-Contentful-Version": String(unpubJson.sys.version) },
-            });
+    // Helper to upsert and publish a single CMA entry only if changed
+    const upsertEntry = async (
+      id: string,
+      contentTypeId: string,
+      fields: Record<string, unknown>,
+    ) => {
+      const locale = "en-US";
+      const localizedFields = Object.fromEntries(
+        Object.entries(fields).map(([k, v]) => [k, { [locale]: v }]),
+      );
+
+      const existing = existingMap.get(id);
+
+      if (existing) {
+        // Check if all fields match already: if so, skip to save subrequests!
+        let hasChanges = false;
+        for (const [key, val] of Object.entries(fields)) {
+          const currentVal = existing.fields[key]?.[locale];
+          if (JSON.stringify(currentVal) !== JSON.stringify(val)) {
+            hasChanges = true;
+            break;
           }
-        } else {
-          await cmaFetch(base, token, `/entries/${id}`, {
-            method: "DELETE",
-            headers: { "X-Contentful-Version": String(current.sys.version) },
+        }
+
+        if (!hasChanges) {
+          return;
+        }
+
+        const putRes = await cmaFetch(base, token, `/entries/${id}`, {
+          method: "PUT",
+          headers: { "X-Contentful-Version": String(existing.version) },
+          body: JSON.stringify({ fields: { ...existing.fields, ...localizedFields } }),
+        });
+        if (putRes.ok) {
+          const putJson = (await putRes.json()) as { sys: { version: number } };
+          existing.version = putJson.sys.version;
+          await cmaFetch(base, token, `/entries/${id}/published`, {
+            method: "PUT",
+            headers: { "X-Contentful-Version": String(putJson.sys.version) },
           });
         }
-      };
+      } else {
+        const putRes = await cmaFetch(base, token, `/entries/${id}`, {
+          method: "PUT",
+          headers: { "X-Contentful-Content-Type": contentTypeId },
+          body: JSON.stringify({ fields: localizedFields }),
+        });
+        if (putRes.ok) {
+          const putJson = (await putRes.json()) as { sys: { version: number } };
+          existingMap.set(id, { version: putJson.sys.version, fields: localizedFields });
+          await cmaFetch(base, token, `/entries/${id}/published`, {
+            method: "PUT",
+            headers: { "X-Contentful-Version": String(putJson.sys.version) },
+          });
+        }
+      }
+    };
+
+    // Helper to unpublish and delete a single CMA entry
+    const deleteEntry = async (id: string) => {
+      const existing = existingMap.get(id);
+      if (!existing) return;
+      const unpubRes = await cmaFetch(base, token, `/entries/${id}/published`, {
+        method: "DELETE",
+        headers: { "X-Contentful-Version": String(existing.version) },
+      });
+      const unpubVersion = unpubRes.ok
+        ? ((await unpubRes.json()) as { sys: { version: number } }).sys.version
+        : existing.version;
+      await cmaFetch(base, token, `/entries/${id}`, {
+        method: "DELETE",
+        headers: { "X-Contentful-Version": String(unpubVersion) },
+      });
+      existingMap.delete(id);
+    };
 
       // 1. Update siteSettings
       if (body.siteSettings) {
