@@ -670,6 +670,14 @@ export async function onRequestGet(context: EventContext): Promise<Response> {
         altText: cleanText(f.altText?.[locale]) || result.founderProfile.altText,
         portraitUrl,
       };
+      (result as Record<string, unknown>)._debug = {
+        assetsResOk: assetsRes.ok,
+        assetsResStatus: assetsRes.status,
+        assetMapSize: assetUrlMap.size,
+        assetMapKeys: Array.from(assetUrlMap.keys()),
+        pAssetId,
+        founderId: activeFounderRes === founderRes ? "life-founder-profile" : "life-founder-mani-sir",
+      };
     }
 
     // 4. galleryItems
