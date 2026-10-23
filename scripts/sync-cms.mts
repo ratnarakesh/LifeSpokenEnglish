@@ -128,6 +128,12 @@ async function syncFounderProfile(profile: CmsFounderProfile | null): Promise<{
   spiritOfLifeContent?: string | null;
   journeyMilestones?: string | null;
   teachingPhilosophy?: string | null;
+  bioHeadline?: string | null;
+  bioParagraphs?: string | null;
+  missionStatement?: string | null;
+  statsExperience?: string | null;
+  statsStudents?: string | null;
+  statsBatches?: string | null;
   file?: string;
   legacyFile?: string;
 } | null> {
@@ -155,6 +161,12 @@ async function syncFounderProfile(profile: CmsFounderProfile | null): Promise<{
     spiritOfLifeContent: profile.spiritOfLifeContent ?? null,
     journeyMilestones: profile.journeyMilestones ?? null,
     teachingPhilosophy: profile.teachingPhilosophy ?? null,
+    bioHeadline: profile.bioHeadline ?? null,
+    bioParagraphs: profile.bioParagraphs ?? null,
+    missionStatement: profile.missionStatement ?? null,
+    statsExperience: profile.statsExperience ?? null,
+    statsStudents: profile.statsStudents ?? null,
+    statsBatches: profile.statsBatches ?? null,
     file,
     legacyFile,
   };
@@ -231,6 +243,7 @@ async function main() {
         announcement: content.announcement,
         founderProfile,
         siteSettings: content.siteSettings,
+        storyLore: content.storyLore,
         courseTracks: content.courseTracks,
         faqItems: content.faqItems,
         testimonials: content.testimonials,
@@ -248,7 +261,7 @@ async function main() {
   });
 
   console.log(
-    `[cms] Synced ${photoCount} photo(s), ${videoCount} video(s), ${content.courseTracks.length} course track(s), ${content.faqItems.length} FAQ(s), ${content.testimonials.length} testimonial(s), ${content.legalDocuments.length} legal doc(s); site settings: ${content.siteSettings ? "active" : "none"}; founder profile: ${founderProfile ? "active" : "none"}; announcement: ${content.announcement ? "active" : "none"}.`,
+    `[cms] Synced ${photoCount} photo(s), ${videoCount} video(s), ${content.courseTracks.length} course track(s), ${content.faqItems.length} FAQ(s), ${content.testimonials.length} testimonial(s), ${content.legalDocuments.length} legal doc(s); site settings: ${content.siteSettings ? "active" : "none"}; story lore: ${content.storyLore ? "active" : "none"}; founder profile: ${founderProfile ? "active" : "none"}; announcement: ${content.announcement ? "active" : "none"}.`,
   );
 }
 

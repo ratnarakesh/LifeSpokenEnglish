@@ -72,6 +72,16 @@ const CONTENT_TYPES = [
       { id: "lifeAcronymI", name: "LIFE Acronym I", type: "Symbol", required: false },
       { id: "lifeAcronymF", name: "LIFE Acronym F", type: "Symbol", required: false },
       { id: "lifeAcronymE", name: "LIFE Acronym E", type: "Symbol", required: false },
+      { id: "trialBadgeText", name: "Trial Badge Text", type: "Symbol", required: false },
+      { id: "heroSubheadline", name: "Hero Subheadline", type: "Text", required: false },
+      { id: "coursesSectionTitle", name: "Courses Section Title", type: "Symbol", required: false },
+      { id: "coursesSectionSubtitle", name: "Courses Section Subtitle", type: "Symbol", required: false },
+      { id: "promisesSectionTitle", name: "Promises Section Title", type: "Symbol", required: false },
+      { id: "promisesSectionSubtitle", name: "Promises Section Subtitle", type: "Symbol", required: false },
+      { id: "contactAddress", name: "Contact Address", type: "Text", required: false },
+      { id: "contactPhone", name: "Contact Phone", type: "Symbol", required: false },
+      { id: "contactEmail", name: "Contact Email", type: "Symbol", required: false },
+      { id: "whatsappMessage", name: "WhatsApp Default Message", type: "Symbol", required: false },
     ],
   },
   {
@@ -96,6 +106,35 @@ const CONTENT_TYPES = [
       { id: "spiritOfLifeContent", name: "Spirit of LIFE Content", type: "Text", required: false },
       { id: "journeyMilestones", name: "Journey Milestones", type: "Text", required: false },
       { id: "teachingPhilosophy", name: "Teaching Philosophy", type: "Text", required: false },
+      { id: "bioHeadline", name: "Bio Headline", type: "Symbol", required: false },
+      { id: "bioParagraphs", name: "Bio Paragraphs", type: "Text", required: false },
+      { id: "missionStatement", name: "Mission Statement", type: "Text", required: false },
+      { id: "statsExperience", name: "Stats: Experience", type: "Symbol", required: false },
+      { id: "statsStudents", name: "Stats: Students", type: "Symbol", required: false },
+      { id: "statsBatches", name: "Stats: Batches", type: "Symbol", required: false },
+    ],
+  },
+  {
+    id: "storyLore",
+    name: "Story Lore & Brand Story",
+    description: "The complete eagle parable, Spirit of LIFE philosophy, and 4 pillars of L.I.F.E.",
+    displayField: "eagleStoryTitle",
+    fields: [
+      { id: "eagleStoryTitle", name: "Eagle Story Title", type: "Symbol", required: false },
+      { id: "eagleStorySubtitle", name: "Eagle Story Subtitle", type: "Symbol", required: false },
+      { id: "eagleStoryParagraphs", name: "Eagle Story Paragraphs", type: "Text", required: false },
+      { id: "eagleStoryMoral", name: "Eagle Story Moral", type: "Text", required: false },
+      { id: "spiritOfLifeTitle", name: "Spirit of LIFE Title", type: "Symbol", required: false },
+      { id: "spiritOfLifeIntro", name: "Spirit of LIFE Intro", type: "Text", required: false },
+      { id: "spiritOfLifePoints", name: "Spirit of LIFE Points", type: "Text", required: false },
+      { id: "pillarLTitle", name: "Pillar L Title", type: "Symbol", required: false },
+      { id: "pillarLText", name: "Pillar L Text", type: "Text", required: false },
+      { id: "pillarITitle", name: "Pillar I Title", type: "Symbol", required: false },
+      { id: "pillarIText", name: "Pillar I Text", type: "Text", required: false },
+      { id: "pillarFTitle", name: "Pillar F Title", type: "Symbol", required: false },
+      { id: "pillarFText", name: "Pillar F Text", type: "Text", required: false },
+      { id: "pillarETitle", name: "Pillar E Title", type: "Symbol", required: false },
+      { id: "pillarEText", name: "Pillar E Text", type: "Text", required: false },
     ],
   },
   {
@@ -441,6 +480,16 @@ async function main() {
       lifeAcronymI: "It",
       lifeAcronymF: "For",
       lifeAcronymE: "Eternity",
+      trialBadgeText: heroCopy.badgeText,
+      heroSubheadline: heroCopy.subheadline,
+      coursesSectionTitle: `${courseCopy.sectionHeading.titleLead} ${courseCopy.sectionHeading.titleGradient}`,
+      coursesSectionSubtitle: courseCopy.sectionHeading.description,
+      promisesSectionTitle: `${storyCopy.promisesHeading.titleLead} ${storyCopy.promisesHeading.titleGradient}`,
+      promisesSectionSubtitle: storyCopy.promisesHeading.description,
+      contactAddress: brandCopy.address.full,
+      contactPhone: brandCopy.phones.primary.display,
+      contactEmail: brandCopy.email,
+      whatsappMessage: brandCopy.whatsappCta.defaultMessage,
     },
     locale,
   );
@@ -457,8 +506,39 @@ async function main() {
     spiritOfLifeContent: storyCopy.meaningParagraphs.join("\n\n"),
     journeyMilestones: JSON.stringify(storyCopy.milestones, null, 2),
     teachingPhilosophy: `${founderCopy.lede}\n\n${founderCopy.paragraphs.join("\n\n")}`,
+    bioHeadline: founderCopy.lede,
+    bioParagraphs: founderCopy.paragraphs.join("\n\n"),
+    missionStatement: brandCopy.mission,
+    statsExperience: "20+ Years",
+    statsStudents: "25,000+ Students",
+    statsBatches: "1,200+ Batches",
   };
   await upsertEntry("life-founder-profile", "founderProfile", founderSeedFields, locale);
+
+  // 2c. Seed storyLore
+  console.log("\nSeeding storyLore...");
+  const storyLoreFields = {
+    eagleStoryTitle: storyCopy.logoStory.title,
+    eagleStorySubtitle: storyCopy.logoStory.eyebrow,
+    eagleStoryParagraphs: storyCopy.logoStory.parable.join("\n\n"),
+    eagleStoryMoral: storyCopy.logoStory.moral,
+    spiritOfLifeTitle: storyCopy.meaningTitle,
+    spiritOfLifeIntro: storyCopy.meaningParagraphs.join("\n\n"),
+    spiritOfLifePoints: JSON.stringify(storyCopy.logoStory.symbols, null, 2),
+    pillarLTitle: "Live",
+    pillarLText:
+      "English not as an academic subject, but as a living life skill you will carry forever.",
+    pillarITitle: "It",
+    pillarIText:
+      "Language lives on your tongue, not in a notebook. Active speaking drills from day one.",
+    pillarFTitle: "For",
+    pillarFText:
+      "Purpose-driven communication for campus placements, corporate growth, and life.",
+    pillarETitle: "Eternity",
+    pillarEText:
+      "Unshakeable confidence that stays with you forever and transforms how you carry yourself.",
+  };
+  await upsertEntry("life-story-lore", "storyLore", storyLoreFields, locale);
 
   // 3. Seed courseTrack
   console.log("\nSeeding courseTracks...");

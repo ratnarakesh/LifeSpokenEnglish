@@ -40,6 +40,7 @@ import type {
   AdminGalleryItem,
   AdminLegalDocument,
   AdminSiteSettings,
+  AdminStoryLore,
   AdminTestimonialItem,
   FullAdminData,
 } from "../../../functions/api/admin/content";
@@ -92,6 +93,18 @@ const DEFAULT_SETTINGS: AdminSiteSettings = {
   lifeAcronymI: "It",
   lifeAcronymF: "For",
   lifeAcronymE: "Eternity",
+  trialBadgeText: heroCopy.badgeText,
+  heroSubheadline: heroCopy.subheadline,
+  coursesSectionTitle: "Every Stage of English Fluency",
+  coursesSectionSubtitle: "From foundational hesitation removal to stage-ready executive communication.",
+  promisesSectionTitle: "The 10 LIFE Promises",
+  promisesSectionSubtitle: "Ten commitments you won't find anywhere else, straight from Mani\u00A0Sir.",
+  contactAddress:
+    "First Floor, Beside HP Petrol Bunk, Car Shed Junction, PM Palem, Madhurawada, Visakhapatnam, Andhra Pradesh 530041",
+  contactPhone: PHONES.primary.display,
+  contactEmail: "lifebymanisir@gmail.com",
+  whatsappMessage:
+    "Hello Mani Sir, I am interested in the 10 Free Trial Classes at LIFE Spoken English. Please share the next batch details.",
 };
 
 const DEFAULT_LEGAL_DOCS: AdminLegalDocument[] = [
@@ -326,6 +339,42 @@ const DEFAULT_FOUNDER: AdminFounderProfile = {
   ),
   teachingPhilosophy:
     "Some teachers teach English. Mani\u00A0Sir teaches people to believe in their own voice.\n\nK. Maneendra Kumar, known to thousands of learners simply as Mani\u00A0Sir, founded LIFE in Madhurawada, Visakhapatnam with one simple belief: nobody is bad at English. Most people have just never been given a safe place to speak it.",
+  bioHeadline: "Teaching with Empathy & Conviction",
+  bioParagraphs:
+    "K. Maneendra Kumar, known to thousands of learners simply as Mani\u00A0Sir, founded LIFE in Madhurawada, Visakhapatnam with one simple belief: nobody is bad at English. Most people have just never been given a safe place to speak it.\n\nIn his classroom, mistakes are not punished; they are welcomed as proof that you are trying. Lessons sound like real life: waking up, travelling, explaining, negotiating, interviewing. A new word is not finished until every student has said it aloud and used it in a sentence of their own.\n\nBy bridging every idea from Telugu to English, he turns the language people feared most into something that feels familiar. Students often say his classes feel more like watching a movie than sitting through a lecture.\n\nToday his lessons travel far beyond one classroom through YouTube and live online batches. But the goal has never changed: the day each student speaks without fear.",
+  missionStatement:
+    "To eliminate the fear of English and empower learners with unshakeable speaking confidence that lasts for eternity.",
+  statsExperience: "20+ Years",
+  statsStudents: "25,000+ Students",
+  statsBatches: "1,200+ Batches",
+};
+
+const DEFAULT_STORY_LORE: AdminStoryLore = {
+  eagleStoryTitle: "The Young Eagle Who Was Afraid to Fly",
+  eagleStorySubtitle: "The Story Inside Our Logo",
+  eagleStoryParagraphs:
+    "High on a cliff above the Vizag coast, a young eagle sat at the edge of its nest every morning, watching the others soar.\n\nIt knew everything about flying. It had watched a thousand flights and could explain every feather. But each time the wind called, its wings stayed folded. What if I fall? What if they laugh?\n\nOne morning, an old eagle landed beside it. He did not lecture. He did not push. He simply said, \"Fly with me. Just a little today.\"\n\nThey stepped into the warm wind together. The young eagle wobbled, dipped, and then, for the very first time, it rose. Below them, over the sea, the sun was rising too.\n\nThat morning the young eagle learned something no book had taught it: it never needed more knowledge. It needed someone to fly beside it, and the courage to open its wings.",
+  eagleStoryMoral:
+    "Every learner who walks into LIFE is that young eagle: full of knowledge, held back by fear. Our job is to fly beside you until your own wings take over.",
+  spiritOfLifeTitle: "The Meaning Behind Our Name",
+  spiritOfLifeIntro:
+    "Most people approach English like a temporary subject: something you study just to pass an exam, clear an interview, or memorize for a few weeks. But language is not a school textbook. Language is life itself.\n\nWhen you acquire true confidence in speaking, it does not disappear after an interview. It stays with you when you talk to your children, when you present in boardrooms, when you travel the world, and when you stand on any public stage. It transforms how you carry yourself forever.",
+  spiritOfLifePoints: JSON.stringify(
+    [
+      "Most people approach English like a temporary subject: something you study just to pass an exam, clear an interview, or memorize for a few weeks. But language is not a school textbook. Language is life itself.",
+      "When you acquire true confidence in speaking, it does not disappear after an interview. It stays with you when you talk to your children, when you present in boardrooms, when you travel the world, and when you stand on any public stage. It transforms how you carry yourself forever.",
+    ],
+    null,
+    2,
+  ),
+  pillarLTitle: "Live",
+  pillarLText: "English not as an academic subject, but as a living life skill you will carry forever.",
+  pillarITitle: "It",
+  pillarIText: "Language lives on your tongue, not in a notebook. Active speaking drills from day one.",
+  pillarFTitle: "For",
+  pillarFText: "Purpose-driven communication for campus placements, corporate growth, and life.",
+  pillarETitle: "Eternity",
+  pillarEText: "Unshakeable confidence that stays with you forever and transforms how you carry yourself.",
 };
 
 export function AdminClient() {
@@ -350,6 +399,7 @@ export function AdminClient() {
   // Content states
   const [announcement, setAnnouncement] = useState<AdminAnnouncement>(DEFAULT_ANNOUNCEMENT);
   const [siteSettings, setSiteSettings] = useState<AdminSiteSettings>(DEFAULT_SETTINGS);
+  const [storyLore, setStoryLore] = useState<AdminStoryLore>(DEFAULT_STORY_LORE);
   const [founderProfile, setFounderProfile] = useState<AdminFounderProfile>(DEFAULT_FOUNDER);
   const [galleryItems, setGalleryItems] = useState<AdminGalleryItem[]>([]);
   const [deletedGalleryIds, setDeletedGalleryIds] = useState<string[]>([]);
@@ -449,6 +499,7 @@ export function AdminClient() {
         const data = (await res.json()) as Partial<FullAdminData>;
         if (data.announcement) setAnnouncement((prev) => ({ ...prev, ...data.announcement }));
         if (data.siteSettings) setSiteSettings((prev) => ({ ...prev, ...data.siteSettings }));
+        if (data.storyLore) setStoryLore((prev) => ({ ...prev, ...data.storyLore }));
         if (data.founderProfile) {
           setFounderProfile((prev) => ({ ...prev, ...data.founderProfile }));
           if (data.founderProfile.portraitUrl) {
@@ -525,6 +576,7 @@ export function AdminClient() {
       const payload = {
         announcement,
         siteSettings,
+        storyLore,
         founderProfile,
         galleryItems,
         deletedGalleryIds,
@@ -1346,12 +1398,32 @@ export function AdminClient() {
                 <textarea
                   id="hero-subheadline"
                   rows={3}
-                  value={siteSettings.heroSubtitle}
+                  value={siteSettings.heroSubheadline || siteSettings.heroSubtitle}
                   onChange={(e) =>
-                    setSiteSettings((prev) => ({ ...prev, heroSubtitle: e.target.value }))
+                    setSiteSettings((prev) => ({
+                      ...prev,
+                      heroSubtitle: e.target.value,
+                      heroSubheadline: e.target.value,
+                    }))
                   }
                   placeholder="Practical, interactive Spoken English..."
                   className="mt-1 w-full rounded-xl border border-stone-700 bg-obsidian-950 px-3.5 py-2 text-sm text-stone-100 placeholder:text-stone-600 focus:border-ember-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="trial-badge-text" className="block text-xs font-semibold text-stone-300">
+                  Hero Trial Badge Text
+                </label>
+                <input
+                  id="trial-badge-text"
+                  type="text"
+                  value={siteSettings.trialBadgeText ?? "10 Days Free Trial"}
+                  onChange={(e) =>
+                    setSiteSettings((prev) => ({ ...prev, trialBadgeText: e.target.value }))
+                  }
+                  placeholder="e.g. 10 Days Free Trial"
+                  className="mt-1 w-full rounded-xl border border-stone-700 bg-obsidian-950 px-3.5 py-2.5 text-sm text-stone-100 placeholder:text-stone-600 focus:border-ember-500 focus:outline-none"
                 />
               </div>
 
@@ -1750,8 +1822,41 @@ export function AdminClient() {
               <h2 className="text-base font-semibold">Course Tracks &amp; Syllabus</h2>
             </div>
             <p className="mt-2 text-xs text-stone-400">
-              Edit course track titles, descriptions, and syllabus key highlights.
+              Edit course section titles, track details, descriptions, and syllabus key highlights.
             </p>
+
+            <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <label htmlFor="courses-section-title" className="block text-xs font-semibold text-stone-300">
+                  Courses Section Title
+                </label>
+                <input
+                  id="courses-section-title"
+                  type="text"
+                  value={siteSettings.coursesSectionTitle ?? "Every Stage of English Fluency"}
+                  onChange={(e) =>
+                    setSiteSettings((prev) => ({ ...prev, coursesSectionTitle: e.target.value }))
+                  }
+                  placeholder="Every Stage of English Fluency"
+                  className="mt-1 w-full rounded-xl border border-stone-700 bg-obsidian-950 px-3.5 py-2 text-sm text-stone-100 placeholder:text-stone-600 focus:border-ember-500 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label htmlFor="courses-section-subtitle" className="block text-xs font-semibold text-stone-300">
+                  Courses Section Subtitle
+                </label>
+                <input
+                  id="courses-section-subtitle"
+                  type="text"
+                  value={siteSettings.coursesSectionSubtitle ?? "From foundational hesitation removal to stage-ready executive communication."}
+                  onChange={(e) =>
+                    setSiteSettings((prev) => ({ ...prev, coursesSectionSubtitle: e.target.value }))
+                  }
+                  placeholder="From foundational hesitation removal..."
+                  className="mt-1 w-full rounded-xl border border-stone-700 bg-obsidian-950 px-3.5 py-2 text-sm text-stone-100 placeholder:text-stone-600 focus:border-ember-500 focus:outline-none"
+                />
+              </div>
+            </div>
           </div>
 
           <div className="space-y-4">
@@ -1831,9 +1936,107 @@ export function AdminClient() {
         </div>
       )}
 
-      {/* TAB 4: FAQS */}
+      {/* TAB 4: FAQS & CONTACTS */}
       {activeTab === "faqs" && (
         <div className="space-y-6">
+          {/* Contact Numbers & Center Address Card */}
+          <section className="rounded-2xl border border-stone-800 bg-obsidian-900/90 p-5 shadow-lg backdrop-blur-md">
+            <div className="flex items-center gap-2 border-b border-stone-800 pb-3 text-stone-200">
+              <Phone className="h-5 w-5 text-ember-400" />
+              <h2 className="text-base font-semibold">Contact &amp; Branch Information</h2>
+            </div>
+
+            <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <label htmlFor="tab4-primary-phone" className="block text-xs font-semibold text-stone-300">
+                  Primary Contact Phone
+                </label>
+                <input
+                  id="tab4-primary-phone"
+                  type="text"
+                  value={siteSettings.contactPhone || siteSettings.primaryPhone}
+                  onChange={(e) =>
+                    setSiteSettings((prev) => ({
+                      ...prev,
+                      primaryPhone: e.target.value,
+                      contactPhone: e.target.value,
+                    }))
+                  }
+                  placeholder="+91 73374 12999"
+                  className="mt-1 w-full rounded-xl border border-stone-700 bg-obsidian-950 px-3.5 py-2.5 text-sm text-stone-100 placeholder:text-stone-600 focus:border-ember-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="tab4-whatsapp-number" className="block text-xs font-semibold text-stone-300">
+                  WhatsApp Inquiry Number
+                </label>
+                <input
+                  id="tab4-whatsapp-number"
+                  type="text"
+                  value={siteSettings.whatsappNumber}
+                  onChange={(e) =>
+                    setSiteSettings((prev) => ({ ...prev, whatsappNumber: e.target.value }))
+                  }
+                  placeholder="+91 73374 12999"
+                  className="mt-1 w-full rounded-xl border border-stone-700 bg-obsidian-950 px-3.5 py-2.5 text-sm text-stone-100 placeholder:text-stone-600 focus:border-ember-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="tab4-contact-email" className="block text-xs font-semibold text-stone-300">
+                  Official Contact Email
+                </label>
+                <input
+                  id="tab4-contact-email"
+                  type="email"
+                  value={siteSettings.contactEmail ?? "lifebymanisir@gmail.com"}
+                  onChange={(e) =>
+                    setSiteSettings((prev) => ({ ...prev, contactEmail: e.target.value }))
+                  }
+                  placeholder="lifebymanisir@gmail.com"
+                  className="mt-1 w-full rounded-xl border border-stone-700 bg-obsidian-950 px-3.5 py-2.5 text-sm text-stone-100 placeholder:text-stone-600 focus:border-ember-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="tab4-whatsapp-message" className="block text-xs font-semibold text-stone-300">
+                  Default WhatsApp Message
+                </label>
+                <input
+                  id="tab4-whatsapp-message"
+                  type="text"
+                  value={siteSettings.whatsappMessage ?? "Hello Mani Sir, I am interested in the 10 Free Trial Classes at LIFE Spoken English. Please share the next batch details."}
+                  onChange={(e) =>
+                    setSiteSettings((prev) => ({ ...prev, whatsappMessage: e.target.value }))
+                  }
+                  placeholder="Hello Mani Sir..."
+                  className="mt-1 w-full rounded-xl border border-stone-700 bg-obsidian-950 px-3.5 py-2.5 text-sm text-stone-100 placeholder:text-stone-600 focus:border-ember-500 focus:outline-none"
+                />
+              </div>
+
+              <div className="sm:col-span-2">
+                <label htmlFor="tab4-contact-address" className="block text-xs font-semibold text-stone-300">
+                  Branch Full Address
+                </label>
+                <textarea
+                  id="tab4-contact-address"
+                  rows={2}
+                  value={siteSettings.contactAddress || siteSettings.address}
+                  onChange={(e) =>
+                    setSiteSettings((prev) => ({
+                      ...prev,
+                      address: e.target.value,
+                      contactAddress: e.target.value,
+                    }))
+                  }
+                  placeholder="First Floor, Beside HP Petrol Bunk..."
+                  className="mt-1 w-full rounded-xl border border-stone-700 bg-obsidian-950 px-3.5 py-2 text-sm text-stone-100 placeholder:text-stone-600 focus:border-ember-500 focus:outline-none"
+                />
+              </div>
+            </div>
+          </section>
+
           {/* Add New FAQ Card */}
           <section className="rounded-2xl border border-stone-800 bg-obsidian-900/90 p-5 shadow-lg backdrop-blur-md">
             <div className="flex items-center gap-2 border-b border-stone-800 pb-3 text-stone-200">
@@ -2157,6 +2360,99 @@ export function AdminClient() {
               </div>
 
               <div className="sm:col-span-2">
+                <label htmlFor="founderBioHeadline" className="block text-xs font-semibold text-stone-300">
+                  Founder Bio Headline
+                </label>
+                <input
+                  id="founderBioHeadline"
+                  type="text"
+                  value={founderProfile.bioHeadline ?? ""}
+                  onChange={(e) =>
+                    setFounderProfile((prev) => ({ ...prev, bioHeadline: e.target.value }))
+                  }
+                  placeholder="e.g. Teaching with Empathy & Conviction"
+                  className="mt-1 w-full rounded-xl border border-stone-700 bg-obsidian-950 px-3.5 py-2.5 text-sm text-stone-100 focus:border-ember-500 focus:outline-none"
+                />
+              </div>
+
+              <div className="sm:col-span-2">
+                <label htmlFor="founderBioParagraphs" className="block text-xs font-semibold text-stone-300">
+                  Full Narrative Bio Paragraphs
+                </label>
+                <textarea
+                  id="founderBioParagraphs"
+                  rows={5}
+                  value={founderProfile.bioParagraphs ?? ""}
+                  onChange={(e) =>
+                    setFounderProfile((prev) => ({ ...prev, bioParagraphs: e.target.value }))
+                  }
+                  placeholder="Full narrative bio..."
+                  className="mt-1 w-full rounded-xl border border-stone-700 bg-obsidian-950 px-3.5 py-2 text-sm text-stone-100 focus:border-ember-500 focus:outline-none"
+                />
+              </div>
+
+              <div className="sm:col-span-2">
+                <label htmlFor="founderMissionStatement" className="block text-xs font-semibold text-stone-300">
+                  Mission Statement
+                </label>
+                <textarea
+                  id="founderMissionStatement"
+                  rows={2}
+                  value={founderProfile.missionStatement ?? ""}
+                  onChange={(e) =>
+                    setFounderProfile((prev) => ({ ...prev, missionStatement: e.target.value }))
+                  }
+                  placeholder="To eliminate the fear of English..."
+                  className="mt-1 w-full rounded-xl border border-stone-700 bg-obsidian-950 px-3.5 py-2 text-sm text-stone-100 focus:border-ember-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="statsExperience" className="block text-xs font-semibold text-stone-300">
+                  Stats: Experience
+                </label>
+                <input
+                  id="statsExperience"
+                  type="text"
+                  value={founderProfile.statsExperience ?? "20+ Years"}
+                  onChange={(e) =>
+                    setFounderProfile((prev) => ({ ...prev, statsExperience: e.target.value }))
+                  }
+                  className="mt-1 w-full rounded-xl border border-stone-700 bg-obsidian-950 px-3.5 py-2.5 text-sm text-stone-100 focus:border-ember-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="statsStudents" className="block text-xs font-semibold text-stone-300">
+                  Stats: Students Trained
+                </label>
+                <input
+                  id="statsStudents"
+                  type="text"
+                  value={founderProfile.statsStudents ?? "25,000+ Students"}
+                  onChange={(e) =>
+                    setFounderProfile((prev) => ({ ...prev, statsStudents: e.target.value }))
+                  }
+                  className="mt-1 w-full rounded-xl border border-stone-700 bg-obsidian-950 px-3.5 py-2.5 text-sm text-stone-100 focus:border-ember-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="statsBatches" className="block text-xs font-semibold text-stone-300">
+                  Stats: Batches Completed
+                </label>
+                <input
+                  id="statsBatches"
+                  type="text"
+                  value={founderProfile.statsBatches ?? "1,200+ Batches"}
+                  onChange={(e) =>
+                    setFounderProfile((prev) => ({ ...prev, statsBatches: e.target.value }))
+                  }
+                  className="mt-1 w-full rounded-xl border border-stone-700 bg-obsidian-950 px-3.5 py-2.5 text-sm text-stone-100 focus:border-ember-500 focus:outline-none"
+                />
+              </div>
+
+              <div className="sm:col-span-2">
                 <label htmlFor="founderStoryHeadline" className="block text-xs font-semibold text-stone-300">
                   About Page Story Headline
                 </label>
@@ -2341,6 +2637,37 @@ export function AdminClient() {
               The ten commitments highlighted on the homepage that eliminate every barrier between students and fluent spoken English. Format: Title: Description
             </p>
 
+            <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <label htmlFor="promisesSectionTitle" className="block text-xs font-semibold text-stone-300">
+                  Promises Section Title
+                </label>
+                <input
+                  id="promisesSectionTitle"
+                  type="text"
+                  value={siteSettings.promisesSectionTitle ?? "The 10 Promises"}
+                  onChange={(e) =>
+                    setSiteSettings((prev) => ({ ...prev, promisesSectionTitle: e.target.value }))
+                  }
+                  className="mt-1 w-full rounded-xl border border-stone-800 bg-obsidian-900 px-3.5 py-2 text-xs text-white focus:border-ember-500 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label htmlFor="promisesSectionSubtitle" className="block text-xs font-semibold text-stone-300">
+                  Promises Section Subtitle
+                </label>
+                <input
+                  id="promisesSectionSubtitle"
+                  type="text"
+                  value={siteSettings.promisesSectionSubtitle ?? ""}
+                  onChange={(e) =>
+                    setSiteSettings((prev) => ({ ...prev, promisesSectionSubtitle: e.target.value }))
+                  }
+                  className="mt-1 w-full rounded-xl border border-stone-800 bg-obsidian-900 px-3.5 py-2 text-xs text-white focus:border-ember-500 focus:outline-none"
+                />
+              </div>
+            </div>
+
             <div className="mt-5 space-y-3">
               {(siteSettings.promises && siteSettings.promises.length > 0
                 ? siteSettings.promises
@@ -2388,6 +2715,37 @@ export function AdminClient() {
                 />
               </div>
 
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div>
+                  <label htmlFor="eagleStoryTitle" className="block text-xs font-semibold text-stone-300">
+                    Eagle Story Title
+                  </label>
+                  <input
+                    id="eagleStoryTitle"
+                    type="text"
+                    value={storyLore.eagleStoryTitle ?? ""}
+                    onChange={(e) =>
+                      setStoryLore((prev) => ({ ...prev, eagleStoryTitle: e.target.value }))
+                    }
+                    className="mt-1 w-full rounded-xl border border-stone-800 bg-obsidian-900 px-3.5 py-2 text-xs text-white focus:border-ember-500 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="eagleStorySubtitle" className="block text-xs font-semibold text-stone-300">
+                    Eagle Story Subtitle
+                  </label>
+                  <input
+                    id="eagleStorySubtitle"
+                    type="text"
+                    value={storyLore.eagleStorySubtitle ?? ""}
+                    onChange={(e) =>
+                      setStoryLore((prev) => ({ ...prev, eagleStorySubtitle: e.target.value }))
+                    }
+                    className="mt-1 w-full rounded-xl border border-stone-800 bg-obsidian-900 px-3.5 py-2 text-xs text-white focus:border-ember-500 focus:outline-none"
+                  />
+                </div>
+              </div>
+
               <div>
                 <label htmlFor="logoStoryEagle" className="block text-xs font-semibold text-stone-300">
                   Full Eagle Parable Narrative (About Page)
@@ -2395,13 +2753,62 @@ export function AdminClient() {
                 <textarea
                   id="logoStoryEagle"
                   rows={6}
-                  value={siteSettings.logoStoryEagle ?? ""}
-                  onChange={(e) =>
-                    setSiteSettings((prev) => ({ ...prev, logoStoryEagle: e.target.value }))
-                  }
+                  value={siteSettings.logoStoryEagle ?? storyLore.eagleStoryParagraphs ?? ""}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setSiteSettings((prev) => ({ ...prev, logoStoryEagle: val }));
+                    setStoryLore((prev) => ({ ...prev, eagleStoryParagraphs: val }));
+                  }}
                   className="mt-1.5 w-full rounded-xl border border-stone-800 bg-obsidian-900 p-3 text-xs text-white placeholder-stone-600 focus:border-ember-500 focus:ring-1 focus:ring-ember-500"
                   placeholder="The complete eagle parable narrative and moral..."
                 />
+              </div>
+
+              <div>
+                <label htmlFor="eagleStoryMoral" className="block text-xs font-semibold text-stone-300">
+                  Eagle Story Moral / Core Lesson
+                </label>
+                <textarea
+                  id="eagleStoryMoral"
+                  rows={2}
+                  value={storyLore.eagleStoryMoral ?? ""}
+                  onChange={(e) =>
+                    setStoryLore((prev) => ({ ...prev, eagleStoryMoral: e.target.value }))
+                  }
+                  className="mt-1.5 w-full rounded-xl border border-stone-800 bg-obsidian-900 p-3 text-xs text-white placeholder-stone-600 focus:border-ember-500 focus:ring-1 focus:ring-ember-500"
+                  placeholder="Core lesson / moral..."
+                />
+              </div>
+
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div>
+                  <label htmlFor="spiritOfLifeTitle" className="block text-xs font-semibold text-stone-300">
+                    Spirit of LIFE Title
+                  </label>
+                  <input
+                    id="spiritOfLifeTitle"
+                    type="text"
+                    value={storyLore.spiritOfLifeTitle ?? ""}
+                    onChange={(e) =>
+                      setStoryLore((prev) => ({ ...prev, spiritOfLifeTitle: e.target.value }))
+                    }
+                    className="mt-1 w-full rounded-xl border border-stone-800 bg-obsidian-900 px-3.5 py-2 text-xs text-white focus:border-ember-500 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="spiritOfLifeIntro" className="block text-xs font-semibold text-stone-300">
+                    Spirit of LIFE Subtitle / Intro
+                  </label>
+                  <input
+                    id="spiritOfLifeIntro"
+                    type="text"
+                    value={storyLore.spiritOfLifeIntro ?? ""}
+                    onChange={(e) =>
+                      setStoryLore((prev) => ({ ...prev, spiritOfLifeIntro: e.target.value }))
+                    }
+                    className="mt-1 w-full rounded-xl border border-stone-800 bg-obsidian-900 px-3.5 py-2 text-xs text-white focus:border-ember-500 focus:outline-none"
+                  />
+                </div>
               </div>
 
               <div>
@@ -2413,44 +2820,88 @@ export function AdminClient() {
                     <span className="block font-serif text-sm font-bold text-sun-400 mb-1">L</span>
                     <input
                       type="text"
-                      value={siteSettings.lifeAcronymL ?? "Live"}
-                      onChange={(e) =>
-                        setSiteSettings((prev) => ({ ...prev, lifeAcronymL: e.target.value }))
-                      }
+                      value={siteSettings.lifeAcronymL ?? storyLore.pillarLTitle ?? "Live"}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setSiteSettings((prev) => ({ ...prev, lifeAcronymL: val }));
+                        setStoryLore((prev) => ({ ...prev, pillarLTitle: val }));
+                      }}
                       className="w-full rounded-xl border border-stone-800 bg-obsidian-900 px-3 py-2 text-xs text-white placeholder-stone-600 focus:border-ember-500 focus:ring-1 focus:ring-ember-500"
+                    />
+                    <textarea
+                      rows={2}
+                      value={storyLore.pillarLText ?? ""}
+                      onChange={(e) =>
+                        setStoryLore((prev) => ({ ...prev, pillarLText: e.target.value }))
+                      }
+                      placeholder="L pillar description..."
+                      className="mt-2 w-full rounded-xl border border-stone-800 bg-obsidian-900 px-3 py-2 text-xs text-stone-300 placeholder-stone-600 focus:border-ember-500 focus:ring-1 focus:ring-ember-500"
                     />
                   </div>
                   <div>
                     <span className="block font-serif text-sm font-bold text-sun-400 mb-1">I</span>
                     <input
                       type="text"
-                      value={siteSettings.lifeAcronymI ?? "It"}
-                      onChange={(e) =>
-                        setSiteSettings((prev) => ({ ...prev, lifeAcronymI: e.target.value }))
-                      }
+                      value={siteSettings.lifeAcronymI ?? storyLore.pillarITitle ?? "It"}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setSiteSettings((prev) => ({ ...prev, lifeAcronymI: val }));
+                        setStoryLore((prev) => ({ ...prev, pillarITitle: val }));
+                      }}
                       className="w-full rounded-xl border border-stone-800 bg-obsidian-900 px-3 py-2 text-xs text-white placeholder-stone-600 focus:border-ember-500 focus:ring-1 focus:ring-ember-500"
+                    />
+                    <textarea
+                      rows={2}
+                      value={storyLore.pillarIText ?? ""}
+                      onChange={(e) =>
+                        setStoryLore((prev) => ({ ...prev, pillarIText: e.target.value }))
+                      }
+                      placeholder="I pillar description..."
+                      className="mt-2 w-full rounded-xl border border-stone-800 bg-obsidian-900 px-3 py-2 text-xs text-stone-300 placeholder-stone-600 focus:border-ember-500 focus:ring-1 focus:ring-ember-500"
                     />
                   </div>
                   <div>
                     <span className="block font-serif text-sm font-bold text-sun-400 mb-1">F</span>
                     <input
                       type="text"
-                      value={siteSettings.lifeAcronymF ?? "For"}
-                      onChange={(e) =>
-                        setSiteSettings((prev) => ({ ...prev, lifeAcronymF: e.target.value }))
-                      }
+                      value={siteSettings.lifeAcronymF ?? storyLore.pillarFTitle ?? "For"}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setSiteSettings((prev) => ({ ...prev, lifeAcronymF: val }));
+                        setStoryLore((prev) => ({ ...prev, pillarFTitle: val }));
+                      }}
                       className="w-full rounded-xl border border-stone-800 bg-obsidian-900 px-3 py-2 text-xs text-white placeholder-stone-600 focus:border-ember-500 focus:ring-1 focus:ring-ember-500"
+                    />
+                    <textarea
+                      rows={2}
+                      value={storyLore.pillarFText ?? ""}
+                      onChange={(e) =>
+                        setStoryLore((prev) => ({ ...prev, pillarFText: e.target.value }))
+                      }
+                      placeholder="F pillar description..."
+                      className="mt-2 w-full rounded-xl border border-stone-800 bg-obsidian-900 px-3 py-2 text-xs text-stone-300 placeholder-stone-600 focus:border-ember-500 focus:ring-1 focus:ring-ember-500"
                     />
                   </div>
                   <div>
                     <span className="block font-serif text-sm font-bold text-sun-400 mb-1">E</span>
                     <input
                       type="text"
-                      value={siteSettings.lifeAcronymE ?? "Eternity"}
-                      onChange={(e) =>
-                        setSiteSettings((prev) => ({ ...prev, lifeAcronymE: e.target.value }))
-                      }
+                      value={siteSettings.lifeAcronymE ?? storyLore.pillarETitle ?? "Eternity"}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setSiteSettings((prev) => ({ ...prev, lifeAcronymE: val }));
+                        setStoryLore((prev) => ({ ...prev, pillarETitle: val }));
+                      }}
                       className="w-full rounded-xl border border-stone-800 bg-obsidian-900 px-3 py-2 text-xs text-white placeholder-stone-600 focus:border-ember-500 focus:ring-1 focus:ring-ember-500"
+                    />
+                    <textarea
+                      rows={2}
+                      value={storyLore.pillarEText ?? ""}
+                      onChange={(e) =>
+                        setStoryLore((prev) => ({ ...prev, pillarEText: e.target.value }))
+                      }
+                      placeholder="E pillar description..."
+                      className="mt-2 w-full rounded-xl border border-stone-800 bg-obsidian-900 px-3 py-2 text-xs text-stone-300 placeholder-stone-600 focus:border-ember-500 focus:ring-1 focus:ring-ember-500"
                     />
                   </div>
                 </div>

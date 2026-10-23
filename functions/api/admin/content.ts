@@ -35,6 +35,34 @@ export interface AdminSiteSettings {
   lifeAcronymI?: string;
   lifeAcronymF?: string;
   lifeAcronymE?: string;
+  trialBadgeText?: string;
+  heroSubheadline?: string;
+  coursesSectionTitle?: string;
+  coursesSectionSubtitle?: string;
+  promisesSectionTitle?: string;
+  promisesSectionSubtitle?: string;
+  contactAddress?: string;
+  contactPhone?: string;
+  contactEmail?: string;
+  whatsappMessage?: string;
+}
+
+export interface AdminStoryLore {
+  eagleStoryTitle: string;
+  eagleStorySubtitle: string;
+  eagleStoryParagraphs: string;
+  eagleStoryMoral: string;
+  spiritOfLifeTitle: string;
+  spiritOfLifeIntro: string;
+  spiritOfLifePoints: string;
+  pillarLTitle: string;
+  pillarLText: string;
+  pillarITitle: string;
+  pillarIText: string;
+  pillarFTitle: string;
+  pillarFText: string;
+  pillarETitle: string;
+  pillarEText: string;
 }
 
 export interface AdminGalleryItem {
@@ -85,6 +113,12 @@ export interface AdminFounderProfile {
   spiritOfLifeContent?: string | null;
   journeyMilestones?: string | null;
   teachingPhilosophy?: string | null;
+  bioHeadline?: string | null;
+  bioParagraphs?: string | null;
+  missionStatement?: string | null;
+  statsExperience?: string | null;
+  statsStudents?: string | null;
+  statsBatches?: string | null;
 }
 
 export interface AdminLegalDocument {
@@ -98,6 +132,7 @@ export interface AdminLegalDocument {
 export interface FullAdminData {
   announcement: AdminAnnouncement;
   siteSettings: AdminSiteSettings;
+  storyLore?: AdminStoryLore;
   galleryItems: AdminGalleryItem[];
   courseTracks: AdminCourseTrack[];
   faqItems: AdminFaqItem[];
@@ -157,6 +192,46 @@ export const DEFAULT_ADMIN_DATA: FullAdminData = {
     lifeAcronymI: "It",
     lifeAcronymF: "For",
     lifeAcronymE: "Eternity",
+    trialBadgeText: "10 Days Free Trial",
+    heroSubheadline:
+      "Practical, interactive Spoken English & Soft Skills training led personally by Mani\u00A0Sir. Learn without fear or grammar intimidation in Visakhapatnam or via Live Online classes.",
+    coursesSectionTitle: "Every Stage of English Fluency",
+    coursesSectionSubtitle: "From foundational hesitation removal to stage-ready executive communication.",
+    promisesSectionTitle: "The 10 LIFE Promises",
+    promisesSectionSubtitle: "Ten commitments you won't find anywhere else, straight from Mani\u00A0Sir.",
+    contactAddress:
+      "First Floor, Beside HP Petrol Bunk, Car Shed Junction, PM Palem, Madhurawada, Visakhapatnam, Andhra Pradesh 530041",
+    contactPhone: "+91 73374 12999",
+    contactEmail: "lifebymanisir@gmail.com",
+    whatsappMessage:
+      "Hello Mani Sir, I am interested in the 10 Free Trial Classes at LIFE Spoken English. Please share the next batch details.",
+  },
+  storyLore: {
+    eagleStoryTitle: "The Young Eagle Who Was Afraid to Fly",
+    eagleStorySubtitle: "The Story Inside Our Logo",
+    eagleStoryParagraphs:
+      "High on a cliff above the Vizag coast, a young eagle sat at the edge of its nest every morning, watching the others soar.\n\nIt knew everything about flying. It had watched a thousand flights and could explain every feather. But each time the wind called, its wings stayed folded. What if I fall? What if they laugh?\n\nOne morning, an old eagle landed beside it. He did not lecture. He did not push. He simply said, \"Fly with me. Just a little today.\"\n\nThey stepped into the warm wind together. The young eagle wobbled, dipped, and then, for the very first time, it rose. Below them, over the sea, the sun was rising too.\n\nThat morning the young eagle learned something no book had taught it: it never needed more knowledge. It needed someone to fly beside it, and the courage to open its wings.",
+    eagleStoryMoral:
+      "Every learner who walks into LIFE is that young eagle: full of knowledge, held back by fear. Our job is to fly beside you until your own wings take over.",
+    spiritOfLifeTitle: "The Meaning Behind Our Name",
+    spiritOfLifeIntro:
+      "Most people approach English like a temporary subject: something you study just to pass an exam, clear an interview, or memorize for a few weeks. But language is not a school textbook. Language is life itself.\n\nWhen you acquire true confidence in speaking, it does not disappear after an interview. It stays with you when you talk to your children, when you present in boardrooms, when you travel the world, and when you stand on any public stage. It transforms how you carry yourself forever.",
+    spiritOfLifePoints: JSON.stringify(
+      [
+        "Most people approach English like a temporary subject: something you study just to pass an exam, clear an interview, or memorize for a few weeks. But language is not a school textbook. Language is life itself.",
+        "When you acquire true confidence in speaking, it does not disappear after an interview. It stays with you when you talk to your children, when you present in boardrooms, when you travel the world, and when you stand on any public stage. It transforms how you carry yourself forever.",
+      ],
+      null,
+      2,
+    ),
+    pillarLTitle: "Live",
+    pillarLText: "English not as an academic subject, but as a living life skill you will carry forever.",
+    pillarITitle: "It",
+    pillarIText: "Language lives on your tongue, not in a notebook. Active speaking drills from day one.",
+    pillarFTitle: "For",
+    pillarFText: "Purpose-driven communication for campus placements, corporate growth, and life.",
+    pillarETitle: "Eternity",
+    pillarEText: "Unshakeable confidence that stays with you forever and transforms how you carry yourself.",
   },
   founderProfile: {
     name: "Mani\u00A0Sir",
@@ -196,6 +271,14 @@ export const DEFAULT_ADMIN_DATA: FullAdminData = {
     ),
     teachingPhilosophy:
       "Some teachers teach English. Mani\u00A0Sir teaches people to believe in their own voice.\n\nK. Maneendra Kumar, known to thousands of learners simply as Mani\u00A0Sir, founded LIFE in Madhurawada, Visakhapatnam with one simple belief: nobody is bad at English. Most people have just never been given a safe place to speak it.",
+    bioHeadline: "Teaching with Empathy & Conviction",
+    bioParagraphs:
+      "K. Maneendra Kumar, known to thousands of learners simply as Mani\u00A0Sir, founded LIFE in Madhurawada, Visakhapatnam with one simple belief: nobody is bad at English. Most people have just never been given a safe place to speak it.\n\nIn his classroom, mistakes are not punished; they are welcomed as proof that you are trying. Lessons sound like real life: waking up, travelling, explaining, negotiating, interviewing. A new word is not finished until every student has said it aloud and used it in a sentence of their own.\n\nBy bridging every idea from Telugu to English, he turns the language people feared most into something that feels familiar. Students often say his classes feel more like watching a movie than sitting through a lecture.\n\nToday his lessons travel far beyond one classroom through YouTube and live online batches. But the goal has never changed: the day each student speaks without fear.",
+    missionStatement:
+      "To eliminate the fear of English and empower learners with unshakeable speaking confidence that lasts for eternity.",
+    statsExperience: "20+ Years",
+    statsStudents: "25,000+ Students",
+    statsBatches: "1,200+ Batches",
   },
   galleryItems: [
     {
@@ -714,7 +797,16 @@ export async function onRequestGet(context: EventContext): Promise<Response> {
         lifeAcronymL: cleanText(f.lifeAcronymL?.[locale]) || result.siteSettings.lifeAcronymL,
         lifeAcronymI: cleanText(f.lifeAcronymI?.[locale]) || result.siteSettings.lifeAcronymI,
         lifeAcronymF: cleanText(f.lifeAcronymF?.[locale]) || result.siteSettings.lifeAcronymF,
-        lifeAcronymE: cleanText(f.lifeAcronymE?.[locale]) || result.siteSettings.lifeAcronymE,
+        trialBadgeText: cleanText(f.trialBadgeText?.[locale]) || result.siteSettings.trialBadgeText,
+        heroSubheadline: cleanText(f.heroSubheadline?.[locale]) || result.siteSettings.heroSubheadline,
+        coursesSectionTitle: cleanText(f.coursesSectionTitle?.[locale]) || result.siteSettings.coursesSectionTitle,
+        coursesSectionSubtitle: cleanText(f.coursesSectionSubtitle?.[locale]) || result.siteSettings.coursesSectionSubtitle,
+        promisesSectionTitle: cleanText(f.promisesSectionTitle?.[locale]) || result.siteSettings.promisesSectionTitle,
+        promisesSectionSubtitle: cleanText(f.promisesSectionSubtitle?.[locale]) || result.siteSettings.promisesSectionSubtitle,
+        contactAddress: cleanText(f.contactAddress?.[locale]) || result.siteSettings.contactAddress,
+        contactPhone: cleanText(f.contactPhone?.[locale]) || result.siteSettings.contactPhone,
+        contactEmail: cleanText(f.contactEmail?.[locale]) || result.siteSettings.contactEmail,
+        whatsappMessage: cleanText(f.whatsappMessage?.[locale]) || result.siteSettings.whatsappMessage,
       };
     }
 
@@ -755,6 +847,12 @@ export async function onRequestGet(context: EventContext): Promise<Response> {
         spiritOfLifeContent: cleanText(f.spiritOfLifeContent?.[locale]) || result.founderProfile.spiritOfLifeContent,
         journeyMilestones: cleanText(f.journeyMilestones?.[locale]) || result.founderProfile.journeyMilestones,
         teachingPhilosophy: cleanText(f.teachingPhilosophy?.[locale]) || result.founderProfile.teachingPhilosophy,
+        bioHeadline: cleanText(f.bioHeadline?.[locale]) || result.founderProfile.bioHeadline,
+        bioParagraphs: cleanText(f.bioParagraphs?.[locale]) || result.founderProfile.bioParagraphs,
+        missionStatement: cleanText(f.missionStatement?.[locale]) || result.founderProfile.missionStatement,
+        statsExperience: cleanText(f.statsExperience?.[locale]) || result.founderProfile.statsExperience,
+        statsStudents: cleanText(f.statsStudents?.[locale]) || result.founderProfile.statsStudents,
+        statsBatches: cleanText(f.statsBatches?.[locale]) || result.founderProfile.statsBatches,
       };
       (result as Record<string, unknown>)._debug = {
         assetsResOk: assetsRes.ok,
@@ -763,6 +861,31 @@ export async function onRequestGet(context: EventContext): Promise<Response> {
         assetMapKeys: Array.from(assetUrlMap.keys()),
         pAssetId,
         founderId: founderEntry.sys.id,
+      };
+    }
+
+    // 3b. storyLore
+    const loreEntry =
+      entryMap.get("life-story-lore") || entriesByContentType.get("storyLore")?.[0];
+    if (loreEntry) {
+      const f = loreEntry.fields ?? {};
+      const locale = Object.keys(f.eagleStoryTitle ?? {})[0] ?? "en-US";
+      result.storyLore = {
+        eagleStoryTitle: cleanText(f.eagleStoryTitle?.[locale]) || result.storyLore!.eagleStoryTitle,
+        eagleStorySubtitle: cleanText(f.eagleStorySubtitle?.[locale]) || result.storyLore!.eagleStorySubtitle,
+        eagleStoryParagraphs: cleanText(f.eagleStoryParagraphs?.[locale]) || result.storyLore!.eagleStoryParagraphs,
+        eagleStoryMoral: cleanText(f.eagleStoryMoral?.[locale]) || result.storyLore!.eagleStoryMoral,
+        spiritOfLifeTitle: cleanText(f.spiritOfLifeTitle?.[locale]) || result.storyLore!.spiritOfLifeTitle,
+        spiritOfLifeIntro: cleanText(f.spiritOfLifeIntro?.[locale]) || result.storyLore!.spiritOfLifeIntro,
+        spiritOfLifePoints: typeof f.spiritOfLifePoints?.[locale] === "string" ? cleanText(f.spiritOfLifePoints[locale] as string) : result.storyLore!.spiritOfLifePoints,
+        pillarLTitle: cleanText(f.pillarLTitle?.[locale]) || "Live",
+        pillarLText: cleanText(f.pillarLText?.[locale]) || result.storyLore!.pillarLText,
+        pillarITitle: cleanText(f.pillarITitle?.[locale]) || "It",
+        pillarIText: cleanText(f.pillarIText?.[locale]) || result.storyLore!.pillarIText,
+        pillarFTitle: cleanText(f.pillarFTitle?.[locale]) || "For",
+        pillarFText: cleanText(f.pillarFText?.[locale]) || result.storyLore!.pillarFText,
+        pillarETitle: cleanText(f.pillarETitle?.[locale]) || "Eternity",
+        pillarEText: cleanText(f.pillarEText?.[locale]) || result.storyLore!.pillarEText,
       };
     }
 
@@ -898,6 +1021,7 @@ export async function onRequestPost(context: EventContext): Promise<Response> {
     const body = (await context.request.json()) as {
       announcement?: Partial<AdminAnnouncement>;
       siteSettings?: Partial<AdminSiteSettings>;
+      storyLore?: Partial<AdminStoryLore>;
       founderProfile?: Partial<AdminFounderProfile>;
       galleryItems?: AdminGalleryItem[];
       deletedGalleryIds?: string[];
@@ -1048,6 +1172,37 @@ export async function onRequestPost(context: EventContext): Promise<Response> {
           ...(body.siteSettings.lifeAcronymI && { lifeAcronymI: cleanText(body.siteSettings.lifeAcronymI) }),
           ...(body.siteSettings.lifeAcronymF && { lifeAcronymF: cleanText(body.siteSettings.lifeAcronymF) }),
           ...(body.siteSettings.lifeAcronymE && { lifeAcronymE: cleanText(body.siteSettings.lifeAcronymE) }),
+          ...(body.siteSettings.trialBadgeText && { trialBadgeText: cleanText(body.siteSettings.trialBadgeText) }),
+          ...(body.siteSettings.heroSubheadline && { heroSubheadline: cleanText(body.siteSettings.heroSubheadline) }),
+          ...(body.siteSettings.coursesSectionTitle && { coursesSectionTitle: cleanText(body.siteSettings.coursesSectionTitle) }),
+          ...(body.siteSettings.coursesSectionSubtitle && { coursesSectionSubtitle: cleanText(body.siteSettings.coursesSectionSubtitle) }),
+          ...(body.siteSettings.promisesSectionTitle && { promisesSectionTitle: cleanText(body.siteSettings.promisesSectionTitle) }),
+          ...(body.siteSettings.promisesSectionSubtitle && { promisesSectionSubtitle: cleanText(body.siteSettings.promisesSectionSubtitle) }),
+          ...(body.siteSettings.contactAddress && { contactAddress: cleanText(body.siteSettings.contactAddress) }),
+          ...(body.siteSettings.contactPhone && { contactPhone: cleanText(body.siteSettings.contactPhone) }),
+          ...(body.siteSettings.contactEmail && { contactEmail: cleanText(body.siteSettings.contactEmail) }),
+          ...(body.siteSettings.whatsappMessage && { whatsappMessage: cleanText(body.siteSettings.whatsappMessage) }),
+        });
+      }
+
+      // 1b. Update storyLore
+      if (body.storyLore) {
+        await upsertEntry("life-story-lore", "storyLore", {
+          ...(body.storyLore.eagleStoryTitle && { eagleStoryTitle: cleanText(body.storyLore.eagleStoryTitle) }),
+          ...(body.storyLore.eagleStorySubtitle && { eagleStorySubtitle: cleanText(body.storyLore.eagleStorySubtitle) }),
+          ...(body.storyLore.eagleStoryParagraphs && { eagleStoryParagraphs: cleanText(body.storyLore.eagleStoryParagraphs) }),
+          ...(body.storyLore.eagleStoryMoral && { eagleStoryMoral: cleanText(body.storyLore.eagleStoryMoral) }),
+          ...(body.storyLore.spiritOfLifeTitle && { spiritOfLifeTitle: cleanText(body.storyLore.spiritOfLifeTitle) }),
+          ...(body.storyLore.spiritOfLifeIntro && { spiritOfLifeIntro: cleanText(body.storyLore.spiritOfLifeIntro) }),
+          ...(body.storyLore.spiritOfLifePoints && { spiritOfLifePoints: cleanText(body.storyLore.spiritOfLifePoints) }),
+          ...(body.storyLore.pillarLTitle && { pillarLTitle: cleanText(body.storyLore.pillarLTitle) }),
+          ...(body.storyLore.pillarLText && { pillarLText: cleanText(body.storyLore.pillarLText) }),
+          ...(body.storyLore.pillarITitle && { pillarITitle: cleanText(body.storyLore.pillarITitle) }),
+          ...(body.storyLore.pillarIText && { pillarIText: cleanText(body.storyLore.pillarIText) }),
+          ...(body.storyLore.pillarFTitle && { pillarFTitle: cleanText(body.storyLore.pillarFTitle) }),
+          ...(body.storyLore.pillarFText && { pillarFText: cleanText(body.storyLore.pillarFText) }),
+          ...(body.storyLore.pillarETitle && { pillarETitle: cleanText(body.storyLore.pillarETitle) }),
+          ...(body.storyLore.pillarEText && { pillarEText: cleanText(body.storyLore.pillarEText) }),
         });
       }
 
@@ -1072,6 +1227,12 @@ export async function onRequestPost(context: EventContext): Promise<Response> {
           ...(body.founderProfile.spiritOfLifeContent && { spiritOfLifeContent: cleanText(body.founderProfile.spiritOfLifeContent) }),
           ...(body.founderProfile.journeyMilestones && { journeyMilestones: cleanText(body.founderProfile.journeyMilestones) }),
           ...(body.founderProfile.teachingPhilosophy && { teachingPhilosophy: cleanText(body.founderProfile.teachingPhilosophy) }),
+          ...(body.founderProfile.bioHeadline && { bioHeadline: cleanText(body.founderProfile.bioHeadline) }),
+          ...(body.founderProfile.bioParagraphs && { bioParagraphs: cleanText(body.founderProfile.bioParagraphs) }),
+          ...(body.founderProfile.missionStatement && { missionStatement: cleanText(body.founderProfile.missionStatement) }),
+          ...(body.founderProfile.statsExperience && { statsExperience: cleanText(body.founderProfile.statsExperience) }),
+          ...(body.founderProfile.statsStudents && { statsStudents: cleanText(body.founderProfile.statsStudents) }),
+          ...(body.founderProfile.statsBatches && { statsBatches: cleanText(body.founderProfile.statsBatches) }),
         };
         await upsertEntry("life-founder-profile", "founderProfile", founderPayload);
         await upsertEntry("life-founder-mani-sir", "founderProfile", founderPayload);

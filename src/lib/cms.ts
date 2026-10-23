@@ -24,6 +24,12 @@ export type FounderProfile = {
   spiritOfLifeContent?: string | null;
   journeyMilestones?: string | null;
   teachingPhilosophy?: string | null;
+  bioHeadline?: string | null;
+  bioParagraphs?: string | null;
+  missionStatement?: string | null;
+  statsExperience?: string | null;
+  statsStudents?: string | null;
+  statsBatches?: string | null;
 };
 
 export type SiteSettings = {
@@ -42,6 +48,34 @@ export type SiteSettings = {
   lifeAcronymI?: string;
   lifeAcronymF?: string;
   lifeAcronymE?: string;
+  trialBadgeText?: string;
+  heroSubheadline?: string;
+  coursesSectionTitle?: string;
+  coursesSectionSubtitle?: string;
+  promisesSectionTitle?: string;
+  promisesSectionSubtitle?: string;
+  contactAddress?: string;
+  contactPhone?: string;
+  contactEmail?: string;
+  whatsappMessage?: string;
+};
+
+export type StoryLore = {
+  eagleStoryTitle: string;
+  eagleStorySubtitle: string;
+  eagleStoryParagraphs: string;
+  eagleStoryMoral: string;
+  spiritOfLifeTitle: string;
+  spiritOfLifeIntro: string;
+  spiritOfLifePoints: string;
+  pillarLTitle: string;
+  pillarLText: string;
+  pillarITitle: string;
+  pillarIText: string;
+  pillarFTitle: string;
+  pillarFText: string;
+  pillarETitle: string;
+  pillarEText: string;
 };
 
 export type CourseTrack = {
@@ -103,6 +137,7 @@ type Snapshot = {
   announcement: Announcement | null;
   founderProfile: FounderProfile | null;
   siteSettings: SiteSettings | null;
+  storyLore: StoryLore | null;
   courseTracks: CourseTrack[] | null;
   faqItems: FaqItem[] | null;
   testimonials: TestimonialItem[] | null;
@@ -122,6 +157,30 @@ const DEFAULT_FOUNDER_PROFILE: FounderProfile = {
   spiritOfLifeContent: storyCopy.meaningParagraphs.join("\n\n"),
   journeyMilestones: JSON.stringify(storyCopy.milestones),
   teachingPhilosophy: `${founderCopy.lede}\n\n${founderCopy.paragraphs.join("\n\n")}`,
+  bioHeadline: "Teaching with Empathy & Conviction",
+  bioParagraphs: founderCopy.paragraphs.join("\n\n"),
+  missionStatement: brandCopy.mission,
+  statsExperience: "20+ Years",
+  statsStudents: "25,000+ Students",
+  statsBatches: "1,200+ Batches",
+};
+
+const DEFAULT_STORY_LORE: StoryLore = {
+  eagleStoryTitle: storyCopy.logoStory.title,
+  eagleStorySubtitle: storyCopy.logoStory.eyebrow,
+  eagleStoryParagraphs: storyCopy.logoStory.parable.join("\n\n"),
+  eagleStoryMoral: storyCopy.logoStory.moral,
+  spiritOfLifeTitle: storyCopy.meaningTitle,
+  spiritOfLifeIntro: storyCopy.meaningLead,
+  spiritOfLifePoints: JSON.stringify(storyCopy.meaningParagraphs),
+  pillarLTitle: "Live",
+  pillarLText: "English is not a temporary subject for exams or interviews. It is a daily living tool.",
+  pillarITitle: "It",
+  pillarIText: "Embrace the language on your tongue with practical drills and zero hesitation.",
+  pillarFTitle: "For",
+  pillarFText: "Build habits, professional skills, and confidence for every stage of your life.",
+  pillarETitle: "Eternity",
+  pillarEText: "Fluency that stays with you forever - at work, with family, and across the globe.",
 };
 
 const DEFAULT_PROMISES_RAW: string[] = [
@@ -166,6 +225,16 @@ const DEFAULT_SITE_SETTINGS: SiteSettings = {
   lifeAcronymI: "It",
   lifeAcronymF: "For",
   lifeAcronymE: "Eternity",
+  trialBadgeText: heroCopy.badgeText,
+  heroSubheadline: heroCopy.subheadline,
+  coursesSectionTitle: "Every Stage of English Fluency",
+  coursesSectionSubtitle: "From foundational hesitation removal to stage-ready executive communication.",
+  promisesSectionTitle: "The 10 LIFE Promises",
+  promisesSectionSubtitle: "Ten commitments you won't find anywhere else, straight from Mani\u00A0Sir.",
+  contactAddress: brandCopy.address.full,
+  contactPhone: brandCopy.phones.primary.display,
+  contactEmail: brandCopy.email,
+  whatsappMessage: brandCopy.whatsappCta.defaultMessage,
 };
 
 const DEFAULT_PRIVACY_POLICY: LegalDocument = {
@@ -510,6 +579,29 @@ export function getLogoStory(): string {
   return settings.logoStoryEagle || settings.logoStory || DEFAULT_LOGO_STORY;
 }
 
+/** Story lore (eagle parable, Spirit of LIFE, and the 4 pillars) from Contentful, or default. */
+export function getStoryLore(): StoryLore {
+  const lore = readSnapshot()?.storyLore;
+  if (!lore) return DEFAULT_STORY_LORE;
+  return {
+    eagleStoryTitle: lore.eagleStoryTitle || DEFAULT_STORY_LORE.eagleStoryTitle,
+    eagleStorySubtitle: lore.eagleStorySubtitle || DEFAULT_STORY_LORE.eagleStorySubtitle,
+    eagleStoryParagraphs: lore.eagleStoryParagraphs || DEFAULT_STORY_LORE.eagleStoryParagraphs,
+    eagleStoryMoral: lore.eagleStoryMoral || DEFAULT_STORY_LORE.eagleStoryMoral,
+    spiritOfLifeTitle: lore.spiritOfLifeTitle || DEFAULT_STORY_LORE.spiritOfLifeTitle,
+    spiritOfLifeIntro: lore.spiritOfLifeIntro || DEFAULT_STORY_LORE.spiritOfLifeIntro,
+    spiritOfLifePoints: lore.spiritOfLifePoints || DEFAULT_STORY_LORE.spiritOfLifePoints,
+    pillarLTitle: lore.pillarLTitle || DEFAULT_STORY_LORE.pillarLTitle,
+    pillarLText: lore.pillarLText || DEFAULT_STORY_LORE.pillarLText,
+    pillarITitle: lore.pillarITitle || DEFAULT_STORY_LORE.pillarITitle,
+    pillarIText: lore.pillarIText || DEFAULT_STORY_LORE.pillarIText,
+    pillarFTitle: lore.pillarFTitle || DEFAULT_STORY_LORE.pillarFTitle,
+    pillarFText: lore.pillarFText || DEFAULT_STORY_LORE.pillarFText,
+    pillarETitle: lore.pillarETitle || DEFAULT_STORY_LORE.pillarETitle,
+    pillarEText: lore.pillarEText || DEFAULT_STORY_LORE.pillarEText,
+  };
+}
+
 /** Complete Eagle parable and moral dynamically fetched from CMS. */
 export function getEagleParable(): {
   title: string;
@@ -518,26 +610,15 @@ export function getEagleParable(): {
   moral: string;
   symbolsHeading: string;
 } {
-  const settings = getSiteSettings();
-  const rawEagle = settings.logoStoryEagle || DEFAULT_EAGLE_PARABLE;
+  const lore = getStoryLore();
+  const rawEagle = lore.eagleStoryParagraphs || DEFAULT_STORY_LORE.eagleStoryParagraphs;
   const parts = rawEagle.split(/\n\n+/).map((p) => p.trim()).filter(Boolean);
 
-  let parable = storyCopy.logoStory.parable;
-  let moral = storyCopy.logoStory.moral;
-
-  if (parts.length > 1) {
-    parable = parts.slice(0, -1);
-    moral = parts[parts.length - 1];
-  } else if (parts.length === 1) {
-    parable = parts;
-    moral = settings.logoStory || storyCopy.logoStory.moral;
-  }
-
   return {
-    title: storyCopy.logoStory.title,
-    eyebrow: storyCopy.logoStory.eyebrow,
-    parable,
-    moral,
+    title: lore.eagleStoryTitle || storyCopy.logoStory.title,
+    eyebrow: lore.eagleStorySubtitle || storyCopy.logoStory.eyebrow,
+    parable: parts.length > 0 ? parts : storyCopy.logoStory.parable,
+    moral: lore.eagleStoryMoral || storyCopy.logoStory.moral,
     symbolsHeading: storyCopy.logoStory.symbolsHeading,
   };
 }
@@ -550,27 +631,42 @@ export function getSpiritOfLife(): {
   paragraphs: string[];
   namedLine: string;
   promise: string;
-  acronym: Array<{ letter: string; word: string }>;
+  acronym: Array<{ letter: string; word: string; description?: string }>;
 } {
+  const lore = getStoryLore();
   const profile = getFounderProfile();
-  const settings = getSiteSettings();
 
-  const title = profile.spiritOfLifeTitle || storyCopy.meaningTitle;
-  const rawContent = profile.spiritOfLifeContent;
-  const paragraphs = rawContent
-    ? rawContent.split(/\n\n+/).map((p) => p.trim()).filter(Boolean)
-    : storyCopy.meaningParagraphs;
+  const title = lore.spiritOfLifeTitle || profile.spiritOfLifeTitle || storyCopy.meaningTitle;
+  const lead = lore.spiritOfLifeIntro || storyCopy.meaningLead;
+
+  let paragraphs = storyCopy.meaningParagraphs;
+  if (lore.spiritOfLifePoints) {
+    try {
+      const parsed = JSON.parse(lore.spiritOfLifePoints);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        if (typeof parsed[0] === "string") {
+          paragraphs = parsed;
+        } else if (parsed[0]?.title && parsed[0]?.body) {
+          paragraphs = parsed.map((item: { title: string; body: string }) => `${item.title}: ${item.body}`);
+        }
+      }
+    } catch {
+      paragraphs = lore.spiritOfLifePoints.split(/\n\n+/).map((p) => p.trim()).filter(Boolean);
+    }
+  } else if (profile.spiritOfLifeContent) {
+    paragraphs = profile.spiritOfLifeContent.split(/\n\n+/).map((p) => p.trim()).filter(Boolean);
+  }
 
   const acronym = [
-    { letter: "L", word: settings.lifeAcronymL || "Live" },
-    { letter: "I", word: settings.lifeAcronymI || "It" },
-    { letter: "F", word: settings.lifeAcronymF || "For" },
-    { letter: "E", word: settings.lifeAcronymE || "Eternity" },
+    { letter: "L", word: lore.pillarLTitle || "Live", description: lore.pillarLText },
+    { letter: "I", word: lore.pillarITitle || "It", description: lore.pillarIText },
+    { letter: "F", word: lore.pillarFTitle || "For", description: lore.pillarFText },
+    { letter: "E", word: lore.pillarETitle || "Eternity", description: lore.pillarEText },
   ];
 
   return {
     title,
-    lead: storyCopy.meaningLead,
+    lead,
     eyebrow: storyCopy.eyebrow,
     paragraphs: paragraphs.length > 0 ? paragraphs : storyCopy.meaningParagraphs,
     namedLine: storyCopy.namedLine,

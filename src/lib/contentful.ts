@@ -40,6 +40,12 @@ export type CmsFounderProfile = {
   spiritOfLifeContent?: string | null;
   journeyMilestones?: string | null;
   teachingPhilosophy?: string | null;
+  bioHeadline?: string | null;
+  bioParagraphs?: string | null;
+  missionStatement?: string | null;
+  statsExperience?: string | null;
+  statsStudents?: string | null;
+  statsBatches?: string | null;
 };
 
 export type CmsAnnouncement = { message: string; badgeText: string | null };
@@ -60,6 +66,34 @@ export type CmsSiteSettings = {
   lifeAcronymI?: string;
   lifeAcronymF?: string;
   lifeAcronymE?: string;
+  trialBadgeText?: string;
+  heroSubheadline?: string;
+  coursesSectionTitle?: string;
+  coursesSectionSubtitle?: string;
+  promisesSectionTitle?: string;
+  promisesSectionSubtitle?: string;
+  contactAddress?: string;
+  contactPhone?: string;
+  contactEmail?: string;
+  whatsappMessage?: string;
+};
+
+export type CmsStoryLore = {
+  eagleStoryTitle: string;
+  eagleStorySubtitle: string;
+  eagleStoryParagraphs: string;
+  eagleStoryMoral: string;
+  spiritOfLifeTitle: string;
+  spiritOfLifeIntro: string;
+  spiritOfLifePoints: string;
+  pillarLTitle: string;
+  pillarLText: string;
+  pillarITitle: string;
+  pillarIText: string;
+  pillarFTitle: string;
+  pillarFText: string;
+  pillarETitle: string;
+  pillarEText: string;
 };
 
 export type CmsLegalDocument = {
@@ -105,6 +139,7 @@ export type CmsContent = {
   faqItems: CmsFaqItem[];
   testimonials: CmsTestimonialItem[];
   legalDocuments: CmsLegalDocument[];
+  storyLore: CmsStoryLore | null;
 };
 
 const TIMEOUT_MS = 15_000;
@@ -206,6 +241,12 @@ function toFounderProfile(entry: { sys: { id: string }; fields: Fields } | undef
     spiritOfLifeContent: cleanText(f.spiritOfLifeContent) || null,
     journeyMilestones: cleanText(f.journeyMilestones) || null,
     teachingPhilosophy: cleanText(f.teachingPhilosophy) || null,
+    bioHeadline: cleanText(f.bioHeadline) || null,
+    bioParagraphs: cleanText(f.bioParagraphs) || null,
+    missionStatement: cleanText(f.missionStatement) || null,
+    statsExperience: cleanText(f.statsExperience) || null,
+    statsStudents: cleanText(f.statsStudents) || null,
+    statsBatches: cleanText(f.statsBatches) || null,
   };
 }
 
@@ -231,6 +272,41 @@ function toSiteSettings(entry: { fields: Fields } | undefined): CmsSiteSettings 
     lifeAcronymI: cleanText(f.lifeAcronymI) || undefined,
     lifeAcronymF: cleanText(f.lifeAcronymF) || undefined,
     lifeAcronymE: cleanText(f.lifeAcronymE) || undefined,
+    trialBadgeText: cleanText(f.trialBadgeText) || undefined,
+    heroSubheadline: cleanText(f.heroSubheadline) || undefined,
+    coursesSectionTitle: cleanText(f.coursesSectionTitle) || undefined,
+    coursesSectionSubtitle: cleanText(f.coursesSectionSubtitle) || undefined,
+    promisesSectionTitle: cleanText(f.promisesSectionTitle) || undefined,
+    promisesSectionSubtitle: cleanText(f.promisesSectionSubtitle) || undefined,
+    contactAddress: cleanText(f.contactAddress) || undefined,
+    contactPhone: cleanText(f.contactPhone) || undefined,
+    contactEmail: cleanText(f.contactEmail) || undefined,
+    whatsappMessage: cleanText(f.whatsappMessage) || undefined,
+  };
+}
+
+function toStoryLore(entry: { fields: Fields } | undefined): CmsStoryLore | null {
+  if (!entry?.fields) return null;
+  const f = entry.fields;
+  return {
+    eagleStoryTitle: cleanText(f.eagleStoryTitle),
+    eagleStorySubtitle: cleanText(f.eagleStorySubtitle),
+    eagleStoryParagraphs: cleanText(f.eagleStoryParagraphs),
+    eagleStoryMoral: cleanText(f.eagleStoryMoral),
+    spiritOfLifeTitle: cleanText(f.spiritOfLifeTitle),
+    spiritOfLifeIntro: cleanText(f.spiritOfLifeIntro),
+    spiritOfLifePoints:
+      typeof f.spiritOfLifePoints === "string"
+        ? cleanText(f.spiritOfLifePoints)
+        : JSON.stringify(f.spiritOfLifePoints ?? ""),
+    pillarLTitle: cleanText(f.pillarLTitle) || "Live",
+    pillarLText: cleanText(f.pillarLText),
+    pillarITitle: cleanText(f.pillarITitle) || "It",
+    pillarIText: cleanText(f.pillarIText),
+    pillarFTitle: cleanText(f.pillarFTitle) || "For",
+    pillarFText: cleanText(f.pillarFText),
+    pillarETitle: cleanText(f.pillarETitle) || "Eternity",
+    pillarEText: cleanText(f.pillarEText),
   };
 }
 
@@ -318,7 +394,7 @@ async function fetchAllViaCda(): Promise<CmsContent> {
     retryLimit: 2,
   }).withoutUnresolvableLinks;
 
-  const [gallery, announcements, founders, settings, courses, faqs, testimonials, legalDocs] = await Promise.all([
+  const [gallery, announcements, founders, settings, courses, faqs, testimonials, legalDocs, lore] = await Promise.all([
     client.getEntries({ content_type: "galleryItem", include: 1, limit: 200 }),
     client.getEntries({ content_type: "announcement", "fields.isActive": true, order: ["-sys.updatedAt"], limit: 1 }),
     client.getEntries({ content_type: "founderProfile", include: 1, limit: 5 }),
@@ -327,6 +403,7 @@ async function fetchAllViaCda(): Promise<CmsContent> {
     client.getEntries({ content_type: "faqItem", order: ["fields.order"], limit: 50 }),
     client.getEntries({ content_type: "testimonialItem", order: ["fields.order"], limit: 50 }),
     client.getEntries({ content_type: "legalDocument", limit: 10 }).catch(() => ({ items: [] })),
+    client.getEntries({ content_type: "storyLore", limit: 1 }).catch(() => ({ items: [] })),
   ]);
 
   const photos = gallery.items
@@ -344,6 +421,7 @@ async function fetchAllViaCda(): Promise<CmsContent> {
   const founderProfile = toFounderProfile(founderItem as unknown as { sys: { id: string }; fields: Fields } | undefined);
 
   const siteSettings = toSiteSettings(settings.items[0] as unknown as { fields: Fields } | undefined);
+  const storyLore = toStoryLore(lore.items[0] as unknown as { fields: Fields } | undefined);
 
   const courseTracks = courses.items
     .map((e) => toCourseTrack(e as unknown as { sys: { id: string }; fields: Fields }))
@@ -373,6 +451,7 @@ async function fetchAllViaCda(): Promise<CmsContent> {
     faqItems,
     testimonials: testimonialList,
     legalDocuments,
+    storyLore,
   };
 }
 
@@ -386,7 +465,7 @@ async function fetchAllViaCma(): Promise<CmsContent> {
     "Content-Type": "application/vnd.contentful.management.v1+json",
   };
 
-  const [assetsRes, galleryRes, annRes, foundersRes, settingsRes, coursesRes, faqsRes, testsRes, legalRes] =
+  const [assetsRes, galleryRes, annRes, foundersRes, settingsRes, coursesRes, faqsRes, testsRes, legalRes, loreRes] =
     await Promise.all([
       fetch(`${base}/assets?limit=100`, { headers }).then((r) => r.json()),
       fetch(`${base}/entries?content_type=galleryItem&limit=100`, { headers }).then((r) => r.json()),
@@ -397,6 +476,7 @@ async function fetchAllViaCma(): Promise<CmsContent> {
       fetch(`${base}/entries?content_type=faqItem&order=fields.order&limit=50`, { headers }).then((r) => r.json()),
       fetch(`${base}/entries?content_type=testimonialItem&order=fields.order&limit=50`, { headers }).then((r) => r.json()),
       fetch(`${base}/entries?content_type=legalDocument&limit=10`, { headers }).then((r) => r.json()).catch(() => ({ items: [] })),
+      fetch(`${base}/entries?content_type=storyLore&limit=1`, { headers }).then((r) => r.json()).catch(() => ({ items: [] })),
     ]);
 
   const assetMap = new Map<string, AssetLike>();
@@ -435,6 +515,9 @@ async function fetchAllViaCma(): Promise<CmsContent> {
   const settingItems = (settingsRes as { items?: Array<{ fields: Record<string, unknown> }> })?.items ?? [];
   const siteSettings = settingItems[0] ? toSiteSettings({ fields: normalizeCmaFields(settingItems[0].fields) }) : null;
 
+  const loreItems = (loreRes as { items?: Array<{ fields: Record<string, unknown> }> })?.items ?? [];
+  const storyLore = loreItems[0] ? toStoryLore({ fields: normalizeCmaFields(loreItems[0].fields) }) : null;
+
   const courseItems = (coursesRes as { items?: Array<{ sys: { id: string }; fields: Record<string, unknown> }> })?.items ?? [];
   const courseTracks = courseItems
     .map((e) => toCourseTrack({ sys: e.sys, fields: normalizeCmaFields(e.fields) }))
@@ -467,6 +550,7 @@ async function fetchAllViaCma(): Promise<CmsContent> {
     faqItems,
     testimonials,
     legalDocuments,
+    storyLore,
   };
 }
 

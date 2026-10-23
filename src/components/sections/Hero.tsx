@@ -14,7 +14,7 @@ const HIGHLIGHT_ICONS = [CalendarCheck, Wallet, Mic] as const;
 export function Hero() {
   const settings = getSiteSettings();
   const heroTitle = settings.heroTitle || heroCopy.headlineFull;
-  const subheadline = settings.heroSubtitle || heroCopy.subheadline;
+  const subheadline = settings.heroSubheadline || settings.heroSubtitle || heroCopy.subheadline;
 
   return (
     <section id="top" className="relative overflow-hidden pt-10 pb-20 sm:pt-14 lg:pt-16 lg:pb-28">
@@ -47,7 +47,7 @@ export function Hero() {
                 <Star key={i} className="size-3.5 fill-amber-400 text-amber-400" />
               ))}
             </span>
-            {heroCopy.badgeText}
+            {settings.trialBadgeText || heroCopy.badgeText}
           </a>
         </Reveal>
 

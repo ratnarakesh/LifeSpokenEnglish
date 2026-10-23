@@ -1,12 +1,13 @@
 import { GlowCard } from "@/components/ui/GlowCard";
 import { Reveal } from "@/components/ui/Reveal";
 import { GradientText, SectionHeading } from "@/components/ui/SectionHeading";
-import { getPromises } from "@/lib/cms";
+import { getPromises, getSiteSettings } from "@/lib/cms";
 import { PROMISES as FALLBACK_PROMISES } from "@/lib/content";
 import { storyCopy } from "@/lib/site-copy";
 
 export function Promises() {
   const dynamicPromises = getPromises();
+  const settings = getSiteSettings();
   const promises = dynamicPromises.map((p, i) => {
     const fallback = FALLBACK_PROMISES[i % FALLBACK_PROMISES.length];
     return {
@@ -16,19 +17,23 @@ export function Promises() {
     };
   });
 
+  const titleNode = settings.promisesSectionTitle ? (
+    settings.promisesSectionTitle
+  ) : (
+    <>
+      {storyCopy.promisesHeading.titleLead}{" "}
+      <GradientText>{storyCopy.promisesHeading.titleGradient}</GradientText>
+    </>
+  );
+
   return (
     <section id="promises" className="relative py-20 sm:py-28">
       <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[40rem] bg-mesh opacity-70" aria-hidden="true" />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow={storyCopy.promisesHeading.eyebrow}
-          title={
-            <>
-              {storyCopy.promisesHeading.titleLead}{" "}
-              <GradientText>{storyCopy.promisesHeading.titleGradient}</GradientText>
-            </>
-          }
-          description={storyCopy.promisesHeading.description}
+          title={titleNode}
+          description={settings.promisesSectionSubtitle || storyCopy.promisesHeading.description}
         />
 
         <ol className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">

@@ -125,6 +125,46 @@ createServer(async (req, res) => {
             lifeAcronymI: "It",
             lifeAcronymF: "For",
             lifeAcronymE: "Eternity",
+            trialBadgeText: "5.0 Star Rated on Google by 1,800+ Students & Professionals",
+            heroSubheadline:
+              "Practical, interactive Spoken English & Soft Skills training led personally by Mani\u00A0Sir. Learn without fear or grammar intimidation in Visakhapatnam or via Live Online classes.",
+            coursesSectionTitle: "Every Stage of English Fluency",
+            coursesSectionSubtitle: "From foundational hesitation removal to stage-ready executive communication.",
+            promisesSectionTitle: "The 10 LIFE Promises",
+            promisesSectionSubtitle: "Ten commitments you won't find anywhere else, straight from Mani\u00A0Sir.",
+            contactAddress:
+              "First Floor, Beside HP Petrol Bunk, Car Shed Junction, PM Palem, Madhurawada, Visakhapatnam, Andhra Pradesh 530041",
+            contactPhone: "+91 73374 12999",
+            contactEmail: "lifebymanisir@gmail.com",
+            whatsappMessage:
+              "Hello Mani Sir, I am interested in the 10 Free Trial Classes at LIFE Spoken English. Please share the next batch details.",
+          },
+          storyLore: {
+            eagleStoryTitle: "The Young Eagle Who Was Afraid to Fly",
+            eagleStorySubtitle: "The Story Inside Our Logo",
+            eagleStoryParagraphs:
+              "High on a cliff above the Vizag coast, a young eagle sat at the edge of its nest every morning, watching the others soar.\n\nIt knew everything about flying. It had watched a thousand flights and could explain every feather. But each time the wind called, its wings stayed folded. What if I fall? What if they laugh?\n\nOne morning, an old eagle landed beside it. He did not lecture. He did not push. He simply said, \"Fly with me. Just a little today.\"\n\nThey stepped into the warm wind together. The young eagle wobbled, dipped, and then, for the very first time, it rose. Below them, over the sea, the sun was rising too.\n\nThat morning the young eagle learned something no book had taught it: it never needed more knowledge. It needed someone to fly beside it, and the courage to open its wings.",
+            eagleStoryMoral:
+              "Every learner who walks into LIFE is that young eagle: full of knowledge, held back by fear. Our job is to fly beside you until your own wings take over.",
+            spiritOfLifeTitle: "The Meaning Behind Our Name",
+            spiritOfLifeIntro:
+              "Most people approach English like a temporary subject: something you study just to pass an exam, clear an interview, or memorize for a few weeks. But language is not a school textbook. Language is life itself.\n\nWhen you acquire true confidence in speaking, it does not disappear after an interview. It stays with you when you talk to your children, when you present in boardrooms, when you travel the world, and when you stand on any public stage. It transforms how you carry yourself forever.",
+            spiritOfLifePoints: JSON.stringify(
+              [
+                "Most people approach English like a temporary subject: something you study just to pass an exam, clear an interview, or memorize for a few weeks. But language is not a school textbook. Language is life itself.",
+                "When you acquire true confidence in speaking, it does not disappear after an interview. It stays with you when you talk to your children, when you present in boardrooms, when you travel the world, and when you stand on any public stage. It transforms how you carry yourself forever.",
+              ],
+              null,
+              2,
+            ),
+            pillarLTitle: "Live",
+            pillarLText: "English not as an academic subject, but as a living life skill you will carry forever.",
+            pillarITitle: "It",
+            pillarIText: "Language lives on your tongue, not in a notebook. Active speaking drills from day one.",
+            pillarFTitle: "For",
+            pillarFText: "Purpose-driven communication for campus placements, corporate growth, and life.",
+            pillarETitle: "Eternity",
+            pillarEText: "Unshakeable confidence that stays with you forever and transforms how you carry yourself.",
           },
           founderProfile: {
             name: "Mani\u00A0Sir",
@@ -160,6 +200,14 @@ createServer(async (req, res) => {
             ]),
             teachingPhilosophy:
               "Some teachers teach English. Mani\u00A0Sir teaches people to believe in their own voice.\n\nK. Maneendra Kumar, known to thousands of learners simply as Mani\u00A0Sir, founded LIFE in Madhurawada, Visakhapatnam with one simple belief: nobody is bad at English. Most people have just never been given a safe place to speak it.",
+            bioHeadline: "Teaching with Empathy & Conviction",
+            bioParagraphs:
+              "K. Maneendra Kumar, known to thousands of learners simply as Mani\u00A0Sir, founded LIFE in Madhurawada, Visakhapatnam with one simple belief: nobody is bad at English. Most people have just never been given a safe place to speak it.\n\nIn his classroom, mistakes are not punished; they are welcomed as proof that you are trying. Lessons sound like real life: waking up, travelling, explaining, negotiating, interviewing. A new word is not finished until every student has said it aloud and used it in a sentence of their own.\n\nBy bridging every idea from Telugu to English, he turns the language people feared most into something that feels familiar. Students often say his classes feel more like watching a movie than sitting through a lecture.\n\nToday his lessons travel far beyond one classroom through YouTube and live online batches. But the goal has never changed: the day each student speaks without fear.",
+            missionStatement:
+              "To eliminate the fear of English and empower learners with unshakeable speaking confidence that lasts for eternity.",
+            statsExperience: "20+ Years",
+            statsStudents: "25,000+ Students",
+            statsBatches: "1,200+ Batches",
           },
           galleryItems: [
             {
