@@ -1,5 +1,6 @@
 import {
   ADMIN_COOKIE_NAME,
+  DEFAULT_SESSION_SECRET,
   jsonResponse,
   parseCookies,
   verifySession,
@@ -14,7 +15,7 @@ interface EventContext {
 export async function onRequestPost(context: EventContext): Promise<Response> {
   const cookies = parseCookies(context.request.headers.get("Cookie"));
   const sessionToken = cookies[ADMIN_COOKIE_NAME];
-  const secret = context.env.ADMIN_SESSION_SECRET ?? "life-spoken-english-local-secret-2026";
+  const secret = context.env.ADMIN_SESSION_SECRET || DEFAULT_SESSION_SECRET;
   const isValid = await verifySession(sessionToken, secret);
   if (!isValid) {
     return jsonResponse({ error: "Unauthorized" }, { status: 401 });

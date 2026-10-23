@@ -26,7 +26,7 @@ import {
   User,
   Video,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { AdminBreadcrumbs } from "./AdminBreadcrumbs";
@@ -394,6 +394,15 @@ export function AdminClient() {
     message: string;
   } | null>(null);
 
+  // Baseline data snapshot for dirty checking & pending deployment tracking
+  const [initialDataJson, setInitialDataJson] = useState<string | null>(null);
+  const [hasPendingDeployment, setHasPendingDeployment] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      return sessionStorage.getItem("admin_has_pending_deploy") === "true";
+    }
+    return false;
+  });
+
   // Active Tab
   const [activeTab, setActiveTab] = useState<AdminTab>("announcements");
 
@@ -410,6 +419,73 @@ export function AdminClient() {
   const [testimonials, setTestimonials] = useState<AdminTestimonialItem[]>([]);
   const [deletedTestimonialIds, setDeletedTestimonialIds] = useState<string[]>([]);
   const [legalDocuments, setLegalDocuments] = useState<AdminLegalDocument[]>(DEFAULT_LEGAL_DOCS);
+
+  // Current content serialized for deep dirty comparison
+  const currentDataJson = useMemo(
+    () =>
+      JSON.stringify({
+        announcement,
+        siteSettings,
+        storyLore,
+        founderProfile,
+        galleryItems,
+        deletedGalleryIds,
+        courseTracks,
+        faqItems,
+        deletedFaqIds,
+        testimonials,
+        deletedTestimonialIds,
+        legalDocuments,
+      }),
+    [
+      announcement,
+      siteSettings,
+      storyLore,
+      founderProfile,
+      galleryItems,
+      deletedGalleryIds,
+      courseTracks,
+      faqItems,
+      deletedFaqIds,
+      testimonials,
+      deletedTestimonialIds,
+      legalDocuments,
+    ],
+  );
+
+  // Deep comparison dirty state: true only when user has unsaved modifications
+  const isDirty = initialDataJson !== null ? currentDataJson !== initialDataJson : false;
+
+  // Clear all notification banners on tab switch
+  function handleTabChange(tab: AdminTab) {
+    setActiveTab(tab);
+    setSaveStatus(null);
+    setDeployStatus(null);
+    setPhotoUploadSuccess(null);
+    setPhotoUploadError(null);
+    setPortraitUploadSuccess(null);
+    setPortraitUploadError(null);
+    setReplacePhotoSuccess(null);
+    setReplacePhotoError(null);
+  }
+
+  // Auto-dismiss save banner after 4000ms
+  useEffect(() => {
+    if (!saveStatus) return;
+    const timer = setTimeout(() => {
+      setSaveStatus(null);
+    }, 4000);
+    return () => clearTimeout(timer);
+  }, [saveStatus]);
+
+  // Auto-dismiss deploy banner after 4000ms
+  useEffect(() => {
+    if (!deployStatus) return;
+    const timer = setTimeout(() => {
+      setDeployStatus(null);
+    }, 4000);
+    return () => clearTimeout(timer);
+  }, [deployStatus]);
 
   // FAQ Accordion expanded IDs
   const [expandedFaqId, setExpandedFaqId] = useState<string | null>(null);
@@ -495,31 +571,92 @@ export function AdminClient() {
 
   async function loadContent() {
     try {
-      const res = await fetch("/api/admin/content");
+      const res = await fetch("/api/admin/content", {
+        credentials: "include",
+      });
       if (res.ok) {
         const data = (await res.json()) as Partial<FullAdminData>;
-        if (data.announcement) setAnnouncement((prev) => ({ ...prev, ...data.announcement }));
-        if (data.siteSettings) setSiteSettings((prev) => ({ ...prev, ...data.siteSettings }));
-        if (data.storyLore) setStoryLore((prev) => ({ ...prev, ...data.storyLore }));
-        if (data.founderProfile) {
-          setFounderProfile((prev) => ({ ...prev, ...data.founderProfile }));
-          if (data.founderProfile.portraitUrl) {
-            setActivePortraitUrl(data.founderProfile.portraitUrl);
-          }
+        const loadedAnnouncement = data.announcement ? { ...DEFAULT_ANNOUNCEMENT, ...data.announcement } : DEFAULT_ANNOUNCEMENT;
+        const loadedSettings = data.siteSettings ? { ...DEFAULT_SETTINGS, ...data.siteSettings } : DEFAULT_SETTINGS;
+        const loadedLore = data.storyLore ? { ...DEFAULT_STORY_LORE, ...data.storyLore } : DEFAULT_STORY_LORE;
+        const loadedFounder = data.founderProfile ? { ...DEFAULT_FOUNDER, ...data.founderProfile } : DEFAULT_FOUNDER;
+        const loadedGallery = Array.isArray(data.galleryItems) ? data.galleryItems : [];
+        const loadedTracks = Array.isArray(data.courseTracks) ? data.courseTracks : [];
+        const loadedFaqs = Array.isArray(data.faqItems) ? data.faqItems : [];
+        const loadedTestimonials = Array.isArray(data.testimonials) ? data.testimonials : [];
+        const loadedLegal =
+          Array.isArray(data.legalDocuments) && data.legalDocuments.length > 0
+            ? data.legalDocuments
+            : DEFAULT_LEGAL_DOCS;
+
+        setAnnouncement(loadedAnnouncement);
+        setSiteSettings(loadedSettings);
+        setStoryLore(loadedLore);
+        setFounderProfile(loadedFounder);
+        if (loadedFounder.portraitUrl) {
+          setActivePortraitUrl(loadedFounder.portraitUrl);
         }
-        if (Array.isArray(data.galleryItems)) setGalleryItems(data.galleryItems);
-        if (Array.isArray(data.courseTracks)) setCourseTracks(data.courseTracks);
-        if (Array.isArray(data.faqItems)) setFaqItems(data.faqItems);
-        if (Array.isArray(data.testimonials)) setTestimonials(data.testimonials);
-        if (Array.isArray(data.legalDocuments) && data.legalDocuments.length > 0) {
-          setLegalDocuments(data.legalDocuments);
-        }
+        setGalleryItems(loadedGallery);
+        setDeletedGalleryIds([]);
+        setCourseTracks(loadedTracks);
+        setFaqItems(loadedFaqs);
+        setDeletedFaqIds([]);
+        setTestimonials(loadedTestimonials);
+        setDeletedTestimonialIds([]);
+        setLegalDocuments(loadedLegal);
+
         if (typeof data.isConfigured === "boolean") {
           setIsConfigured(data.isConfigured);
         }
+
+        const snapshot = {
+          announcement: loadedAnnouncement,
+          siteSettings: loadedSettings,
+          storyLore: loadedLore,
+          founderProfile: loadedFounder,
+          galleryItems: loadedGallery,
+          deletedGalleryIds: [],
+          courseTracks: loadedTracks,
+          faqItems: loadedFaqs,
+          deletedFaqIds: [],
+          testimonials: loadedTestimonials,
+          deletedTestimonialIds: [],
+          legalDocuments: loadedLegal,
+        };
+        setInitialDataJson(JSON.stringify(snapshot));
+      } else {
+        const defaultSnapshot = {
+          announcement: DEFAULT_ANNOUNCEMENT,
+          siteSettings: DEFAULT_SETTINGS,
+          storyLore: DEFAULT_STORY_LORE,
+          founderProfile: DEFAULT_FOUNDER,
+          galleryItems: [],
+          deletedGalleryIds: [],
+          courseTracks: [],
+          faqItems: [],
+          deletedFaqIds: [],
+          testimonials: [],
+          deletedTestimonialIds: [],
+          legalDocuments: DEFAULT_LEGAL_DOCS,
+        };
+        setInitialDataJson(JSON.stringify(defaultSnapshot));
       }
     } catch {
-      // Content fallback already in place
+      const defaultSnapshot = {
+        announcement: DEFAULT_ANNOUNCEMENT,
+        siteSettings: DEFAULT_SETTINGS,
+        storyLore: DEFAULT_STORY_LORE,
+        founderProfile: DEFAULT_FOUNDER,
+        galleryItems: [],
+        deletedGalleryIds: [],
+        courseTracks: [],
+        faqItems: [],
+        deletedFaqIds: [],
+        testimonials: [],
+        deletedTestimonialIds: [],
+        legalDocuments: DEFAULT_LEGAL_DOCS,
+      };
+      setInitialDataJson(JSON.stringify(defaultSnapshot));
     }
   }
 
@@ -591,6 +728,7 @@ export function AdminClient() {
 
       const res = await fetch("/api/admin/content", {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
@@ -606,6 +744,19 @@ export function AdminClient() {
         setDeletedGalleryIds([]);
         setDeletedFaqIds([]);
         setDeletedTestimonialIds([]);
+        // Update baseline snapshot to current saved data so isDirty becomes false
+        const savedSnapshot = {
+          ...payload,
+          deletedGalleryIds: [],
+          deletedFaqIds: [],
+          deletedTestimonialIds: [],
+        };
+        setInitialDataJson(JSON.stringify(savedSnapshot));
+        // Mark deployment pending
+        setHasPendingDeployment(true);
+        if (typeof window !== "undefined") {
+          sessionStorage.setItem("admin_has_pending_deploy", "true");
+        }
       } else {
         const err = (await res.json()) as { error?: string };
         setSaveStatus({
@@ -629,6 +780,8 @@ export function AdminClient() {
     try {
       const res = await fetch("/api/admin/deploy", {
         method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
       });
       const data = (await res.json()) as { success?: boolean; message?: string; error?: string };
       if (res.ok && data.success) {
@@ -636,6 +789,10 @@ export function AdminClient() {
           type: "success",
           message: data.message || "Deployment started! The live site will refresh in ~60 seconds.",
         });
+        setHasPendingDeployment(false);
+        if (typeof window !== "undefined") {
+          sessionStorage.removeItem("admin_has_pending_deploy");
+        }
       } else {
         setDeployStatus({
           type: "error",
@@ -698,6 +855,7 @@ export function AdminClient() {
 
       const res = await fetch("/api/admin/upload", {
         method: "POST",
+        credentials: "include",
         body: formData,
       });
 
@@ -715,6 +873,10 @@ export function AdminClient() {
         setPhotoUploadSuccess(
           data.message || "Classroom photo uploaded and added to gallery successfully!",
         );
+        setHasPendingDeployment(true);
+        if (typeof window !== "undefined") {
+          sessionStorage.setItem("admin_has_pending_deploy", "true");
+        }
         setPhotoFile(null);
         setPhotoPreview(null);
         setPhotoTitle("");
@@ -747,6 +909,7 @@ export function AdminClient() {
 
       const res = await fetch("/api/admin/upload", {
         method: "POST",
+        credentials: "include",
         body: formData,
       });
 
@@ -757,9 +920,13 @@ export function AdminClient() {
           prev.map((it) => (it.id === itemId ? { ...it, imageUrl: newUrl } : it)),
         );
         setReplacePhotoSuccess(
-          data.message || "Photo replaced successfully! Website is rebuilding...",
+          data.message || "Photo replaced successfully! Click Publish to Live Site to deploy.",
         );
-        setTimeout(() => setReplacePhotoSuccess(null), 6000);
+        setHasPendingDeployment(true);
+        if (typeof window !== "undefined") {
+          sessionStorage.setItem("admin_has_pending_deploy", "true");
+        }
+        setTimeout(() => setReplacePhotoSuccess(null), 4000);
       } else {
         const err = (await res.json()) as { error?: string };
         setReplacePhotoError(err.error || "Failed to replace photo. Please try again.");
@@ -784,6 +951,7 @@ export function AdminClient() {
 
       const res = await fetch("/api/admin/upload", {
         method: "POST",
+        credentials: "include",
         body: formData,
       });
 
@@ -794,8 +962,12 @@ export function AdminClient() {
           setFounderProfile((prev) => ({ ...prev, portraitUrl: data.assetUrl }));
         }
         setPortraitUploadSuccess(
-          data.message || "Official portrait updated successfully! Website is rebuilding.",
+          data.message || "Official portrait updated successfully! Click Publish to Live Site to deploy.",
         );
+        setHasPendingDeployment(true);
+        if (typeof window !== "undefined") {
+          sessionStorage.setItem("admin_has_pending_deploy", "true");
+        }
         setPortraitFile(null);
         setPortraitPreview(null);
       } else {
@@ -1018,19 +1190,40 @@ export function AdminClient() {
           <button
             type="button"
             onClick={handleDeploy}
-            disabled={isDeploying}
-            className="flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-ember-600 via-ember-500 to-sun-500 px-3 py-1.5 text-xs font-bold text-white shadow-md shadow-ember-950/40 transition hover:from-ember-500 hover:to-sun-400 disabled:opacity-50"
-            title="Deploy changes to live site via Cloudflare"
+            disabled={!hasPendingDeployment || isDeploying || isDirty}
+            aria-label={
+              hasPendingDeployment && !isDirty
+                ? "🚀 Publish Changes to Live Site (Publish to Live Site)"
+                : "Site Up to Date (Publish to Live Site)"
+            }
+            className={cn(
+              "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition shadow-md",
+              !hasPendingDeployment || isDeploying || isDirty
+                ? "opacity-50 cursor-not-allowed bg-stone-800 text-stone-400 border border-stone-700/60 shadow-none"
+                : "bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-500 text-white shadow-emerald-950/40 hover:from-emerald-500 hover:to-teal-400 ring-2 ring-emerald-400/40",
+            )}
+            title={
+              isDirty
+                ? "Save changes to CMS first before deploying"
+                : hasPendingDeployment
+                  ? "Publish changes to live site via Cloudflare"
+                  : "No pending CMS changes to publish. Site is up to date."
+            }
           >
             {isDeploying ? (
               <>
                 <RefreshCw className="h-3.5 w-3.5 animate-spin" />
                 <span className="hidden sm:inline">Triggering</span> Deploy...
               </>
+            ) : hasPendingDeployment && !isDirty ? (
+              <>
+                <Rocket className="h-3.5 w-3.5 text-emerald-100" />
+                🚀 Publish Changes to Live Site
+              </>
             ) : (
               <>
-                <Rocket className="h-3.5 w-3.5 text-amber-200" />
-                Publish to Live Site
+                <CheckCircle2 className="h-3.5 w-3.5 text-stone-400" />
+                Site Up to Date
               </>
             )}
           </button>
@@ -1058,8 +1251,9 @@ export function AdminClient() {
       {/* Sticky Breadcrumb-Style Navigation */}
       <AdminBreadcrumbs
         activeTab={activeTab}
-        onTabChange={(tab) => setActiveTab(tab)}
+        onTabChange={handleTabChange}
         isSaving={isSaving}
+        isDirty={isDirty}
         saveStatus={saveStatus}
         counts={{
           gallery: galleryItems.length,
@@ -1094,20 +1288,30 @@ export function AdminClient() {
         <div
           role="status"
           className={cn(
-            "mb-4 flex items-start gap-3 rounded-2xl p-4 text-sm font-medium",
+            "mb-4 flex items-start justify-between gap-3 rounded-2xl p-4 text-sm font-medium",
             saveStatus.type === "success"
               ? "border border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
               : "border border-red-500/30 bg-red-500/10 text-red-300",
           )}
         >
-          {saveStatus.type === "success" ? (
-            <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-400" />
-          ) : (
-            <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-red-400" />
-          )}
-          <div>
-            <p>{saveStatus.message}</p>
+          <div className="flex items-start gap-3">
+            {saveStatus.type === "success" ? (
+              <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-400" />
+            ) : (
+              <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-red-400" />
+            )}
+            <div>
+              <p>{saveStatus.message}</p>
+            </div>
           </div>
+          <button
+            type="button"
+            onClick={() => setSaveStatus(null)}
+            className="text-stone-400 hover:text-white text-base leading-none px-1"
+            aria-label="Dismiss save status"
+          >
+            &times;
+          </button>
         </div>
       )}
 
@@ -2988,26 +3192,40 @@ export function AdminClient() {
             </p>
           </div>
 
-          <div className="flex w-full sm:w-auto items-center gap-3">
+          <div className="flex w-full sm:w-auto flex-col sm:flex-row items-center gap-3">
+            {isDirty && (
+              <span className="hidden md:inline-block text-[11px] font-medium text-amber-400">
+                Save changes to CMS first before deploying
+              </span>
+            )}
             <button
               type="button"
               onClick={handleSave}
-              disabled={isSaving}
-              aria-label="Save Changes to CMS"
+              disabled={!isDirty || isSaving}
+              aria-label={isDirty ? "Save Changes to CMS" : "No Changes to Save (Save Changes to CMS)"}
+              title={!isDirty ? "No edits made since last save" : "Save all modified fields to Contentful"}
               className={cn(
                 button("secondary", "md"),
-                "w-full sm:w-auto font-semibold text-xs border-stone-700 bg-stone-900/90 hover:bg-stone-800 text-stone-200",
+                "w-full sm:w-auto font-semibold text-xs transition duration-200",
+                !isDirty || isSaving
+                  ? "opacity-50 cursor-not-allowed bg-stone-900/60 border-stone-800 text-stone-500 hover:bg-stone-900/60 shadow-none"
+                  : "bg-gradient-to-r from-ember-600 via-ember-500 to-sun-500 text-white border-transparent hover:from-ember-500 hover:to-sun-400 shadow-lg shadow-ember-950/50 ring-2 ring-ember-400/30",
               )}
             >
               {isSaving ? (
                 <>
-                  <RefreshCw className="mr-2 h-4 w-4 animate-spin text-ember-400" />
+                  <RefreshCw className="mr-2 h-4 w-4 animate-spin text-white" />
                   Saving to CMS...
+                </>
+              ) : isDirty ? (
+                <>
+                  <Save className="mr-2 h-4 w-4 text-amber-200" />
+                  Save Changes to CMS
                 </>
               ) : (
                 <>
-                  <Save className="mr-2 h-4 w-4 text-ember-400" />
-                  Save Changes to CMS
+                  <CheckCircle2 className="mr-2 h-4 w-4 text-stone-500" />
+                  No Changes to Save
                 </>
               )}
             </button>
@@ -3015,10 +3233,25 @@ export function AdminClient() {
             <button
               type="button"
               onClick={handleDeploy}
-              disabled={isDeploying}
+              disabled={!hasPendingDeployment || isDeploying || isDirty}
+              aria-label={
+                hasPendingDeployment && !isDirty
+                  ? "🚀 Publish Changes to Live Site (Publish to Live Site)"
+                  : "Site Up to Date (Publish to Live Site)"
+              }
+              title={
+                isDirty
+                  ? "Save changes to CMS first before deploying"
+                  : hasPendingDeployment
+                    ? "Publish pending CMS changes to live site via Cloudflare"
+                    : "No pending CMS changes to publish. Site is up to date."
+              }
               className={cn(
                 button("primary", "md"),
-                "w-full sm:w-auto font-bold text-xs bg-gradient-to-r from-ember-600 via-ember-500 to-sun-500 hover:from-ember-500 hover:to-sun-400 text-white shadow-lg shadow-ember-950/50",
+                "w-full sm:w-auto font-bold text-xs transition duration-200",
+                !hasPendingDeployment || isDeploying || isDirty
+                  ? "opacity-50 cursor-not-allowed bg-stone-800/80 text-stone-500 border border-stone-700/40 shadow-none hover:bg-stone-800/80"
+                  : "bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white shadow-lg shadow-emerald-950/50 ring-2 ring-emerald-400/40",
               )}
             >
               {isDeploying ? (
@@ -3026,10 +3259,15 @@ export function AdminClient() {
                   <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
                   Deploying...
                 </>
+              ) : hasPendingDeployment && !isDirty ? (
+                <>
+                  <Rocket className="mr-2 h-4 w-4 text-emerald-100" />
+                  🚀 Publish Changes to Live Site
+                </>
               ) : (
                 <>
-                  <Rocket className="mr-2 h-4 w-4 text-amber-200" />
-                  Publish to Live Site
+                  <CheckCircle2 className="mr-2 h-4 w-4 text-stone-500" />
+                  Site Up to Date
                 </>
               )}
             </button>

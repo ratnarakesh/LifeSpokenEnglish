@@ -97,9 +97,11 @@ test.describe("Version 43: Complete 100% Contentful Migration of All Website Tex
     await page.getByRole("button", { name: /Legal & Policies/i }).click();
     await expect(page.getByText(/Legal Policies & DPDP Compliance/i)).toBeVisible();
 
-    // Save Changes button
+    // Save Changes button (enabled after making an edit)
+    await page.getByLabel(/Last Updated Notice/i).first().fill("23 October 2026");
     const saveCmsBtn = page.getByRole("button", { name: "Save Changes to CMS" });
     await expect(saveCmsBtn).toBeVisible();
+    await expect(saveCmsBtn).toBeEnabled();
     await saveCmsBtn.click();
     await expect(
       page.getByText(/Draft saved to CMS instantly\. Click 'Publish to Live Site' when ready to deploy\./i),

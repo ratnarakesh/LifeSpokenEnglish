@@ -71,6 +71,10 @@ test.describe("Admin Control Panel (/admin)", () => {
     const saveButton = page.getByRole("button", { name: /Save (?:Changes to CMS|& Update Website)/i });
     await expect(saveButton).toBeVisible();
 
+    // Edit a field to make form dirty and enable Save button
+    await page.getByLabel("Announcement Message").fill("Special New Batches Starting This Monday!");
+    await expect(saveButton).toBeEnabled();
+
     // Save action updates status
     await saveButton.click();
     await expect(page.getByRole("status").first()).toHaveText(

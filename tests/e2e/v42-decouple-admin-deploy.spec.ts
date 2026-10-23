@@ -20,7 +20,11 @@ test.describe("Version 42: Decoupled CMS Saves & On-Demand Site Deployment", () 
     const saveCmsBtn = page.getByRole("button", { name: "Save Changes to CMS" });
     await expect(saveCmsBtn).toBeVisible();
 
-    // 2. Click "Save Changes to CMS" -> saves directly and displays instant CMS message
+    // 2. Edit a field to make state dirty -> enables "Save Changes to CMS"
+    await page.getByLabel(/Hero Main Headline/i).fill("Speak English with Unshakeable Confidence");
+    await expect(saveCmsBtn).toBeEnabled();
+
+    // Click "Save Changes to CMS" -> saves directly and displays instant CMS message
     await saveCmsBtn.click();
     await expect(
       page.getByText(/Draft saved to CMS instantly\. Click 'Publish to Live Site' when ready to deploy\./i),

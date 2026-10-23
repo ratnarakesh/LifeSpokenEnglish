@@ -116,6 +116,7 @@ export interface AdminBreadcrumbsProps {
   activeTab: AdminTab;
   onTabChange: (tab: AdminTab) => void;
   isSaving?: boolean;
+  isDirty?: boolean;
   saveStatus?: {
     type: "success" | "error";
     message: string;
@@ -133,6 +134,7 @@ export function AdminBreadcrumbs({
   activeTab,
   onTabChange,
   isSaving = false,
+  isDirty = false,
   saveStatus = null,
   counts = {},
 }: AdminBreadcrumbsProps) {
@@ -306,7 +308,7 @@ export function AdminBreadcrumbs({
           )}
         </div>
 
-        {/* Right Status Indicator: Saved / Saving / Error */}
+        {/* Right Status Indicator: Saved / Unsaved changes / Saving / Error */}
         <div className="shrink-0 flex items-center gap-1.5 text-xs">
           {isSaving ? (
             <span className="inline-flex items-center gap-1.5 text-amber-300 font-medium">
@@ -320,6 +322,11 @@ export function AdminBreadcrumbs({
             >
               <AlertCircle className="h-3 w-3 text-red-400" />
               <span>Save Error</span>
+            </span>
+          ) : isDirty ? (
+            <span className="inline-flex items-center gap-1.5 text-amber-400 font-medium text-[11px]">
+              <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse" />
+              <span>Unsaved changes</span>
             </span>
           ) : (
             <span className="inline-flex items-center gap-1.5 text-emerald-400 font-medium text-[11px]">

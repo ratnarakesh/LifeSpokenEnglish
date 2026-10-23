@@ -1,5 +1,5 @@
-// Cloudflare Pages Functions shared utilities for /api/admin
 export const ADMIN_COOKIE_NAME = "admin_session";
+export const DEFAULT_SESSION_SECRET = "life-spoken-english-admin-secret-2026";
 
 export interface Env {
   ADMIN_PASSCODE?: string;
