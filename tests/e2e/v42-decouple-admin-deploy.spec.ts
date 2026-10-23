@@ -13,9 +13,9 @@ test.describe("Version 42: Decoupled CMS Saves & On-Demand Site Deployment", () 
     await page.getByRole("button", { name: "7", exact: true }).click();
     await page.getByRole("button", { name: "Unlock Control Panel" }).click();
 
-    // 1. Verify prominent "Publish to Live Site" actions exist in header and sticky bottom bar
-    const publishHeaderBtn = page.getByRole("button", { name: "Publish to Live Site" }).first();
-    await expect(publishHeaderBtn).toBeVisible();
+    // 1. Verify sticky bottom bar action buttons exist
+    const publishBtn = page.getByRole("button", { name: "Publish to Live Site" });
+    await expect(publishBtn).toBeVisible();
 
     const saveCmsBtn = page.getByRole("button", { name: "Save Changes to CMS" });
     await expect(saveCmsBtn).toBeVisible();
@@ -27,13 +27,13 @@ test.describe("Version 42: Decoupled CMS Saves & On-Demand Site Deployment", () 
     // Click "Save Changes to CMS" -> saves directly and displays instant CMS message
     await saveCmsBtn.click();
     await expect(
-      page.getByText(/Draft saved to CMS instantly\. Click 'Publish to Live Site' when ready to deploy\./i),
+      page.getByText(/(?:Saved to CMS! Click 'Publish Changes to Live Site'|Draft saved to CMS)/i),
     ).toBeVisible();
 
     // 3. Click "Publish to Live Site" -> triggers on-demand deployment and renders confirmation banner
-    await publishHeaderBtn.click();
+    await publishBtn.click();
     await expect(
-      page.getByText(/Deployment started! The live site will refresh in ~60 seconds\./i),
+      page.getByText(/Deployment started! (?:Your live website|The live site) will (?:update|refresh) in ~60 seconds\./i),
     ).toBeVisible();
 
     // 4. Verify banner can be dismissed
@@ -41,7 +41,7 @@ test.describe("Version 42: Decoupled CMS Saves & On-Demand Site Deployment", () 
     await expect(dismissBtn).toBeVisible();
     await dismissBtn.click();
     await expect(
-      page.getByText(/Deployment started! The live site will refresh in ~60 seconds\./i),
+      page.getByText(/Deployment started! (?:Your live website|The live site) will (?:update|refresh) in ~60 seconds\./i),
     ).toHaveCount(0);
   });
 });

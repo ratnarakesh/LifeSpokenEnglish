@@ -1,11 +1,9 @@
 {
-  "timestamp": "2026-10-23T11:36:05.041Z",
+  "timestamp": "2026-10-23T13:26:58.142Z",
   "nodeVersion": "v25.2.1",
   "hasSpaceId": true,
   "hasAccessToken": true,
   "hasManagementToken": true,
-  "status": "success",
-  "photoCount": 1,
-  "videoCount": 21,
-  "founderProfile": "active"
+  "status": "fallback",
+  "reason": "CMS sync disabled (CMS_SYNC=off)."
 }

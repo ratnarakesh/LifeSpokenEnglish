@@ -104,7 +104,7 @@ test.describe("Version 43: Complete 100% Contentful Migration of All Website Tex
     await expect(saveCmsBtn).toBeEnabled();
     await saveCmsBtn.click();
     await expect(
-      page.getByText(/Draft saved to CMS instantly\. Click 'Publish to Live Site' when ready to deploy\./i),
+      page.getByText(/(?:Saved to CMS! Click 'Publish Changes to Live Site'|Draft saved to CMS)/i),
     ).toBeVisible();
   });
 });

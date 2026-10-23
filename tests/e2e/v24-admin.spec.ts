@@ -78,7 +78,7 @@ test.describe("Admin Control Panel (/admin)", () => {
     // Save action updates status
     await saveButton.click();
     await expect(page.getByRole("status").first()).toHaveText(
-      /(?:Draft saved to CMS instantly|Changes saved! Your website is rebuilding)/i,
+      /(?:Saved to CMS!|Draft saved to CMS instantly|Changes saved! Your website is rebuilding)/i,
     );
 
     // Logout action returns to passcode screen

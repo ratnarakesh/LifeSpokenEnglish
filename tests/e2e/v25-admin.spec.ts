@@ -67,7 +67,7 @@ test.describe("Version 25: Full Website Admin Coverage (/admin)", () => {
     await saveBtn.click();
 
     await expect(page.getByRole("status").first()).toHaveText(
-      /(?:Draft saved to CMS instantly|Changes saved! Your website is rebuilding)/i,
+      /(?:Saved to CMS!|Draft saved to CMS instantly|Changes saved! Your website is rebuilding)/i,
     );
   });
 });

@@ -324,7 +324,8 @@ createServer(async (req, res) => {
         return res.end(
           JSON.stringify({
             success: true,
-            message: "Draft saved to CMS instantly. Click 'Publish to Live Site' when ready to deploy.",
+            message:
+              "Saved to CMS! Click 'Publish Changes to Live Site' when you are ready to update the public site.",
           }),
         );
       });
@@ -338,7 +339,7 @@ createServer(async (req, res) => {
       return res.end(
         JSON.stringify({
           success: true,
-          message: "Deployment started! The live site will refresh in ~60 seconds.",
+          message: "Deployment started! Your live website will update in ~60 seconds.",
         }),
       );
     }

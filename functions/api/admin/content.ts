@@ -1332,7 +1332,8 @@ export async function onRequestPost(context: EventContext): Promise<Response> {
 
       return jsonResponse({
         success: true,
-        message: "Draft saved to CMS instantly. Click 'Publish to Live Site' when ready to deploy.",
+        message:
+          "Saved to CMS! Click 'Publish Changes to Live Site' when you are ready to update the public site.",
       });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Failed to update content";

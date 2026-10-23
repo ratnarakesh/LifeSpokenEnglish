@@ -478,12 +478,12 @@ export function AdminClient() {
     return () => clearTimeout(timer);
   }, [saveStatus]);
 
-  // Auto-dismiss deploy banner after 4000ms
+  // Auto-dismiss deploy banner after 6000ms
   useEffect(() => {
     if (!deployStatus) return;
     const timer = setTimeout(() => {
       setDeployStatus(null);
-    }, 4000);
+    }, 6000);
     return () => clearTimeout(timer);
   }, [deployStatus]);
 
@@ -739,7 +739,7 @@ export function AdminClient() {
           type: "success",
           message:
             data.message ||
-            "Draft saved to CMS instantly. Click 'Publish to Live Site' when ready to deploy.",
+            "Saved to CMS! Click 'Publish Changes to Live Site' when you are ready to update the public site.",
         });
         setDeletedGalleryIds([]);
         setDeletedFaqIds([]);
@@ -787,7 +787,9 @@ export function AdminClient() {
       if (res.ok && data.success) {
         setDeployStatus({
           type: "success",
-          message: data.message || "Deployment started! The live site will refresh in ~60 seconds.",
+          message:
+            data.message ||
+            "Deployment started! Your live website will update in ~60 seconds.",
         });
         setHasPendingDeployment(false);
         if (typeof window !== "undefined") {
@@ -1187,46 +1189,6 @@ export function AdminClient() {
         </div>
         <div className="flex items-center gap-2">
           <ThemeToggle />
-          <button
-            type="button"
-            onClick={handleDeploy}
-            disabled={!hasPendingDeployment || isDeploying || isDirty}
-            aria-label={
-              hasPendingDeployment && !isDirty
-                ? "🚀 Publish Changes to Live Site (Publish to Live Site)"
-                : "Site Up to Date (Publish to Live Site)"
-            }
-            className={cn(
-              "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition shadow-md",
-              !hasPendingDeployment || isDeploying || isDirty
-                ? "opacity-50 cursor-not-allowed bg-stone-800 text-stone-400 border border-stone-700/60 shadow-none"
-                : "bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-500 text-white shadow-emerald-950/40 hover:from-emerald-500 hover:to-teal-400 ring-2 ring-emerald-400/40",
-            )}
-            title={
-              isDirty
-                ? "Save changes to CMS first before deploying"
-                : hasPendingDeployment
-                  ? "Publish changes to live site via Cloudflare"
-                  : "No pending CMS changes to publish. Site is up to date."
-            }
-          >
-            {isDeploying ? (
-              <>
-                <RefreshCw className="h-3.5 w-3.5 animate-spin" />
-                <span className="hidden sm:inline">Triggering</span> Deploy...
-              </>
-            ) : hasPendingDeployment && !isDirty ? (
-              <>
-                <Rocket className="h-3.5 w-3.5 text-emerald-100" />
-                🚀 Publish Changes to Live Site
-              </>
-            ) : (
-              <>
-                <CheckCircle2 className="h-3.5 w-3.5 text-stone-400" />
-                Site Up to Date
-              </>
-            )}
-          </button>
           <Link
             href="/"
             target="_blank"
@@ -3188,27 +3150,39 @@ export function AdminClient() {
               Editing: <span className="text-ember-400 font-semibold">{activeTab.toUpperCase()}</span>
             </p>
             <p className="text-[11px] text-stone-500">
-              Drafts save to CMS instantly. Click Publish to Live Site when ready to deploy.
+              {isDirty
+                ? "Unsaved modifications. Save changes to CMS first before deploying."
+                : hasPendingDeployment
+                  ? "All modifications saved in CMS. Ready to publish to the live site."
+                  : "All changes synchronized. Public site is up to date."}
             </p>
           </div>
 
-          <div className="flex w-full sm:w-auto flex-col sm:flex-row items-center gap-3">
-            {isDirty && (
-              <span className="hidden md:inline-block text-[11px] font-medium text-amber-400">
-                Save changes to CMS first before deploying
-              </span>
-            )}
+          <div className="flex w-full sm:w-auto items-center gap-3">
+            {/* Step 1: Save Changes to CMS */}
             <button
               type="button"
               onClick={handleSave}
               disabled={!isDirty || isSaving}
-              aria-label={isDirty ? "Save Changes to CMS" : "No Changes to Save (Save Changes to CMS)"}
-              title={!isDirty ? "No edits made since last save" : "Save all modified fields to Contentful"}
+              aria-label={
+                isDirty
+                  ? "Save Changes to CMS"
+                  : hasPendingDeployment
+                    ? "All Changes Saved to CMS (Save Changes to CMS)"
+                    : "No Changes to Save (Save Changes to CMS)"
+              }
+              title={
+                isDirty
+                  ? "Save all modified fields to Contentful"
+                  : hasPendingDeployment
+                    ? "All modifications are saved in Contentful CMS"
+                    : "No edits made since last save"
+              }
               className={cn(
                 button("secondary", "md"),
                 "w-full sm:w-auto font-semibold text-xs transition duration-200",
                 !isDirty || isSaving
-                  ? "opacity-50 cursor-not-allowed bg-stone-900/60 border-stone-800 text-stone-500 hover:bg-stone-900/60 shadow-none"
+                  ? "opacity-40 cursor-not-allowed bg-stone-900/60 border-stone-800 text-stone-500 hover:bg-stone-900/60 shadow-none"
                   : "bg-gradient-to-r from-ember-600 via-ember-500 to-sun-500 text-white border-transparent hover:from-ember-500 hover:to-sun-400 shadow-lg shadow-ember-950/50 ring-2 ring-ember-400/30",
               )}
             >
@@ -3222,6 +3196,11 @@ export function AdminClient() {
                   <Save className="mr-2 h-4 w-4 text-amber-200" />
                   Save Changes to CMS
                 </>
+              ) : hasPendingDeployment ? (
+                <>
+                  <CheckCircle2 className="mr-2 h-4 w-4 text-emerald-400" />
+                  All Changes Saved to CMS
+                </>
               ) : (
                 <>
                   <CheckCircle2 className="mr-2 h-4 w-4 text-stone-500" />
@@ -3230,14 +3209,19 @@ export function AdminClient() {
               )}
             </button>
 
+            {/* Step 2: Publish Changes to Live Site */}
             <button
               type="button"
               onClick={handleDeploy}
               disabled={!hasPendingDeployment || isDeploying || isDirty}
               aria-label={
-                hasPendingDeployment && !isDirty
-                  ? "🚀 Publish Changes to Live Site (Publish to Live Site)"
-                  : "Site Up to Date (Publish to Live Site)"
+                isDeploying
+                  ? "Triggering Build... (Publish to Live Site)"
+                  : isDirty
+                    ? "Save to CMS First (Publish to Live Site)"
+                    : hasPendingDeployment
+                      ? "🚀 Publish Changes to Live Site (Publish to Live Site)"
+                      : "Site Up to Date (Publish to Live Site)"
               }
               title={
                 isDirty
@@ -3250,16 +3234,21 @@ export function AdminClient() {
                 button("primary", "md"),
                 "w-full sm:w-auto font-bold text-xs transition duration-200",
                 !hasPendingDeployment || isDeploying || isDirty
-                  ? "opacity-50 cursor-not-allowed bg-stone-800/80 text-stone-500 border border-stone-700/40 shadow-none hover:bg-stone-800/80"
-                  : "bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white shadow-lg shadow-emerald-950/50 ring-2 ring-emerald-400/40",
+                  ? "opacity-40 cursor-not-allowed bg-stone-800/80 text-stone-500 border border-stone-700/40 shadow-none hover:bg-stone-800/80"
+                  : "bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white shadow-lg shadow-emerald-950/50 ring-2 ring-emerald-400/40 animate-pulse",
               )}
             >
               {isDeploying ? (
                 <>
                   <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-                  Deploying...
+                  Triggering Build...
                 </>
-              ) : hasPendingDeployment && !isDirty ? (
+              ) : isDirty ? (
+                <>
+                  <CheckCircle2 className="mr-2 h-4 w-4 text-stone-500" />
+                  Save to CMS First
+                </>
+              ) : hasPendingDeployment ? (
                 <>
                   <Rocket className="mr-2 h-4 w-4 text-emerald-100" />
                   🚀 Publish Changes to Live Site

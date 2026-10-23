@@ -50,7 +50,7 @@ test.describe("Version 26: True 100% Full-Site Admin Coverage (Legal, Story & Pr
     await saveBtn.click();
 
     await expect(page.getByRole("status").first()).toHaveText(
-      /(?:Draft saved to CMS instantly|Changes saved! Your website is rebuilding)/i,
+      /(?:Saved to CMS!|Draft saved to CMS instantly|Changes saved! Your website is rebuilding)/i,
     );
   });
 

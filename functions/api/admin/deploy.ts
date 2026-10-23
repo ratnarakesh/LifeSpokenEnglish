@@ -39,7 +39,7 @@ export async function onRequestPost(context: EventContext): Promise<Response> {
     }
     return jsonResponse({
       success: true,
-      message: "Deployment started! The live site will refresh in ~60 seconds.",
+      message: "Deployment started! Your live website will update in ~60 seconds.",
     });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Failed to trigger deploy hook";

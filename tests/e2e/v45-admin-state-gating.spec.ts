@@ -18,17 +18,13 @@ test.describe("Version 45: Strict State Gating for Admin Actions & Deployment Se
 
     // 1. FRESH STATE: Both Save and Deploy must be strictly disabled
     const saveBtn = page.getByRole("button", { name: /Save Changes to CMS/i });
-    const publishHeaderBtn = page.getByRole("button", { name: /Publish to Live Site/i }).first();
-    const publishBottomBtn = page.getByRole("button", { name: /Publish to Live Site/i }).nth(1);
+    const publishBtn = page.getByRole("button", { name: /Publish (?:Changes )?to Live Site/i });
 
     await expect(saveBtn).toBeDisabled();
     await expect(saveBtn).toHaveText(/No Changes to Save/i);
 
-    await expect(publishHeaderBtn).toBeDisabled();
-    await expect(publishHeaderBtn).toHaveText(/Site Up to Date/i);
-
-    await expect(publishBottomBtn).toBeDisabled();
-    await expect(publishBottomBtn).toHaveText(/Site Up to Date/i);
+    await expect(publishBtn).toBeDisabled();
+    await expect(publishBtn).toHaveText(/Site Up to Date/i);
 
     // Breadcrumb status indicator shows "Saved"
     await expect(page.getByText(/Saved/i).first()).toBeVisible();
@@ -44,14 +40,10 @@ test.describe("Version 45: Strict State Gating for Admin Actions & Deployment Se
     // Breadcrumb status switches to "Unsaved changes"
     await expect(page.getByText(/Unsaved changes/i)).toBeVisible();
 
-    // Publish buttons remain disabled with warning tooltip
-    await expect(publishHeaderBtn).toBeDisabled();
-    await expect(publishHeaderBtn).toHaveAttribute(
-      "title",
-      "Save changes to CMS first before deploying",
-    );
-    await expect(publishBottomBtn).toBeDisabled();
-    await expect(publishBottomBtn).toHaveAttribute(
+    // Publish button remains disabled with "Save to CMS First"
+    await expect(publishBtn).toBeDisabled();
+    await expect(publishBtn).toHaveText(/Save to CMS First/i);
+    await expect(publishBtn).toHaveAttribute(
       "title",
       "Save changes to CMS first before deploying",
     );
@@ -60,19 +52,17 @@ test.describe("Version 45: Strict State Gating for Admin Actions & Deployment Se
     await saveBtn.click();
 
     // Save confirmation banner appears
-    const saveBanner = page.getByText(/Draft saved to CMS instantly/i);
+    const saveBanner = page.getByText(/Saved to CMS! Click 'Publish Changes to Live Site'/i);
     await expect(saveBanner).toBeVisible();
 
-    // Dirty state resets: Save button is disabled again
+    // Dirty state resets: Save button is disabled with "All Changes Saved to CMS"
     await expect(saveBtn).toBeDisabled();
-    await expect(saveBtn).toHaveText(/No Changes to Save/i);
+    await expect(saveBtn).toHaveText(/All Changes Saved to CMS/i);
     await expect(page.getByText(/Saved/i).first()).toBeVisible();
 
     // Pending deployment is now active: Publish button enables with emerald glow
-    await expect(publishHeaderBtn).toBeEnabled();
-    await expect(publishHeaderBtn).toHaveText(/🚀 Publish Changes to Live Site/i);
-    await expect(publishBottomBtn).toBeEnabled();
-    await expect(publishBottomBtn).toHaveText(/🚀 Publish Changes to Live Site/i);
+    await expect(publishBtn).toBeEnabled();
+    await expect(publishBtn).toHaveText(/🚀 Publish Changes to Live Site/i);
 
     // 4. BANNER HYGIENE: Switching tab clears active notification banners
     await page.getByRole("button", { name: /Videos & Gallery/i }).click();
@@ -82,16 +72,14 @@ test.describe("Version 45: Strict State Gating for Admin Actions & Deployment Se
     await page.getByRole("button", { name: /Announcements & Hero/i }).click();
 
     // 5. PUBLISH TO LIVE SITE: Executes deployment and resets pending deployment state
-    await publishHeaderBtn.click();
+    await publishBtn.click();
 
-    const deployBanner = page.getByText(/Deployment started! The live site will refresh in ~60 seconds\./i);
+    const deployBanner = page.getByText(/Deployment started! Your live website will update in ~60 seconds\./i);
     await expect(deployBanner).toBeVisible();
 
     // After deploy, publish button resets to disabled ("Site Up to Date")
-    await expect(publishHeaderBtn).toBeDisabled();
-    await expect(publishHeaderBtn).toHaveText(/Site Up to Date/i);
-    await expect(publishBottomBtn).toBeDisabled();
-    await expect(publishBottomBtn).toHaveText(/Site Up to Date/i);
+    await expect(publishBtn).toBeDisabled();
+    await expect(publishBtn).toHaveText(/Site Up to Date/i);
 
     // Dismiss deploy banner
     const dismissDeployBtn = page.getByRole("button", { name: "Dismiss deployment status" });
