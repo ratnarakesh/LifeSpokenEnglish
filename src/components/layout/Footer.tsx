@@ -1,3 +1,6 @@
+"use client";
+
+import { usePathname } from "next/navigation";
 import { ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { InstagramIcon, YouTubeIcon } from "@/components/ui/BrandIcons";
@@ -6,6 +9,9 @@ import { ADDRESS, EMAIL, FOOTER_LINKS, LINKS, PHONES, SITE, TIMINGS, mailtoLink,
 import { FullLogo } from "./Brand";
 
 export function Footer() {
+  const pathname = usePathname();
+  if (pathname?.startsWith("/admin")) return null;
+
   return (
     <footer className="relative border-t border-stone-800/80 bg-obsidian-950 pb-28 md:pb-0">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:px-8">

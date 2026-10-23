@@ -7,6 +7,7 @@ import {
   ChevronDown,
   ChevronUp,
   Delete,
+  ExternalLink,
   FileText,
   HelpCircle,
   Lock,
@@ -25,6 +26,8 @@ import {
   Video,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { button, cn } from "@/lib/cn";
 import { heroCopy } from "@/lib/site-copy";
 import { PHONES } from "@/lib/site";
@@ -755,7 +758,7 @@ export function AdminClient() {
   // 1. LOCKED PASSCODE SCREEN
   if (!isAuthenticated) {
     return (
-      <div className="mx-auto w-full max-w-sm px-4 py-8">
+      <div className="mx-auto w-full max-w-sm px-4 py-16 sm:py-24">
         <div className="overflow-hidden rounded-3xl border border-stone-800/80 bg-obsidian-900/90 p-6 shadow-2xl backdrop-blur-xl sm:p-8">
           <div className="text-center">
             <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-ember-500/20 to-sun-500/10 text-ember-400 ring-1 ring-ember-500/30">
@@ -846,6 +849,14 @@ export function AdminClient() {
               )}
             </button>
           </form>
+          <div className="mt-5 text-center">
+            <Link
+              href="/"
+              className="text-xs font-medium text-stone-400 hover:text-ember-300 transition"
+            >
+              &larr; Return to Public Website
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -853,7 +864,7 @@ export function AdminClient() {
 
   // 2. AUTHENTICATED EXECUTIVE DASHBOARD
   return (
-    <div className="mx-auto w-full max-w-4xl px-4 pt-4 pb-36">
+    <div className="mx-auto w-full max-w-4xl px-4 pt-8 pb-36">
       {/* Executive Header */}
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-stone-800/80 bg-obsidian-900/90 p-4 shadow-xl backdrop-blur-xl">
         <div className="flex items-center gap-3">
@@ -875,14 +886,27 @@ export function AdminClient() {
             </div>
           </div>
         </div>
-        <button
-          onClick={handleLogout}
-          type="button"
-          className="flex items-center gap-1.5 rounded-lg border border-stone-700/60 bg-stone-800/50 px-3 py-1.5 text-xs font-medium text-stone-300 transition hover:bg-stone-700 hover:text-stone-100"
-        >
-          <LogOut className="h-3.5 w-3.5 text-stone-400" />
-          Logout
-        </button>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <Link
+            href="/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 rounded-lg border border-stone-700/60 bg-stone-800/50 px-3 py-1.5 text-xs font-medium text-stone-300 transition hover:bg-stone-700 hover:text-stone-100"
+            title="Open public website in a new tab"
+          >
+            <ExternalLink className="h-3.5 w-3.5 text-ember-400" />
+            <span className="hidden sm:inline">View</span> Live Site
+          </Link>
+          <button
+            onClick={handleLogout}
+            type="button"
+            className="flex items-center gap-1.5 rounded-lg border border-stone-700/60 bg-stone-800/50 px-3 py-1.5 text-xs font-medium text-stone-300 transition hover:bg-stone-700 hover:text-stone-100"
+          >
+            <LogOut className="h-3.5 w-3.5 text-stone-400" />
+            Logout
+          </button>
+        </div>
       </div>
 
       {/* Modern Horizontal Tab Bar */}

@@ -1,3 +1,6 @@
+"use client";
+
+import { usePathname } from "next/navigation";
 import { announcementCopy } from "@/lib/site-copy";
 
 const Dot = () => (
@@ -7,6 +10,9 @@ const Dot = () => (
 );
 
 export function AnnouncementBar() {
+  const pathname = usePathname();
+  if (pathname?.startsWith("/admin")) return null;
+
   return (
     <div className="relative z-50 border-b border-ember-500/20 bg-linear-to-r from-bark-800/90 via-ember-800/60 to-bark-800/90 text-center text-xs font-medium text-ember-50 sm:text-sm">
       <p className="mx-auto max-w-7xl px-4 py-2">

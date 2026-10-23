@@ -53,6 +53,8 @@ export function Navbar() {
     return () => window.removeEventListener("keydown", onKey);
   }, [menuOpen]);
 
+  if (pathname?.startsWith("/admin")) return null;
+
   return (
     <header
       className={cn(
