@@ -29,6 +29,7 @@ import {
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { AdminBreadcrumbs } from "./AdminBreadcrumbs";
 import { button, cn } from "@/lib/cn";
 import { heroCopy } from "@/lib/site-copy";
 import { PHONES } from "@/lib/site";
@@ -1054,106 +1055,20 @@ export function AdminClient() {
         </div>
       </div>
 
-      {/* Modern Horizontal Tab Bar */}
-      <div className="mb-6 flex overflow-x-auto rounded-xl border border-stone-800 bg-obsidian-950 p-1.5 scrollbar-none">
-        <button
-          type="button"
-          onClick={() => setActiveTab("announcements")}
-          className={cn(
-            "flex shrink-0 items-center gap-2 rounded-lg px-3.5 py-2 text-xs font-semibold transition sm:text-sm",
-            activeTab === "announcements"
-              ? "bg-ember-500/20 text-ember-300 ring-1 ring-ember-500/40"
-              : "text-stone-400 hover:text-stone-200",
-          )}
-        >
-          <Megaphone className="h-4 w-4" />
-          Announcements &amp; Hero
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setActiveTab("gallery")}
-          className={cn(
-            "flex shrink-0 items-center gap-2 rounded-lg px-3.5 py-2 text-xs font-semibold transition sm:text-sm",
-            activeTab === "gallery"
-              ? "bg-ember-500/20 text-ember-300 ring-1 ring-ember-500/40"
-              : "text-stone-400 hover:text-stone-200",
-          )}
-        >
-          <Video className="h-4 w-4" />
-          Videos &amp; Gallery ({galleryItems.length})
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setActiveTab("courses")}
-          className={cn(
-            "flex shrink-0 items-center gap-2 rounded-lg px-3.5 py-2 text-xs font-semibold transition sm:text-sm",
-            activeTab === "courses"
-              ? "bg-ember-500/20 text-ember-300 ring-1 ring-ember-500/40"
-              : "text-stone-400 hover:text-stone-200",
-          )}
-        >
-          <BookOpen className="h-4 w-4" />
-          Courses &amp; Syllabus ({courseTracks.length})
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setActiveTab("faqs")}
-          className={cn(
-            "flex shrink-0 items-center gap-2 rounded-lg px-3.5 py-2 text-xs font-semibold transition sm:text-sm",
-            activeTab === "faqs"
-              ? "bg-ember-500/20 text-ember-300 ring-1 ring-ember-500/40"
-              : "text-stone-400 hover:text-stone-200",
-          )}
-        >
-          <HelpCircle className="h-4 w-4" />
-          FAQs ({faqItems.length})
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setActiveTab("reviews")}
-          className={cn(
-            "flex shrink-0 items-center gap-2 rounded-lg px-3.5 py-2 text-xs font-semibold transition sm:text-sm",
-            activeTab === "reviews"
-              ? "bg-ember-500/20 text-ember-300 ring-1 ring-ember-500/40"
-              : "text-stone-400 hover:text-stone-200",
-          )}
-        >
-          <Star className="h-4 w-4" />
-          Reviews &amp; Founder
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setActiveTab("story")}
-          className={cn(
-            "flex shrink-0 items-center gap-2 rounded-lg px-3.5 py-2 text-xs font-semibold transition sm:text-sm",
-            activeTab === "story"
-              ? "bg-ember-500/20 text-ember-300 ring-1 ring-ember-500/40"
-              : "text-stone-400 hover:text-stone-200",
-          )}
-        >
-          <Sparkles className="h-4 w-4" />
-          Story &amp; Promises
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setActiveTab("legal")}
-          className={cn(
-            "flex shrink-0 items-center gap-2 rounded-lg px-3.5 py-2 text-xs font-semibold transition sm:text-sm",
-            activeTab === "legal"
-              ? "bg-ember-500/20 text-ember-300 ring-1 ring-ember-500/40"
-              : "text-stone-400 hover:text-stone-200",
-          )}
-        >
-          <ShieldCheck className="h-4 w-4" />
-          Legal &amp; Policies ({legalDocuments.length})
-        </button>
-      </div>
+      {/* Sticky Breadcrumb-Style Navigation */}
+      <AdminBreadcrumbs
+        activeTab={activeTab}
+        onTabChange={(tab) => setActiveTab(tab)}
+        isSaving={isSaving}
+        saveStatus={saveStatus}
+        counts={{
+          gallery: galleryItems.length,
+          courses: courseTracks.length,
+          faqs: faqItems.length,
+          reviews: testimonials.length,
+          legal: legalDocuments.length,
+        }}
+      />
 
       {/* Cloudflare Pages Environment Missing Warning Banner */}
       {isConfigured === false && (
