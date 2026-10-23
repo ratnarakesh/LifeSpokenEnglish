@@ -119,12 +119,47 @@ createServer(async (req, res) => {
               "Morning: 6:00 AM - 7:00 AM, 7:00 AM - 8:00 AM, 8:00 AM - 9:00 AM\nEvening: 5:00 PM - 6:00 PM, 6:00 PM - 7:00 PM, 7:00 PM - 8:00 PM, 8:00 PM - 9:00 PM\nOnline Live: Throughout the day\nWeekend: Saturday & Sunday on-demand personal backup sessions",
             logoStory:
               "Like an eagle renewing its wings on the mountaintop, every learner at LIFE sheds their old hesitation and rises into fluent, confident expression. L.I.F.E. stands for Live It For Eternity: English not as an academic subject, but as a living life skill you will carry forever.",
+            logoStoryEagle:
+              "High on a cliff above the Vizag coast, a young eagle sat at the edge of its nest every morning, watching the others soar.\n\nIt knew everything about flying. It had watched a thousand flights and could explain every feather. But each time the wind called, its wings stayed folded. What if I fall? What if they laugh?\n\nOne morning, an old eagle landed beside it. He did not lecture. He did not push. He simply said, \"Fly with me. Just a little today.\"\n\nThey stepped into the warm wind together. The young eagle wobbled, dipped, and then, for the very first time, it rose. Below them, over the sea, the sun was rising too.\n\nThat morning the young eagle learned something no book had taught it: it never needed more knowledge. It needed someone to fly beside it, and the courage to open its wings.\n\nEvery learner who walks into LIFE is that young eagle: full of knowledge, held back by fear. Our job is to fly beside you until your own wings take over.",
+            lifeAcronymL: "Live",
+            lifeAcronymI: "It",
+            lifeAcronymF: "For",
+            lifeAcronymE: "Eternity",
           },
           founderProfile: {
             name: "Mani\u00A0Sir",
             title: "Founder, Director & Lead Trainer",
             bio: "K. Maneendra Kumar, known to thousands of learners simply as Mani\u00A0Sir, founded LIFE in Madhurawada, Visakhapatnam with one simple belief: nobody is bad at English. Most people have just never been given a safe place to speak it.",
             altText: "Mani\u00A0Sir in the LIFE Spoken English classroom, Madhurawada",
+            portraitUrl: "/media/people/mani-sir-portrait-v2.webp",
+            storyHeadline: "Meet Mani\u00A0Sir, the heart of LIFE",
+            spiritOfLifeTitle: "The Meaning Behind Our Name",
+            spiritOfLifeContent:
+              "Most people approach English like a temporary subject: something you study just to pass an exam, clear an interview, or memorize for a few weeks. But language is not a school textbook. Language is life itself.\n\nWhen you acquire true confidence in speaking, it does not disappear after an interview. It stays with you when you talk to your children, when you present in boardrooms, when you travel the world, and when you stand on any public stage. It transforms how you carry yourself forever.",
+            journeyMilestones: JSON.stringify([
+              {
+                year: "2018",
+                title: "The first classroom",
+                body: "A single room at Vasu Brothers Nilayam, Midhilapuri VUDA Colony, Madhurawada.",
+              },
+              {
+                year: "2024",
+                title: "LIFE goes digital",
+                body: "Mani\u00A0Sir's YouTube channel begins sharing everyday English lessons, Telugu to English.",
+              },
+              {
+                year: "2025",
+                title: "Live online batches",
+                body: "Interactive live online batches welcome learners far beyond Vizag.",
+              },
+              {
+                year: "Today",
+                title: "1,800+ five-star reviews",
+                body: "A perfect 5.0 on Google, earned one confident speaker at a time.",
+              },
+            ]),
+            teachingPhilosophy:
+              "Some teachers teach English. Mani\u00A0Sir teaches people to believe in their own voice.\n\nK. Maneendra Kumar, known to thousands of learners simply as Mani\u00A0Sir, founded LIFE in Madhurawada, Visakhapatnam with one simple belief: nobody is bad at English. Most people have just never been given a safe place to speak it.",
           },
           galleryItems: [
             {

@@ -1,4 +1,4 @@
-import { getFaqItems } from "@/lib/cms";
+import { getFaqItems, getFounderProfile } from "@/lib/cms";
 import { COURSES } from "@/lib/content";
 import { ADDRESS, EMAIL, GEO, LINKS, PHONES, SITE, VIDEO_ID, plainText } from "@/lib/site";
 
@@ -14,6 +14,11 @@ function LdScript({ data }: { data: object }) {
 }
 
 export function JsonLd() {
+  const founder = getFounderProfile();
+  const founderPortrait = founder.portraitSrc.startsWith("http")
+    ? founder.portraitSrc
+    : `${SITE.url}${founder.portraitSrc}`;
+
   const data = {
     "@context": "https://schema.org",
     "@type": ["EducationalOrganization", "LocalBusiness"],
@@ -24,7 +29,7 @@ export function JsonLd() {
       "Spoken English & Soft Skills training institute in Madhurawada, Visakhapatnam offering live offline and online batches with 10 free trial classes.",
     url: SITE.url,
     logo: `${SITE.url}/brand/life-logo.png`,
-    image: [`${SITE.url}/brand/og-image.png`, `${SITE.url}/brand/life-logo.webp`, `${SITE.url}/media/people/mani-sir-portrait-v2.webp`],
+    image: [`${SITE.url}/brand/og-image.png`, `${SITE.url}/brand/life-logo.webp`, founderPortrait],
     slogan: "Live It For Eternity",
     foundingDate: "2018",
     foundingLocation: { "@type": "Place", name: "Madhurawada, Visakhapatnam, Andhra Pradesh, India" },
@@ -52,7 +57,7 @@ export function JsonLd() {
       name: SITE.founder,
       alternateName: plainText(SITE.founderAlias),
       jobTitle: "Founder & Lead Trainer",
-      image: `${SITE.url}/media/people/mani-sir-portrait-v2.webp`,
+      image: founderPortrait,
       url: `${SITE.url}/about`,
     },
     contactPoint: [

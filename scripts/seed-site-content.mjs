@@ -6,7 +6,9 @@ import {
   brandCopy,
   courseCopy,
   faqCopy,
+  founderCopy,
   heroCopy,
+  storyCopy,
   testimonialsCopy,
 } from "../src/lib/site-copy.ts";
 
@@ -65,6 +67,35 @@ const CONTENT_TYPES = [
       { id: "workingHours", name: "Working Hours", type: "Symbol", required: false },
       { id: "batchTimings", name: "Batch Timings", type: "Text", required: false },
       { id: "logoStory", name: "Logo Story & Meaning", type: "Text", required: false },
+      { id: "logoStoryEagle", name: "Logo Story Eagle Parable", type: "Text", required: false },
+      { id: "lifeAcronymL", name: "LIFE Acronym L", type: "Symbol", required: false },
+      { id: "lifeAcronymI", name: "LIFE Acronym I", type: "Symbol", required: false },
+      { id: "lifeAcronymF", name: "LIFE Acronym F", type: "Symbol", required: false },
+      { id: "lifeAcronymE", name: "LIFE Acronym E", type: "Symbol", required: false },
+    ],
+  },
+  {
+    id: "founderProfile",
+    name: "Founder Profile",
+    description: "Mani Sir's official profile information, portrait photo, and biography.",
+    displayField: "name",
+    fields: [
+      { id: "name", name: "Name", type: "Symbol", required: true },
+      { id: "title", name: "Title", type: "Symbol", required: false },
+      { id: "bio", name: "Bio", type: "Text", required: false },
+      {
+        id: "portraitImage",
+        name: "Portrait Image",
+        type: "Link",
+        linkType: "Asset",
+        required: false,
+      },
+      { id: "altText", name: "Alt Text", type: "Symbol", required: false },
+      { id: "storyHeadline", name: "Story Headline", type: "Symbol", required: false },
+      { id: "spiritOfLifeTitle", name: "Spirit of LIFE Title", type: "Symbol", required: false },
+      { id: "spiritOfLifeContent", name: "Spirit of LIFE Content", type: "Text", required: false },
+      { id: "journeyMilestones", name: "Journey Milestones", type: "Text", required: false },
+      { id: "teachingPhilosophy", name: "Teaching Philosophy", type: "Text", required: false },
     ],
   },
   {
@@ -404,9 +435,30 @@ async function main() {
         "Morning: 6:00 AM - 7:00 AM, 7:00 AM - 8:00 AM, 8:00 AM - 9:00 AM\nEvening: 5:00 PM - 6:00 PM, 6:00 PM - 7:00 PM, 7:00 PM - 8:00 PM, 8:00 PM - 9:00 PM\nOnline Live: Throughout the day\nWeekend: Saturday & Sunday on-demand personal backup sessions",
       logoStory:
         "Like an eagle renewing its wings on the mountaintop, every learner at LIFE sheds their old hesitation and rises into fluent, confident expression. L.I.F.E. stands for Live It For Eternity: English not as an academic subject, but as a living life skill you will carry forever.",
+      logoStoryEagle:
+        storyCopy.logoStory.parable.join("\n\n") + "\n\n" + storyCopy.logoStory.moral,
+      lifeAcronymL: "Live",
+      lifeAcronymI: "It",
+      lifeAcronymF: "For",
+      lifeAcronymE: "Eternity",
     },
     locale,
   );
+
+  // 2b. Seed founderProfile
+  console.log("\nSeeding founderProfile...");
+  const founderSeedFields = {
+    name: "Mani\u00A0Sir",
+    title: "Founder, Director & Lead Trainer",
+    bio: founderCopy.paragraphs.join("\n\n"),
+    altText: "Mani\u00A0Sir (K. Maneendra Kumar) in the LIFE classroom",
+    storyHeadline: "Meet Mani\u00A0Sir, the heart of LIFE",
+    spiritOfLifeTitle: storyCopy.meaningTitle,
+    spiritOfLifeContent: storyCopy.meaningParagraphs.join("\n\n"),
+    journeyMilestones: JSON.stringify(storyCopy.milestones, null, 2),
+    teachingPhilosophy: `${founderCopy.lede}\n\n${founderCopy.paragraphs.join("\n\n")}`,
+  };
+  await upsertEntry("life-founder-profile", "founderProfile", founderSeedFields, locale);
 
   // 3. Seed courseTrack
   console.log("\nSeeding courseTracks...");

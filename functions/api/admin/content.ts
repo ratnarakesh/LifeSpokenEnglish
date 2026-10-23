@@ -30,6 +30,11 @@ export interface AdminSiteSettings {
   workingHours?: string;
   batchTimings?: string;
   logoStory?: string;
+  logoStoryEagle?: string;
+  lifeAcronymL?: string;
+  lifeAcronymI?: string;
+  lifeAcronymF?: string;
+  lifeAcronymE?: string;
 }
 
 export interface AdminGalleryItem {
@@ -75,6 +80,11 @@ export interface AdminFounderProfile {
   bio: string;
   altText: string;
   portraitUrl?: string | null;
+  storyHeadline?: string | null;
+  spiritOfLifeTitle?: string | null;
+  spiritOfLifeContent?: string | null;
+  journeyMilestones?: string | null;
+  teachingPhilosophy?: string | null;
 }
 
 export interface AdminLegalDocument {
@@ -141,6 +151,12 @@ export const DEFAULT_ADMIN_DATA: FullAdminData = {
       "Morning: 6:00 AM - 7:00 AM, 7:00 AM - 8:00 AM, 8:00 AM - 9:00 AM\nEvening: 5:00 PM - 6:00 PM, 6:00 PM - 7:00 PM, 7:00 PM - 8:00 PM, 8:00 PM - 9:00 PM\nOnline Live: Throughout the day\nWeekend: Saturday & Sunday on-demand personal backup sessions",
     logoStory:
       "Like an eagle renewing its wings on the mountaintop, every learner at LIFE sheds their old hesitation and rises into fluent, confident expression. L.I.F.E. stands for Live It For Eternity: English not as an academic subject, but as a living life skill you will carry forever.",
+    logoStoryEagle:
+      "High on a cliff above the Vizag coast, a young eagle sat at the edge of its nest every morning, watching the others soar.\n\nIt knew everything about flying. It had watched a thousand flights and could explain every feather. But each time the wind called, its wings stayed folded. What if I fall? What if they laugh?\n\nOne morning, an old eagle landed beside it. He did not lecture. He did not push. He simply said, \"Fly with me. Just a little today.\"\n\nThey stepped into the warm wind together. The young eagle wobbled, dipped, and then, for the very first time, it rose. Below them, over the sea, the sun was rising too.\n\nThat morning the young eagle learned something no book had taught it: it never needed more knowledge. It needed someone to fly beside it, and the courage to open its wings.\n\nEvery learner who walks into LIFE is that young eagle: full of knowledge, held back by fear. Our job is to fly beside you until your own wings take over.",
+    lifeAcronymL: "Live",
+    lifeAcronymI: "It",
+    lifeAcronymF: "For",
+    lifeAcronymE: "Eternity",
   },
   founderProfile: {
     name: "Mani\u00A0Sir",
@@ -148,6 +164,38 @@ export const DEFAULT_ADMIN_DATA: FullAdminData = {
     bio: "K. Maneendra Kumar, known to thousands of learners simply as Mani\u00A0Sir, founded LIFE in Madhurawada, Visakhapatnam with one simple belief: nobody is bad at English. Most people have just never been given a safe place to speak it.",
     altText: "Mani\u00A0Sir in the LIFE Spoken English classroom, Madhurawada",
     portraitUrl: "/media/people/mani-sir-portrait-v2.webp",
+    storyHeadline: "Meet Mani\u00A0Sir, the heart of LIFE",
+    spiritOfLifeTitle: "The Meaning Behind Our Name",
+    spiritOfLifeContent:
+      "Most people approach English like a temporary subject: something you study just to pass an exam, clear an interview, or memorize for a few weeks. But language is not a school textbook. Language is life itself.\n\nWhen you acquire true confidence in speaking, it does not disappear after an interview. It stays with you when you talk to your children, when you present in boardrooms, when you travel the world, and when you stand on any public stage. It transforms how you carry yourself forever.",
+    journeyMilestones: JSON.stringify(
+      [
+        {
+          year: "2018",
+          title: "The first classroom",
+          body: "A single room at Vasu Brothers Nilayam, Midhilapuri VUDA Colony, Madhurawada.",
+        },
+        {
+          year: "2024",
+          title: "LIFE goes digital",
+          body: "Mani\u00A0Sir's YouTube channel begins sharing everyday English lessons, Telugu to English.",
+        },
+        {
+          year: "2025",
+          title: "Live online batches",
+          body: "Interactive live online batches welcome learners far beyond Vizag.",
+        },
+        {
+          year: "Today",
+          title: "1,800+ five-star reviews",
+          body: "A perfect 5.0 on Google, earned one confident speaker at a time.",
+        },
+      ],
+      null,
+      2,
+    ),
+    teachingPhilosophy:
+      "Some teachers teach English. Mani\u00A0Sir teaches people to believe in their own voice.\n\nK. Maneendra Kumar, known to thousands of learners simply as Mani\u00A0Sir, founded LIFE in Madhurawada, Visakhapatnam with one simple belief: nobody is bad at English. Most people have just never been given a safe place to speak it.",
   },
   galleryItems: [
     {
@@ -662,6 +710,11 @@ export async function onRequestGet(context: EventContext): Promise<Response> {
         workingHours: cleanText(f.workingHours?.[locale]) || result.siteSettings.workingHours,
         batchTimings: cleanText(f.batchTimings?.[locale]) || result.siteSettings.batchTimings,
         logoStory: cleanText(f.logoStory?.[locale]) || result.siteSettings.logoStory,
+        logoStoryEagle: cleanText(f.logoStoryEagle?.[locale]) || result.siteSettings.logoStoryEagle,
+        lifeAcronymL: cleanText(f.lifeAcronymL?.[locale]) || result.siteSettings.lifeAcronymL,
+        lifeAcronymI: cleanText(f.lifeAcronymI?.[locale]) || result.siteSettings.lifeAcronymI,
+        lifeAcronymF: cleanText(f.lifeAcronymF?.[locale]) || result.siteSettings.lifeAcronymF,
+        lifeAcronymE: cleanText(f.lifeAcronymE?.[locale]) || result.siteSettings.lifeAcronymE,
       };
     }
 
@@ -697,6 +750,11 @@ export async function onRequestGet(context: EventContext): Promise<Response> {
         bio: cleanText(f.bio?.[locale]) || result.founderProfile.bio,
         altText: cleanText(f.altText?.[locale]) || result.founderProfile.altText,
         portraitUrl,
+        storyHeadline: cleanText(f.storyHeadline?.[locale]) || result.founderProfile.storyHeadline,
+        spiritOfLifeTitle: cleanText(f.spiritOfLifeTitle?.[locale]) || result.founderProfile.spiritOfLifeTitle,
+        spiritOfLifeContent: cleanText(f.spiritOfLifeContent?.[locale]) || result.founderProfile.spiritOfLifeContent,
+        journeyMilestones: cleanText(f.journeyMilestones?.[locale]) || result.founderProfile.journeyMilestones,
+        teachingPhilosophy: cleanText(f.teachingPhilosophy?.[locale]) || result.founderProfile.teachingPhilosophy,
       };
       (result as Record<string, unknown>)._debug = {
         assetsResOk: assetsRes.ok,
@@ -985,6 +1043,11 @@ export async function onRequestPost(context: EventContext): Promise<Response> {
           ...(body.siteSettings.workingHours && { workingHours: cleanText(body.siteSettings.workingHours) }),
           ...(body.siteSettings.batchTimings && { batchTimings: cleanText(body.siteSettings.batchTimings) }),
           ...(body.siteSettings.logoStory && { logoStory: cleanText(body.siteSettings.logoStory) }),
+          ...(body.siteSettings.logoStoryEagle && { logoStoryEagle: cleanText(body.siteSettings.logoStoryEagle) }),
+          ...(body.siteSettings.lifeAcronymL && { lifeAcronymL: cleanText(body.siteSettings.lifeAcronymL) }),
+          ...(body.siteSettings.lifeAcronymI && { lifeAcronymI: cleanText(body.siteSettings.lifeAcronymI) }),
+          ...(body.siteSettings.lifeAcronymF && { lifeAcronymF: cleanText(body.siteSettings.lifeAcronymF) }),
+          ...(body.siteSettings.lifeAcronymE && { lifeAcronymE: cleanText(body.siteSettings.lifeAcronymE) }),
         });
       }
 
@@ -1004,6 +1067,11 @@ export async function onRequestPost(context: EventContext): Promise<Response> {
           ...(body.founderProfile.title && { title: cleanText(body.founderProfile.title) }),
           ...(body.founderProfile.bio && { bio: cleanText(body.founderProfile.bio) }),
           ...(body.founderProfile.altText && { altText: cleanText(body.founderProfile.altText) }),
+          ...(body.founderProfile.storyHeadline && { storyHeadline: cleanText(body.founderProfile.storyHeadline) }),
+          ...(body.founderProfile.spiritOfLifeTitle && { spiritOfLifeTitle: cleanText(body.founderProfile.spiritOfLifeTitle) }),
+          ...(body.founderProfile.spiritOfLifeContent && { spiritOfLifeContent: cleanText(body.founderProfile.spiritOfLifeContent) }),
+          ...(body.founderProfile.journeyMilestones && { journeyMilestones: cleanText(body.founderProfile.journeyMilestones) }),
+          ...(body.founderProfile.teachingPhilosophy && { teachingPhilosophy: cleanText(body.founderProfile.teachingPhilosophy) }),
         };
         await upsertEntry("life-founder-profile", "founderProfile", founderPayload);
         await upsertEntry("life-founder-mani-sir", "founderProfile", founderPayload);

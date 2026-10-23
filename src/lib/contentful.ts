@@ -35,6 +35,11 @@ export type CmsFounderProfile = {
   altText: string;
   width: number;
   height: number;
+  storyHeadline?: string | null;
+  spiritOfLifeTitle?: string | null;
+  spiritOfLifeContent?: string | null;
+  journeyMilestones?: string | null;
+  teachingPhilosophy?: string | null;
 };
 
 export type CmsAnnouncement = { message: string; badgeText: string | null };
@@ -50,6 +55,11 @@ export type CmsSiteSettings = {
   workingHours?: string;
   batchTimings?: string;
   logoStory?: string;
+  logoStoryEagle?: string;
+  lifeAcronymL?: string;
+  lifeAcronymI?: string;
+  lifeAcronymF?: string;
+  lifeAcronymE?: string;
 };
 
 export type CmsLegalDocument = {
@@ -191,6 +201,11 @@ function toFounderProfile(entry: { sys: { id: string }; fields: Fields } | undef
     altText,
     width: size.width,
     height: size.height,
+    storyHeadline: cleanText(f.storyHeadline) || null,
+    spiritOfLifeTitle: cleanText(f.spiritOfLifeTitle) || null,
+    spiritOfLifeContent: cleanText(f.spiritOfLifeContent) || null,
+    journeyMilestones: cleanText(f.journeyMilestones) || null,
+    teachingPhilosophy: cleanText(f.teachingPhilosophy) || null,
   };
 }
 
@@ -211,6 +226,11 @@ function toSiteSettings(entry: { fields: Fields } | undefined): CmsSiteSettings 
     workingHours: cleanText(f.workingHours) || undefined,
     batchTimings: cleanText(f.batchTimings) || undefined,
     logoStory: cleanText(f.logoStory) || undefined,
+    logoStoryEagle: cleanText(f.logoStoryEagle) || undefined,
+    lifeAcronymL: cleanText(f.lifeAcronymL) || undefined,
+    lifeAcronymI: cleanText(f.lifeAcronymI) || undefined,
+    lifeAcronymF: cleanText(f.lifeAcronymF) || undefined,
+    lifeAcronymE: cleanText(f.lifeAcronymE) || undefined,
   };
 }
 

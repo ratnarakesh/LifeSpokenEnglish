@@ -85,6 +85,12 @@ const DEFAULT_SETTINGS: AdminSiteSettings = {
     "Morning: 6:00 AM - 7:00 AM, 7:00 AM - 8:00 AM, 8:00 AM - 9:00 AM\nEvening: 5:00 PM - 6:00 PM, 6:00 PM - 7:00 PM, 7:00 PM - 8:00 PM, 8:00 PM - 9:00 PM\nOnline Live: Throughout the day\nWeekend: Saturday & Sunday on-demand personal backup sessions",
   logoStory:
     "Like an eagle renewing its wings on the mountaintop, every learner at LIFE sheds their old hesitation and rises into fluent, confident expression. L.I.F.E. stands for Live It For Eternity: English not as an academic subject, but as a living life skill you will carry forever.",
+  logoStoryEagle:
+    "High on a cliff above the Vizag coast, a young eagle sat at the edge of its nest every morning, watching the others soar.\n\nIt knew everything about flying. It had watched a thousand flights and could explain every feather. But each time the wind called, its wings stayed folded. What if I fall? What if they laugh?\n\nOne morning, an old eagle landed beside it. He did not lecture. He did not push. He simply said, \"Fly with me. Just a little today.\"\n\nThey stepped into the warm wind together. The young eagle wobbled, dipped, and then, for the very first time, it rose. Below them, over the sea, the sun was rising too.\n\nThat morning the young eagle learned something no book had taught it: it never needed more knowledge. It needed someone to fly beside it, and the courage to open its wings.\n\nEvery learner who walks into LIFE is that young eagle: full of knowledge, held back by fear. Our job is to fly beside you until your own wings take over.",
+  lifeAcronymL: "Live",
+  lifeAcronymI: "It",
+  lifeAcronymF: "For",
+  lifeAcronymE: "Eternity",
 };
 
 const DEFAULT_LEGAL_DOCS: AdminLegalDocument[] = [
@@ -287,6 +293,38 @@ const DEFAULT_FOUNDER: AdminFounderProfile = {
   title: "Founder, Director & Lead Trainer",
   bio: "K. Maneendra Kumar, known to thousands of learners simply as Mani\u00A0Sir, founded LIFE in Madhurawada, Visakhapatnam with one simple belief: nobody is bad at English. Most people have just never been given a safe place to speak it.",
   altText: "Mani\u00A0Sir in the LIFE Spoken English classroom, Madhurawada",
+  storyHeadline: "Meet Mani\u00A0Sir, the heart of LIFE",
+  spiritOfLifeTitle: "The Meaning Behind Our Name",
+  spiritOfLifeContent:
+    "Most people approach English like a temporary subject: something you study just to pass an exam, clear an interview, or memorize for a few weeks. But language is not a school textbook. Language is life itself.\n\nWhen you acquire true confidence in speaking, it does not disappear after an interview. It stays with you when you talk to your children, when you present in boardrooms, when you travel the world, and when you stand on any public stage. It transforms how you carry yourself forever.",
+  journeyMilestones: JSON.stringify(
+    [
+      {
+        year: "2018",
+        title: "The first classroom",
+        body: "A single room at Vasu Brothers Nilayam, Midhilapuri VUDA Colony, Madhurawada.",
+      },
+      {
+        year: "2024",
+        title: "LIFE goes digital",
+        body: "Mani\u00A0Sir's YouTube channel begins sharing everyday English lessons, Telugu to English.",
+      },
+      {
+        year: "2025",
+        title: "Live online batches",
+        body: "Interactive live online batches welcome learners far beyond Vizag.",
+      },
+      {
+        year: "Today",
+        title: "1,800+ five-star reviews",
+        body: "A perfect 5.0 on Google, earned one confident speaker at a time.",
+      },
+    ],
+    null,
+    2,
+  ),
+  teachingPhilosophy:
+    "Some teachers teach English. Mani\u00A0Sir teaches people to believe in their own voice.\n\nK. Maneendra Kumar, known to thousands of learners simply as Mani\u00A0Sir, founded LIFE in Madhurawada, Visakhapatnam with one simple belief: nobody is bad at English. Most people have just never been given a safe place to speak it.",
 };
 
 export function AdminClient() {
@@ -665,6 +703,7 @@ export function AdminClient() {
         const data = (await res.json()) as { assetUrl?: string; message?: string };
         if (data.assetUrl) {
           setActivePortraitUrl(data.assetUrl);
+          setFounderProfile((prev) => ({ ...prev, portraitUrl: data.assetUrl }));
         }
         setPortraitUploadSuccess(
           data.message || "Official portrait updated successfully! Website is rebuilding.",
@@ -2016,15 +2055,79 @@ export function AdminClient() {
 
               <div className="sm:col-span-2">
                 <label className="block text-xs font-semibold text-stone-300">
-                  Biography &amp; Mentor Philosophy
+                  Biography &amp; Mentor Overview
                 </label>
                 <textarea
-                  rows={4}
+                  rows={3}
                   value={founderProfile.bio}
                   onChange={(e) =>
                     setFounderProfile((prev) => ({ ...prev, bio: e.target.value }))
                   }
                   className="mt-1 w-full rounded-xl border border-stone-700 bg-obsidian-950 px-3.5 py-2 text-sm text-stone-100 focus:border-ember-500 focus:outline-none"
+                />
+              </div>
+
+              <div className="sm:col-span-2">
+                <label htmlFor="founderStoryHeadline" className="block text-xs font-semibold text-stone-300">
+                  About Page Story Headline
+                </label>
+                <input
+                  id="founderStoryHeadline"
+                  type="text"
+                  value={founderProfile.storyHeadline ?? ""}
+                  onChange={(e) =>
+                    setFounderProfile((prev) => ({ ...prev, storyHeadline: e.target.value }))
+                  }
+                  placeholder="e.g. Meet Mani Sir, the heart of LIFE"
+                  className="mt-1 w-full rounded-xl border border-stone-700 bg-obsidian-950 px-3.5 py-2.5 text-sm text-stone-100 focus:border-ember-500 focus:outline-none"
+                />
+              </div>
+
+              <div className="sm:col-span-2">
+                <label htmlFor="founderTeachingPhilosophy" className="block text-xs font-semibold text-stone-300">
+                  Teaching Philosophy (Core Belief on English Fluency)
+                </label>
+                <textarea
+                  id="founderTeachingPhilosophy"
+                  rows={4}
+                  value={founderProfile.teachingPhilosophy ?? ""}
+                  onChange={(e) =>
+                    setFounderProfile((prev) => ({ ...prev, teachingPhilosophy: e.target.value }))
+                  }
+                  placeholder="His core belief on English fluency and spoken confidence..."
+                  className="mt-1 w-full rounded-xl border border-stone-700 bg-obsidian-950 px-3.5 py-2 text-sm text-stone-100 focus:border-ember-500 focus:outline-none"
+                />
+              </div>
+
+              <div className="sm:col-span-2">
+                <label htmlFor="founderSpiritOfLifeContent" className="block text-xs font-semibold text-stone-300">
+                  The Spirit of LIFE Narrative
+                </label>
+                <textarea
+                  id="founderSpiritOfLifeContent"
+                  rows={4}
+                  value={founderProfile.spiritOfLifeContent ?? ""}
+                  onChange={(e) =>
+                    setFounderProfile((prev) => ({ ...prev, spiritOfLifeContent: e.target.value }))
+                  }
+                  placeholder="The Spirit of LIFE philosophy narrative (paragraphs separated by blank lines)..."
+                  className="mt-1 w-full rounded-xl border border-stone-700 bg-obsidian-950 px-3.5 py-2 text-sm text-stone-100 focus:border-ember-500 focus:outline-none"
+                />
+              </div>
+
+              <div className="sm:col-span-2">
+                <label htmlFor="founderJourneyMilestones" className="block text-xs font-semibold text-stone-300">
+                  {"Journey Milestones (JSON format: [{ year, title, body }])"}
+                </label>
+                <textarea
+                  id="founderJourneyMilestones"
+                  rows={5}
+                  value={founderProfile.journeyMilestones ?? ""}
+                  onChange={(e) =>
+                    setFounderProfile((prev) => ({ ...prev, journeyMilestones: e.target.value }))
+                  }
+                  placeholder='[{"year":"2018","title":"The first classroom","body":"A single room at Vasu Brothers Nilayam..."}]'
+                  className="mt-1 w-full font-mono rounded-xl border border-stone-700 bg-obsidian-950 px-3.5 py-2 text-xs text-stone-100 focus:border-ember-500 focus:outline-none"
                 />
               </div>
             </div>
@@ -2178,20 +2281,91 @@ export function AdminClient() {
             <p className="mt-1 text-xs text-stone-400">
               The parable of the young eagle learning to fly, and what L.I.F.E. (Live It For Eternity) stands for.
             </p>
-            <div className="mt-4">
-              <label htmlFor="logoStory" className="block text-xs font-semibold text-stone-300">
-                Logo Story &amp; Brand Philosophy
-              </label>
-              <textarea
-                id="logoStory"
-                rows={4}
-                value={siteSettings.logoStory ?? ""}
-                onChange={(e) =>
-                  setSiteSettings((prev) => ({ ...prev, logoStory: e.target.value }))
-                }
-                className="mt-1.5 w-full rounded-xl border border-stone-800 bg-obsidian-900 p-3 text-xs text-white placeholder-stone-600 focus:border-ember-500 focus:ring-1 focus:ring-ember-500"
-                placeholder="Enter logo story and brand philosophy..."
-              />
+
+            <div className="mt-4 space-y-4">
+              <div>
+                <label htmlFor="logoStory" className="block text-xs font-semibold text-stone-300">
+                  Logo Story &amp; Brand Philosophy Summary
+                </label>
+                <textarea
+                  id="logoStory"
+                  rows={3}
+                  value={siteSettings.logoStory ?? ""}
+                  onChange={(e) =>
+                    setSiteSettings((prev) => ({ ...prev, logoStory: e.target.value }))
+                  }
+                  className="mt-1.5 w-full rounded-xl border border-stone-800 bg-obsidian-900 p-3 text-xs text-white placeholder-stone-600 focus:border-ember-500 focus:ring-1 focus:ring-ember-500"
+                  placeholder="Enter logo story and brand philosophy..."
+                />
+              </div>
+
+              <div>
+                <label htmlFor="logoStoryEagle" className="block text-xs font-semibold text-stone-300">
+                  Full Eagle Parable Narrative (About Page)
+                </label>
+                <textarea
+                  id="logoStoryEagle"
+                  rows={6}
+                  value={siteSettings.logoStoryEagle ?? ""}
+                  onChange={(e) =>
+                    setSiteSettings((prev) => ({ ...prev, logoStoryEagle: e.target.value }))
+                  }
+                  className="mt-1.5 w-full rounded-xl border border-stone-800 bg-obsidian-900 p-3 text-xs text-white placeholder-stone-600 focus:border-ember-500 focus:ring-1 focus:ring-ember-500"
+                  placeholder="The complete eagle parable narrative and moral..."
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-stone-300 mb-2">
+                  The 4 Pillars: L.I.F.E. Acronym Definitions
+                </label>
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                  <div>
+                    <span className="block font-serif text-sm font-bold text-sun-400 mb-1">L</span>
+                    <input
+                      type="text"
+                      value={siteSettings.lifeAcronymL ?? "Live"}
+                      onChange={(e) =>
+                        setSiteSettings((prev) => ({ ...prev, lifeAcronymL: e.target.value }))
+                      }
+                      className="w-full rounded-xl border border-stone-800 bg-obsidian-900 px-3 py-2 text-xs text-white placeholder-stone-600 focus:border-ember-500 focus:ring-1 focus:ring-ember-500"
+                    />
+                  </div>
+                  <div>
+                    <span className="block font-serif text-sm font-bold text-sun-400 mb-1">I</span>
+                    <input
+                      type="text"
+                      value={siteSettings.lifeAcronymI ?? "It"}
+                      onChange={(e) =>
+                        setSiteSettings((prev) => ({ ...prev, lifeAcronymI: e.target.value }))
+                      }
+                      className="w-full rounded-xl border border-stone-800 bg-obsidian-900 px-3 py-2 text-xs text-white placeholder-stone-600 focus:border-ember-500 focus:ring-1 focus:ring-ember-500"
+                    />
+                  </div>
+                  <div>
+                    <span className="block font-serif text-sm font-bold text-sun-400 mb-1">F</span>
+                    <input
+                      type="text"
+                      value={siteSettings.lifeAcronymF ?? "For"}
+                      onChange={(e) =>
+                        setSiteSettings((prev) => ({ ...prev, lifeAcronymF: e.target.value }))
+                      }
+                      className="w-full rounded-xl border border-stone-800 bg-obsidian-900 px-3 py-2 text-xs text-white placeholder-stone-600 focus:border-ember-500 focus:ring-1 focus:ring-ember-500"
+                    />
+                  </div>
+                  <div>
+                    <span className="block font-serif text-sm font-bold text-sun-400 mb-1">E</span>
+                    <input
+                      type="text"
+                      value={siteSettings.lifeAcronymE ?? "Eternity"}
+                      onChange={(e) =>
+                        setSiteSettings((prev) => ({ ...prev, lifeAcronymE: e.target.value }))
+                      }
+                      className="w-full rounded-xl border border-stone-800 bg-obsidian-900 px-3 py-2 text-xs text-white placeholder-stone-600 focus:border-ember-500 focus:ring-1 focus:ring-ember-500"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 

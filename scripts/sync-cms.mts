@@ -123,6 +123,11 @@ async function syncFounderProfile(profile: CmsFounderProfile | null): Promise<{
   altText: string;
   width: number;
   height: number;
+  storyHeadline?: string | null;
+  spiritOfLifeTitle?: string | null;
+  spiritOfLifeContent?: string | null;
+  journeyMilestones?: string | null;
+  teachingPhilosophy?: string | null;
   file?: string;
   legacyFile?: string;
 } | null> {
@@ -145,6 +150,11 @@ async function syncFounderProfile(profile: CmsFounderProfile | null): Promise<{
     altText: profile.altText,
     width,
     height,
+    storyHeadline: profile.storyHeadline ?? null,
+    spiritOfLifeTitle: profile.spiritOfLifeTitle ?? null,
+    spiritOfLifeContent: profile.spiritOfLifeContent ?? null,
+    journeyMilestones: profile.journeyMilestones ?? null,
+    teachingPhilosophy: profile.teachingPhilosophy ?? null,
     file,
     legacyFile,
   };

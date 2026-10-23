@@ -1,7 +1,15 @@
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { ANNOUNCEMENT, MANI_SIR, PHOTOS, type Announcement, type GalleryPhoto } from "./content";
-import { brandCopy, courseCopy, faqCopy, heroCopy, testimonialsCopy } from "./site-copy";
+import {
+  brandCopy,
+  courseCopy,
+  faqCopy,
+  founderCopy,
+  heroCopy,
+  storyCopy,
+  testimonialsCopy,
+} from "./site-copy";
 
 export type FounderProfile = {
   name: string;
@@ -11,6 +19,11 @@ export type FounderProfile = {
   altText: string;
   width: number;
   height: number;
+  storyHeadline?: string | null;
+  spiritOfLifeTitle?: string | null;
+  spiritOfLifeContent?: string | null;
+  journeyMilestones?: string | null;
+  teachingPhilosophy?: string | null;
 };
 
 export type SiteSettings = {
@@ -24,6 +37,11 @@ export type SiteSettings = {
   workingHours?: string;
   batchTimings?: string;
   logoStory?: string;
+  logoStoryEagle?: string;
+  lifeAcronymL?: string;
+  lifeAcronymI?: string;
+  lifeAcronymF?: string;
+  lifeAcronymE?: string;
 };
 
 export type CourseTrack = {
@@ -99,6 +117,11 @@ const DEFAULT_FOUNDER_PROFILE: FounderProfile = {
   altText: `${MANI_SIR.alias} (${MANI_SIR.name}) in the LIFE classroom`,
   width: 610,
   height: 763,
+  storyHeadline: "Meet Mani\u00A0Sir, the heart of LIFE",
+  spiritOfLifeTitle: storyCopy.meaningTitle,
+  spiritOfLifeContent: storyCopy.meaningParagraphs.join("\n\n"),
+  journeyMilestones: JSON.stringify(storyCopy.milestones),
+  teachingPhilosophy: `${founderCopy.lede}\n\n${founderCopy.paragraphs.join("\n\n")}`,
 };
 
 const DEFAULT_PROMISES_RAW: string[] = [
@@ -123,6 +146,9 @@ const DEFAULT_BATCH_TIMINGS =
 const DEFAULT_LOGO_STORY =
   "Like an eagle renewing its wings on the mountaintop, every learner at LIFE sheds their old hesitation and rises into fluent, confident expression. L.I.F.E. stands for Live It For Eternity: English not as an academic subject, but as a living life skill you will carry forever.";
 
+const DEFAULT_EAGLE_PARABLE =
+  storyCopy.logoStory.parable.join("\n\n") + "\n\n" + storyCopy.logoStory.moral;
+
 const DEFAULT_SITE_SETTINGS: SiteSettings = {
   heroTitle: heroCopy.headlineFull,
   heroSubtitle: heroCopy.subheadline,
@@ -135,6 +161,11 @@ const DEFAULT_SITE_SETTINGS: SiteSettings = {
   workingHours: DEFAULT_WORKING_HOURS,
   batchTimings: DEFAULT_BATCH_TIMINGS,
   logoStory: DEFAULT_LOGO_STORY,
+  logoStoryEagle: DEFAULT_EAGLE_PARABLE,
+  lifeAcronymL: "Live",
+  lifeAcronymI: "It",
+  lifeAcronymF: "For",
+  lifeAcronymE: "Eternity",
 };
 
 const DEFAULT_PRIVACY_POLICY: LegalDocument = {
@@ -475,5 +506,91 @@ export function getBatchTimings(): string {
 
 /** Logo Eagle story & LIFE acronym meaning from CMS or default. */
 export function getLogoStory(): string {
-  return getSiteSettings().logoStory || DEFAULT_LOGO_STORY;
+  const settings = getSiteSettings();
+  return settings.logoStoryEagle || settings.logoStory || DEFAULT_LOGO_STORY;
+}
+
+/** Complete Eagle parable and moral dynamically fetched from CMS. */
+export function getEagleParable(): {
+  title: string;
+  eyebrow: string;
+  parable: string[];
+  moral: string;
+  symbolsHeading: string;
+} {
+  const settings = getSiteSettings();
+  const rawEagle = settings.logoStoryEagle || DEFAULT_EAGLE_PARABLE;
+  const parts = rawEagle.split(/\n\n+/).map((p) => p.trim()).filter(Boolean);
+
+  let parable = storyCopy.logoStory.parable;
+  let moral = storyCopy.logoStory.moral;
+
+  if (parts.length > 1) {
+    parable = parts.slice(0, -1);
+    moral = parts[parts.length - 1];
+  } else if (parts.length === 1) {
+    parable = parts;
+    moral = settings.logoStory || storyCopy.logoStory.moral;
+  }
+
+  return {
+    title: storyCopy.logoStory.title,
+    eyebrow: storyCopy.logoStory.eyebrow,
+    parable,
+    moral,
+    symbolsHeading: storyCopy.logoStory.symbolsHeading,
+  };
+}
+
+/** The Spirit of LIFE narrative and the 4 L.I.F.E. pillars from CMS. */
+export function getSpiritOfLife(): {
+  title: string;
+  lead: string;
+  eyebrow: string;
+  paragraphs: string[];
+  namedLine: string;
+  promise: string;
+  acronym: Array<{ letter: string; word: string }>;
+} {
+  const profile = getFounderProfile();
+  const settings = getSiteSettings();
+
+  const title = profile.spiritOfLifeTitle || storyCopy.meaningTitle;
+  const rawContent = profile.spiritOfLifeContent;
+  const paragraphs = rawContent
+    ? rawContent.split(/\n\n+/).map((p) => p.trim()).filter(Boolean)
+    : storyCopy.meaningParagraphs;
+
+  const acronym = [
+    { letter: "L", word: settings.lifeAcronymL || "Live" },
+    { letter: "I", word: settings.lifeAcronymI || "It" },
+    { letter: "F", word: settings.lifeAcronymF || "For" },
+    { letter: "E", word: settings.lifeAcronymE || "Eternity" },
+  ];
+
+  return {
+    title,
+    lead: storyCopy.meaningLead,
+    eyebrow: storyCopy.eyebrow,
+    paragraphs: paragraphs.length > 0 ? paragraphs : storyCopy.meaningParagraphs,
+    namedLine: storyCopy.namedLine,
+    promise: storyCopy.promise,
+    acronym,
+  };
+}
+
+/** Key milestones dynamically fetched from founder profile in CMS. */
+export function getJourneyMilestones(): Array<{ year: string; title: string; body: string }> {
+  const profile = getFounderProfile();
+  if (profile.journeyMilestones) {
+    try {
+      const parsed = JSON.parse(profile.journeyMilestones);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
+    } catch {
+      // Fallback if not valid JSON
+    }
+  }
+  return storyCopy.milestones;
 }

@@ -13,6 +13,7 @@ import { GlowCard } from "@/components/ui/GlowCard";
 import { Reveal } from "@/components/ui/Reveal";
 import { GradientText } from "@/components/ui/SectionHeading";
 import { button, cn } from "@/lib/cn";
+import { getJourneyMilestones } from "@/lib/cms";
 import { storyCopy } from "@/lib/site-copy";
 import { ADDRESS, LINKS } from "@/lib/site";
 
@@ -41,7 +42,8 @@ function ChapterHeader({ number, label, title, year, centered }: ChapterHeaderPr
 }
 
 export function StoryJourney() {
-  const { beginning, turningPoint, evolution, milestones } = storyCopy;
+  const { beginning, turningPoint, evolution } = storyCopy;
+  const milestones = getJourneyMilestones();
 
   return (
     <section id="journey" aria-labelledby="journey-title" className="relative py-20 sm:py-28">

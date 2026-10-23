@@ -50,16 +50,42 @@ export function MeetManiSir() {
               id="about-title"
               className="mt-4 text-4xl leading-[1.05] font-extrabold tracking-tight text-balance text-white sm:text-5xl lg:text-6xl"
             >
-              {aboutPageCopy.headlineLead} <GradientText>{founderCopy.alias}</GradientText>, the heart of LIFE
+              {(() => {
+                const headline = founder.storyHeadline || `${aboutPageCopy.headlineLead} ${founderCopy.alias}, the heart of LIFE`;
+                const match = headline.match(/Mani[\s\u00A0]+Sir/);
+                if (match && match.index !== undefined) {
+                  const before = headline.slice(0, match.index);
+                  const after = headline.slice(match.index + match[0].length);
+                  return (
+                    <>
+                      {before}
+                      <GradientText>{founderCopy.alias}</GradientText>
+                      {after}
+                    </>
+                  );
+                }
+                return headline;
+              })()}
             </h1>
-            <p className="mt-6 text-xl leading-relaxed font-semibold text-pretty text-stone-100 sm:text-2xl">
-              {founderCopy.lede}
-            </p>
-            <div className="mt-5 space-y-4 leading-relaxed text-pretty text-stone-300 sm:text-lg">
-              {founderCopy.paragraphs.map((p) => (
-                <p key={p.slice(0, 24)}>{p}</p>
-              ))}
-            </div>
+            {(() => {
+              const philosophyParts = founder.teachingPhilosophy
+                ? founder.teachingPhilosophy.split(/\n\n+/).map((p) => p.trim()).filter(Boolean)
+                : [founderCopy.lede, ...founderCopy.paragraphs];
+              const lede = philosophyParts[0] || founderCopy.lede;
+              const paragraphs = philosophyParts.slice(1);
+              return (
+                <>
+                  <p className="mt-6 text-xl leading-relaxed font-semibold text-pretty text-stone-100 sm:text-2xl">
+                    {lede}
+                  </p>
+                  <div className="mt-5 space-y-4 leading-relaxed text-pretty text-stone-300 sm:text-lg">
+                    {(paragraphs.length > 0 ? paragraphs : founderCopy.paragraphs).map((p) => (
+                      <p key={p.slice(0, 24)}>{p}</p>
+                    ))}
+                  </div>
+                </>
+              );
+            })()}
           </Reveal>
 
           <Reveal delay={0.1}>

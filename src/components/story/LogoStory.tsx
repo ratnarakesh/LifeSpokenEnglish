@@ -3,15 +3,15 @@ import { FullLogo } from "@/components/layout/Brand";
 import { GlowCard } from "@/components/ui/GlowCard";
 import { Reveal } from "@/components/ui/Reveal";
 import { GradientText } from "@/components/ui/SectionHeading";
-import { getLogoStory } from "@/lib/cms";
+import { getEagleParable } from "@/lib/cms";
 import { storyCopy } from "@/lib/site-copy";
 
 const SYMBOL_ICONS: LucideIcon[] = [Bird, Wind, Sunrise, InfinityIcon, Sprout];
 
 export function LogoStory() {
   const { logoStory } = storyCopy;
-  const cmsStory = getLogoStory();
-  const [first, ...rest] = logoStory.parable;
+  const eagle = getEagleParable();
+  const [first, ...rest] = eagle.parable;
   return (
     <section id="logo-story" aria-labelledby="logo-story-title" className="relative overflow-hidden py-20 sm:py-28">
       <div
@@ -29,13 +29,13 @@ export function LogoStory() {
         <div className="lg:col-span-7">
           <Reveal>
             <p className="inline-flex items-center gap-2 rounded-full border border-sun-400/40 bg-sun-400/10 px-3 py-1 text-xs font-semibold tracking-wider text-sun-300 uppercase">
-              <Bird className="size-3.5" /> {logoStory.eyebrow}
+              <Bird className="size-3.5" /> {eagle.eyebrow}
             </p>
             <h2
               id="logo-story-title"
               className="mt-4 text-3xl leading-tight font-extrabold tracking-tight text-balance text-white sm:text-4xl lg:text-5xl"
             >
-              <GradientText>{logoStory.title}</GradientText>
+              <GradientText>{eagle.title}</GradientText>
             </h2>
           </Reveal>
           <Reveal delay={0.08}>
@@ -50,7 +50,7 @@ export function LogoStory() {
           </Reveal>
           <Reveal delay={0.12}>
             <p className="mt-6 rounded-2xl border border-ember-500/40 bg-ember-500/10 p-5 text-base leading-relaxed font-semibold text-ember-50 sm:text-lg">
-              {cmsStory || logoStory.moral}
+              {eagle.moral}
             </p>
           </Reveal>
         </div>
