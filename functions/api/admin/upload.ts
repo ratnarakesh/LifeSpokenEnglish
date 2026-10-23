@@ -281,15 +281,6 @@ export async function onRequestPost(context: EventContext): Promise<Response> {
       }
     }
 
-    // 7. Trigger Cloudflare Deploy Hook if configured
-    if (context.env.CLOUDFLARE_DEPLOY_HOOK_URL) {
-      try {
-        await fetch(context.env.CLOUDFLARE_DEPLOY_HOOK_URL, { method: "POST" });
-      } catch (e) {
-        console.warn("Deploy hook error:", e);
-      }
-    }
-
     const cacheBustedUrl = processedUrl
       ? `${processedUrl}?t=${Date.now()}`
       : `/media/people/mani-sir-portrait-v2.webp`;
@@ -297,7 +288,7 @@ export async function onRequestPost(context: EventContext): Promise<Response> {
     return jsonResponse({
       success: true,
       assetUrl: cacheBustedUrl,
-      message: "Photo uploaded and published successfully! Rebuilding site...",
+      message: "Photo uploaded to CMS. Remember to publish to push live.",
     });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Unknown error during upload";

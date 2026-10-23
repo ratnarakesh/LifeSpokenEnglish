@@ -16,6 +16,7 @@ import {
   Phone,
   Plus,
   RefreshCw,
+  Rocket,
   Save,
   ShieldCheck,
   Sparkles,
@@ -337,6 +338,11 @@ export function AdminClient() {
     type: "success" | "error";
     message: string;
   } | null>(null);
+  const [isDeploying, setIsDeploying] = useState(false);
+  const [deployStatus, setDeployStatus] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
 
   // Active Tab
   const [activeTab, setActiveTab] = useState<AdminTab>("announcements");
@@ -542,7 +548,7 @@ export function AdminClient() {
           type: "success",
           message:
             data.message ||
-            "Changes saved! Your website is rebuilding and will update in ~60 seconds.",
+            "Draft saved to CMS instantly. Click 'Publish to Live Site' when ready to deploy.",
         });
         setDeletedGalleryIds([]);
         setDeletedFaqIds([]);
@@ -561,6 +567,35 @@ export function AdminClient() {
       });
     } finally {
       setIsSaving(false);
+    }
+  }
+
+  async function handleDeploy() {
+    setIsDeploying(true);
+    setDeployStatus(null);
+    try {
+      const res = await fetch("/api/admin/deploy", {
+        method: "POST",
+      });
+      const data = (await res.json()) as { success?: boolean; message?: string; error?: string };
+      if (res.ok && data.success) {
+        setDeployStatus({
+          type: "success",
+          message: data.message || "Deployment started! The live site will refresh in ~60 seconds.",
+        });
+      } else {
+        setDeployStatus({
+          type: "error",
+          message: data.error || "Failed to trigger live deployment. Please verify CLOUDFLARE_DEPLOY_HOOK_URL.",
+        });
+      }
+    } catch {
+      setDeployStatus({
+        type: "error",
+        message: "Network error triggering deployment. Please try again.",
+      });
+    } finally {
+      setIsDeploying(false);
     }
   }
 
@@ -927,6 +962,25 @@ export function AdminClient() {
         </div>
         <div className="flex items-center gap-2">
           <ThemeToggle />
+          <button
+            type="button"
+            onClick={handleDeploy}
+            disabled={isDeploying}
+            className="flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-ember-600 via-ember-500 to-sun-500 px-3 py-1.5 text-xs font-bold text-white shadow-md shadow-ember-950/40 transition hover:from-ember-500 hover:to-sun-400 disabled:opacity-50"
+            title="Deploy changes to live site via Cloudflare"
+          >
+            {isDeploying ? (
+              <>
+                <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+                <span className="hidden sm:inline">Triggering</span> Deploy...
+              </>
+            ) : (
+              <>
+                <Rocket className="h-3.5 w-3.5 text-amber-200" />
+                Publish to Live Site
+              </>
+            )}
+          </button>
           <Link
             href="/"
             target="_blank"
@@ -1073,7 +1127,7 @@ export function AdminClient() {
         <div
           role="status"
           className={cn(
-            "mb-6 flex items-start gap-3 rounded-2xl p-4 text-sm font-medium",
+            "mb-4 flex items-start gap-3 rounded-2xl p-4 text-sm font-medium",
             saveStatus.type === "success"
               ? "border border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
               : "border border-red-500/30 bg-red-500/10 text-red-300",
@@ -1087,6 +1141,41 @@ export function AdminClient() {
           <div>
             <p>{saveStatus.message}</p>
           </div>
+        </div>
+      )}
+
+      {/* Deploy Feedback Banner */}
+      {deployStatus && (
+        <div
+          role="status"
+          className={cn(
+            "mb-6 flex items-start justify-between gap-3 rounded-2xl p-4 text-sm font-medium",
+            deployStatus.type === "success"
+              ? "border border-sun-500/30 bg-sun-500/10 text-sun-200"
+              : "border border-red-500/30 bg-red-500/10 text-red-300",
+          )}
+        >
+          <div className="flex items-start gap-3">
+            {deployStatus.type === "success" ? (
+              <Rocket className="mt-0.5 h-5 w-5 shrink-0 text-sun-400" />
+            ) : (
+              <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-red-400" />
+            )}
+            <div>
+              <p className="font-semibold text-white">
+                {deployStatus.type === "success" ? "Live Site Deployment Started" : "Deployment Notice"}
+              </p>
+              <p className="text-xs text-stone-300 mt-0.5">{deployStatus.message}</p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setDeployStatus(null)}
+            className="text-stone-400 hover:text-white text-base leading-none px-1"
+            aria-label="Dismiss deployment status"
+          >
+            &times;
+          </button>
         </div>
       )}
 
@@ -2523,37 +2612,62 @@ export function AdminClient() {
 
       {/* Global Sticky Action Bar */}
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-stone-800 bg-obsidian-950/95 px-4 py-3 backdrop-blur-xl shadow-2xl">
-        <div className="mx-auto flex max-w-4xl items-center justify-between gap-4">
+        <div className="mx-auto flex max-w-4xl flex-col sm:flex-row items-center justify-between gap-3">
           <div className="hidden sm:block">
             <p className="text-xs font-medium text-stone-300">
               Editing: <span className="text-ember-400 font-semibold">{activeTab.toUpperCase()}</span>
             </p>
             <p className="text-[11px] text-stone-500">
-              Hit Save to publish updates and trigger automatic site rebuild.
+              Drafts save to CMS instantly. Click Publish to Live Site when ready to deploy.
             </p>
           </div>
 
-          <button
-            type="button"
-            onClick={handleSave}
-            disabled={isSaving}
-            className={cn(
-              button("primary", "md"),
-              "w-full sm:w-auto font-bold text-sm bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white shadow-lg shadow-emerald-950/50",
-            )}
-          >
-            {isSaving ? (
-              <>
-                <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-                Publishing &amp; Rebuilding...
-              </>
-            ) : (
-              <>
-                <Save className="mr-2 h-4 w-4" />
-                Save &amp; Update Website
-              </>
-            )}
-          </button>
+          <div className="flex w-full sm:w-auto items-center gap-3">
+            <button
+              type="button"
+              onClick={handleSave}
+              disabled={isSaving}
+              aria-label="Save Changes to CMS"
+              className={cn(
+                button("secondary", "md"),
+                "w-full sm:w-auto font-semibold text-xs border-stone-700 bg-stone-900/90 hover:bg-stone-800 text-stone-200",
+              )}
+            >
+              {isSaving ? (
+                <>
+                  <RefreshCw className="mr-2 h-4 w-4 animate-spin text-ember-400" />
+                  Saving to CMS...
+                </>
+              ) : (
+                <>
+                  <Save className="mr-2 h-4 w-4 text-ember-400" />
+                  Save Changes to CMS
+                </>
+              )}
+            </button>
+
+            <button
+              type="button"
+              onClick={handleDeploy}
+              disabled={isDeploying}
+              className={cn(
+                button("primary", "md"),
+                "w-full sm:w-auto font-bold text-xs bg-gradient-to-r from-ember-600 via-ember-500 to-sun-500 hover:from-ember-500 hover:to-sun-400 text-white shadow-lg shadow-ember-950/50",
+              )}
+            >
+              {isDeploying ? (
+                <>
+                  <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                  Deploying...
+                </>
+              ) : (
+                <>
+                  <Rocket className="mr-2 h-4 w-4 text-amber-200" />
+                  Publish to Live Site
+                </>
+              )}
+            </button>
+          </div>
         </div>
       </div>
     </div>

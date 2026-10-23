@@ -1169,23 +1169,9 @@ export async function onRequestPost(context: EventContext): Promise<Response> {
         }
       }
 
-      // Trigger Cloudflare Pages static rebuild
-      if (context.env.CLOUDFLARE_DEPLOY_HOOK_URL) {
-        try {
-          await fetch(context.env.CLOUDFLARE_DEPLOY_HOOK_URL, { method: "POST" });
-        } catch (e) {
-          console.warn("Deploy hook trigger warning:", e);
-        }
-        return jsonResponse({
-          success: true,
-          message: "Changes saved! Your website is rebuilding and will update in ~60 seconds.",
-        });
-      }
-
       return jsonResponse({
         success: true,
-        message:
-          "Changes saved to Contentful! (Note: CLOUDFLARE_DEPLOY_HOOK_URL is missing in Cloudflare Pages; please trigger a manual deployment to update the site).",
+        message: "Draft saved to CMS instantly. Click 'Publish to Live Site' when ready to deploy.",
       });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Failed to update content";

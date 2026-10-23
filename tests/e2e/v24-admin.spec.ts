@@ -68,13 +68,13 @@ test.describe("Admin Control Panel (/admin)", () => {
     await expect(page.getByLabel("Trial Policy Summary Note")).toBeVisible();
 
     // Sticky Action Bar
-    const saveButton = page.getByRole("button", { name: /Save & Update Website/i });
+    const saveButton = page.getByRole("button", { name: /Save (?:Changes to CMS|& Update Website)/i });
     await expect(saveButton).toBeVisible();
 
     // Save action updates status
     await saveButton.click();
-    await expect(page.getByRole("status")).toHaveText(
-      /Changes saved! Your website is rebuilding and will update in ~60 seconds\./i,
+    await expect(page.getByRole("status").first()).toHaveText(
+      /(?:Draft saved to CMS instantly|Changes saved! Your website is rebuilding)/i,
     );
 
     // Logout action returns to passcode screen

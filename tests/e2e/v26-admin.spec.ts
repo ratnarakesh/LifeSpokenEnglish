@@ -45,12 +45,12 @@ test.describe("Version 26: True 100% Full-Site Admin Coverage (Legal, Story & Pr
     await privacyTitleInput.fill("LIFE Privacy Notice & Data Charter");
 
     // Save changes
-    const saveBtn = page.getByRole("button", { name: /Save & Update Website/i });
+    const saveBtn = page.getByRole("button", { name: /Save (?:Changes to CMS|& Update Website)/i });
     await expect(saveBtn).toBeVisible();
     await saveBtn.click();
 
-    await expect(page.getByRole("status")).toHaveText(
-      /Changes saved! Your website is rebuilding and will update in ~60 seconds\./i,
+    await expect(page.getByRole("status").first()).toHaveText(
+      /(?:Draft saved to CMS instantly|Changes saved! Your website is rebuilding)/i,
     );
   });
 

@@ -276,11 +276,23 @@ createServer(async (req, res) => {
         return res.end(
           JSON.stringify({
             success: true,
-            message: "Changes saved! Your website is rebuilding and will update in ~60 seconds.",
+            message: "Draft saved to CMS instantly. Click 'Publish to Live Site' when ready to deploy.",
           }),
         );
       });
       return;
+    }
+  }
+
+  if (urlPath === "/api/admin/deploy") {
+    if (req.method === "POST") {
+      res.writeHead(200, { "Content-Type": "application/json" });
+      return res.end(
+        JSON.stringify({
+          success: true,
+          message: "Deployment started! The live site will refresh in ~60 seconds.",
+        }),
+      );
     }
   }
 
@@ -294,7 +306,7 @@ createServer(async (req, res) => {
           JSON.stringify({
             success: true,
             assetUrl: "/media/people/mani-sir-portrait-v2.webp",
-            message: "Photo uploaded and published successfully! Rebuilding site...",
+            message: "Photo uploaded to CMS. Remember to publish to push live.",
           }),
         );
       });

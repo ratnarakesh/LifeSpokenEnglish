@@ -61,13 +61,13 @@ test.describe("Version 25: Full Website Admin Coverage (/admin)", () => {
     // Verify new FAQ is rendered
     await expect(page.getByText("Do you provide certificates upon course completion?")).toBeVisible();
 
-    // Save and verify static rebuild trigger message
-    const saveBtn = page.getByRole("button", { name: /Save & Update Website/i });
+    // Save and verify CMS save trigger message
+    const saveBtn = page.getByRole("button", { name: /Save (?:Changes to CMS|& Update Website)/i });
     await expect(saveBtn).toBeVisible();
     await saveBtn.click();
 
-    await expect(page.getByRole("status")).toHaveText(
-      /Changes saved! Your website is rebuilding and will update in ~60 seconds\./i,
+    await expect(page.getByRole("status").first()).toHaveText(
+      /(?:Draft saved to CMS instantly|Changes saved! Your website is rebuilding)/i,
     );
   });
 });

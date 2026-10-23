@@ -46,7 +46,7 @@ test.describe("Version 27: Direct Media & Photo Uploads in Admin Dashboard", () 
 
     // Verify success confirmation
     await expect(
-      page.getByText(/Official portrait updated successfully! Website is rebuilding\.|Photo uploaded and published successfully/i),
+      page.getByText(/Official portrait updated successfully! Website is rebuilding\.|Photo uploaded to CMS|Photo uploaded and published successfully/i),
     ).toBeVisible();
   });
 
@@ -95,7 +95,7 @@ test.describe("Version 27: Direct Media & Photo Uploads in Admin Dashboard", () 
 
     // Verify success confirmation
     await expect(
-      page.getByText(/Photo uploaded and published successfully|Classroom photo uploaded/i),
+      page.getByText(/Photo uploaded to CMS|Photo uploaded and published successfully|Classroom photo uploaded/i),
     ).toBeVisible();
 
     // Verify new item appears in the existing gallery items list
