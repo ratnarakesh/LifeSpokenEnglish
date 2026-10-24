@@ -11,7 +11,7 @@ const Dot = () => (
 
 export function AnnouncementBar() {
   const pathname = usePathname();
-  if (pathname?.startsWith("/admin")) return null;
+  if (pathname?.startsWith("/admin") || pathname?.startsWith("/theme-lab")) return null;
 
   return (
     <div className="relative z-50 border-b border-ember-500/20 bg-linear-to-r from-bark-800/90 via-ember-800/60 to-bark-800/90 text-center text-xs font-medium text-ember-50 sm:text-sm">

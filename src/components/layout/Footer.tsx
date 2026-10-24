@@ -10,7 +10,7 @@ import { FullLogo } from "./Brand";
 
 export function Footer() {
   const pathname = usePathname();
-  if (pathname?.startsWith("/admin")) return null;
+  if (pathname?.startsWith("/admin") || pathname?.startsWith("/theme-lab")) return null;
 
   return (
     <footer className="relative border-t border-stone-800/80 bg-obsidian-950 pb-28 md:pb-0">

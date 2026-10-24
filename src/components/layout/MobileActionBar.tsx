@@ -11,7 +11,7 @@ const base = cn(buttonStyles.base, "gap-1.5 px-3 py-3 text-[13px] leading-tight 
 
 export function MobileActionBar() {
   const pathname = usePathname();
-  if (pathname?.startsWith("/admin")) return null;
+  if (pathname?.startsWith("/admin") || pathname?.startsWith("/theme-lab")) return null;
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-50 border-t border-stone-800/80 bg-obsidian-950/85 px-3 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-xl md:hidden">
