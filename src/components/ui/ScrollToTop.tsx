@@ -34,7 +34,7 @@ export function ScrollToTop() {
       aria-label="Scroll to top"
       title="Scroll to top"
       className={cn(
-        "group fixed right-5 bottom-20 z-40 grid size-11 place-items-center rounded-full glass shadow-xl transition-all duration-300 md:right-8 md:bottom-8 print:hidden",
+        "group fixed right-4 bottom-36 z-30 grid size-11 place-items-center rounded-full glass shadow-xl transition-all duration-300 md:right-8 md:bottom-24 print:hidden",
         "border border-stone-700/60 text-stone-200 hover:border-ember-500/80 hover:text-ember-400 hover:shadow-ember-500/20 active:scale-95",
         visible
           ? "pointer-events-auto translate-y-0 opacity-100 scale-100"

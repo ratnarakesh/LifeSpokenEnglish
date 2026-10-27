@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Providers } from "@/components/Providers";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
+import { FloatingWhatsApp } from "@/components/ui/FloatingWhatsApp";
 import { ScrollToTop } from "@/components/ui/ScrollToTop";
 import { brandCopy } from "@/lib/site-copy";
 import { AnnouncementBar } from "./AnnouncementBar";
@@ -26,6 +27,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
           <Footer />
         </div>
         <ScrollToTop />
+        <FloatingWhatsApp />
         <MobileActionBar />
       </Providers>
     </ThemeProvider>
