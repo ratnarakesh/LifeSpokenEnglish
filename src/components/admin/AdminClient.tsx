@@ -803,7 +803,7 @@ export function AdminClient() {
         headers: { "Content-Type": "application/json" },
       });
 
-      // Always try to parse JSON — deploy.ts now always returns JSON
+      // Always try to parse JSON - deploy.ts now always returns JSON
       let data: { success?: boolean; message?: string; error?: string } = {};
       try {
         data = (await res.json()) as typeof data;
@@ -835,14 +835,14 @@ export function AdminClient() {
         });
       }
     } catch (networkErr: unknown) {
-      // True network failure — fetch itself threw (no internet, DNS failure, etc.)
+      // True network failure - fetch itself threw (no internet, DNS failure, etc.)
       const hint =
         networkErr instanceof TypeError
           ? "Check your internet connection or open the site in Chrome/Safari instead of an in-app browser."
           : String(networkErr);
       setDeployStatus({
         type: "error",
-        message: `Network error — could not reach the server. ${hint}`,
+        message: `Network error - could not reach the server. ${hint}`,
       });
     } finally {
       setIsDeploying(false);

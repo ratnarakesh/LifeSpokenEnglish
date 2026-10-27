@@ -3,7 +3,7 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import { SiteShell } from "@/components/layout/SiteShell";
-import { EXTENDED_KEYWORDS, HOME_DESCRIPTION, HOME_TITLE, TITLE_SUFFIX, rootSocial } from "@/lib/seo";
+import { HOME_DESCRIPTION, HOME_TITLE, KEYWORDS, TITLE_SUFFIX, rootSocial } from "@/lib/seo";
 import { SITE, plainText } from "@/lib/site";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   authors: [{ name: `${SITE.founder} (${plainText(SITE.founderAlias)})` }],
   creator: SITE.founder,
   publisher: SITE.name,
-  keywords: EXTENDED_KEYWORDS,
+  keywords: KEYWORDS,
   category: "education",
   ...rootSocial,
   manifest: "/manifest.json",
@@ -46,7 +46,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en-IN" className={`${jakarta.variable} antialiased`}>
       <head>
-        {/* AI crawler knowledge document — helps Perplexity, ChatGPT, Gemini, Claude discover structured info */}
+        {/* AI crawler knowledge document - helps Perplexity, ChatGPT, Gemini, Claude discover structured info */}
         <link rel="alternate" type="text/plain" title="AI Knowledge Document" href="/llms.txt" />
         <script
           dangerouslySetInnerHTML={{

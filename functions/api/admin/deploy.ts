@@ -13,14 +13,14 @@ interface EventContext {
 }
 
 export async function onRequestPost(context: EventContext): Promise<Response> {
-  // Always return JSON — never let the function throw uncaught
+  // Always return JSON - never let the function throw uncaught
   try {
     const cookies = parseCookies(context.request.headers.get("Cookie"));
     const sessionToken = cookies[ADMIN_COOKIE_NAME];
     const secret = context.env.ADMIN_SESSION_SECRET || DEFAULT_SESSION_SECRET;
     const isValid = await verifySession(sessionToken, secret);
     if (!isValid) {
-      return jsonResponse({ success: false, error: "Unauthorized — session expired. Please log in again." }, { status: 401 });
+      return jsonResponse({ success: false, error: "Unauthorized - session expired. Please log in again." }, { status: 401 });
     }
 
     const deployHook = context.env.CLOUDFLARE_DEPLOY_HOOK_URL?.trim();
