@@ -36,11 +36,18 @@ export async function onRequestPost(context: EventContext): Promise<Response> {
       );
     }
 
+    const cacheBustUrl = `${deployHook}${deployHook.includes("?") ? "&" : "?"}_t=${Date.now()}`;
+
     let hookRes: Response;
     try {
-      hookRes = await fetch(deployHook, {
+      hookRes = await fetch(cacheBustUrl, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          "Pragma": "no-cache",
+        },
+        cache: "no-store",
       });
     } catch (fetchErr: unknown) {
       const msg = fetchErr instanceof Error ? fetchErr.message : String(fetchErr);
@@ -50,7 +57,10 @@ export async function onRequestPost(context: EventContext): Promise<Response> {
       );
     }
 
-    if (!hookRes.ok) {
+    // 2xx are success; 304 (Not Modified) means Cloudflare has already queued or processed this build
+    const isSuccess = hookRes.ok || hookRes.status === 304;
+
+    if (!isSuccess) {
       const body = await hookRes.text().catch(() => "");
       return jsonResponse(
         {
@@ -61,10 +71,17 @@ export async function onRequestPost(context: EventContext): Promise<Response> {
       );
     }
 
-    return jsonResponse({
-      success: true,
-      message: "Deployment triggered! Your live website will update in ~60 seconds.",
-    });
+    return jsonResponse(
+      {
+        success: true,
+        message: "Deployment triggered! Your live website will update in ~60 seconds.",
+      },
+      {
+        headers: {
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+        },
+      },
+    );
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Unexpected server error";
     return jsonResponse({ success: false, error: `Server error: ${message}` }, { status: 500 });
