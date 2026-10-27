@@ -389,10 +389,27 @@ export function AdminClient() {
     message: string;
   } | null>(null);
   const [isDeploying, setIsDeploying] = useState(false);
+  const [publishCountdown, setPublishCountdown] = useState<number | null>(null);
   const [deployStatus, setDeployStatus] = useState<{
     type: "success" | "error";
     message: string;
   } | null>(null);
+  const [isInAppBrowser, setIsInAppBrowser] = useState<boolean>(() => {
+    if (typeof window !== "undefined" && typeof navigator !== "undefined") {
+      const ua = navigator.userAgent || "";
+      return /WhatsApp|Instagram|FBAN|FBAV/i.test(ua);
+    }
+    return false;
+  });
+
+  // Live deployment countdown timer
+  useEffect(() => {
+    if (publishCountdown === null || publishCountdown <= 0) return;
+    const timer = setInterval(() => {
+      setPublishCountdown((prev) => (prev && prev > 1 ? prev - 1 : null));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [publishCountdown]);
 
   // Baseline data snapshot for dirty checking & pending deployment tracking
   const [initialDataJson, setInitialDataJson] = useState<string | null>(null);
@@ -661,7 +678,8 @@ export function AdminClient() {
   }
 
   async function handlePasscodeSubmit(codeToVerify?: string) {
-    const code = codeToVerify ?? passcode;
+    const raw = codeToVerify ?? passcode;
+    const code = raw.trim();
     if (!code) {
       setPasscodeError("Please enter your admin passcode.");
       return;
@@ -671,6 +689,7 @@ export function AdminClient() {
     try {
       const res = await fetch("/api/admin/auth", {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ passcode: code }),
       });
@@ -785,6 +804,7 @@ export function AdminClient() {
       });
       const data = (await res.json()) as { success?: boolean; message?: string; error?: string };
       if (res.ok && data.success) {
+        setPublishCountdown(60);
         setDeployStatus({
           type: "success",
           message:
@@ -810,6 +830,8 @@ export function AdminClient() {
       setIsDeploying(false);
     }
   }
+
+
 
   // Gallery helpers
   function handleAddVideo() {
@@ -1165,7 +1187,58 @@ export function AdminClient() {
 
   // 2. AUTHENTICATED EXECUTIVE DASHBOARD
   return (
-    <div className="mx-auto w-full max-w-4xl px-4 pt-8 pb-36">
+    <div className="mx-auto w-full max-w-4xl px-4 pt-8 pb-44">
+      {/* In-app browser detection advice */}
+      {isInAppBrowser && (
+        <div className="mb-4 flex items-center justify-between gap-3 rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-200">
+          <span>📱 <strong>Notice:</strong> Opened from WhatsApp/Instagram browser. If editing feels sluggish, tap <strong>&vellip;</strong> and choose <strong>&ldquo;Open in Chrome / Safari&rdquo;</strong>.</span>
+          <button
+            type="button"
+            onClick={() => setIsInAppBrowser(false)}
+            className="text-stone-400 hover:text-stone-200 text-sm font-bold px-1"
+          >
+            &times;
+          </button>
+        </div>
+      )}
+
+      {/* Live Rebuild Countdown Banner */}
+      {publishCountdown !== null && (
+        <div className="mb-4 flex flex-col sm:flex-row items-center justify-between gap-3 rounded-2xl border border-emerald-500/40 bg-gradient-to-r from-emerald-950/90 to-obsidian-900/90 p-4 shadow-xl ring-2 ring-emerald-500/30">
+          <div className="flex items-center gap-3">
+            <RefreshCw className="h-6 w-6 shrink-0 animate-spin text-emerald-400" />
+            <div>
+              <p className="text-sm font-bold text-emerald-300">
+                🚀 Cloudflare Live Website Rebuild in Progress!
+              </p>
+              <p className="text-xs text-stone-300">
+                Your changes are compiled and deploying to the global edge network. Estimated time remaining: <strong className="text-emerald-400 font-mono text-sm">{publishCountdown}s</strong>
+              </p>
+            </div>
+          </div>
+          <Link
+            href="/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 rounded-xl bg-emerald-600 px-3.5 py-2 text-xs font-bold text-white shadow-md hover:bg-emerald-500 transition shrink-0"
+          >
+            <ExternalLink className="h-3.5 w-3.5" />
+            Open Live Site ↗
+          </Link>
+        </div>
+      )}
+
+      {/* Helpful Instructions Banner for Mani Sir */}
+      <div className="mb-5 rounded-2xl border border-stone-800 bg-obsidian-900/60 p-3.5 text-xs text-stone-300 backdrop-blur-md">
+        <div className="flex items-center gap-2 font-semibold text-stone-200">
+          <Sparkles className="h-4 w-4 text-sun-400" />
+          <span>Quick Guide for Mani&nbsp;Sir:</span>
+        </div>
+        <p className="mt-1 text-stone-400">
+          1. Edit any text, course details, YouTube lessons, or phone numbers in the tabs below. <br />
+          2. When ready, tap the green <strong>&ldquo;⚡ Save &amp; Publish to Live Site&rdquo;</strong> button at the bottom. Your updates will be saved to the database and automatically deployed to <code className="text-ember-300">lifespokenenglish.com</code> in ~60 seconds!
+        </p>
+      </div>
       {/* Executive Header */}
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-stone-800/80 bg-obsidian-900/90 p-4 shadow-xl backdrop-blur-xl">
         <div className="flex items-center gap-3">
@@ -3150,11 +3223,13 @@ export function AdminClient() {
               Editing: <span className="text-ember-400 font-semibold">{activeTab.toUpperCase()}</span>
             </p>
             <p className="text-[11px] text-stone-500">
-              {isDirty
-                ? "Unsaved modifications. Save changes to CMS first before deploying."
-                : hasPendingDeployment
-                  ? "All modifications saved in CMS. Ready to publish to the live site."
-                  : "All changes synchronized. Public site is up to date."}
+              {publishCountdown !== null
+                ? `🚀 Cloudflare live site rebuild in progress... Ready in ~${publishCountdown}s`
+                : isDirty
+                  ? "Unsaved modifications. Save changes to CMS first before deploying."
+                  : hasPendingDeployment
+                    ? "All modifications saved in CMS. Ready to publish to the live site."
+                    : "All changes synchronized. Public site is up to date."}
             </p>
           </div>
 

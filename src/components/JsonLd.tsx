@@ -1,5 +1,6 @@
 import { getFaqItems, getFounderProfile } from "@/lib/cms";
 import { COURSES } from "@/lib/content";
+import { KEYWORDS } from "@/lib/seo";
 import { ADDRESS, EMAIL, GEO, LINKS, PHONES, SITE, VIDEO_ID, plainText } from "@/lib/site";
 
 const orgId = `${SITE.url}/#organization`;
@@ -37,6 +38,30 @@ export function JsonLd() {
     email: EMAIL,
     priceRange: "₹2,000 - ₹10,000",
     currenciesAccepted: "INR",
+    keywords: KEYWORDS.join(", "),
+    knowsAbout: [
+      "Spoken English",
+      "English Fluency",
+      "Public Speaking",
+      "Stage Fear Removal",
+      "Job Interview Preparation",
+      "Soft Skills Training",
+      "Business Communication",
+      "Professional Email Drafting",
+      "Telugu to English Translation",
+      "Grammar Drills",
+      "Pronunciation & Accent Neutralization",
+    ],
+    serviceType: [
+      "Spoken English Classes",
+      "Soft Skills Training",
+      "Job Interview Coaching",
+      "Stage Fear Removal",
+      "10-Day Free Demo Classes",
+      "Telugu Medium English Bridge Course",
+      "1-on-1 English Mentorship",
+      "Online Spoken English Batches",
+    ],
     address: {
       "@type": "PostalAddress",
       streetAddress: `${ADDRESS.building}, ${ADDRESS.street}, Near Kushi Junction / Naira Petrol Bunk`,
@@ -50,6 +75,23 @@ export function JsonLd() {
       { "@type": "City", name: "Visakhapatnam" },
       { "@type": "Place", name: "Madhurawada" },
       { "@type": "Place", name: "PM Palem" },
+      { "@type": "Place", name: "Kommadi" },
+      { "@type": "Place", name: "Midhilapuri VUDA Colony" },
+      { "@type": "Place", name: "MVP Colony" },
+      { "@type": "Place", name: "Rushikonda" },
+      { "@type": "AdministrativeArea", name: "Andhra Pradesh" },
+      { "@type": "AdministrativeArea", name: "Telangana" },
+    ],
+    makesOffer: [
+      {
+        "@type": "Offer",
+        name: "10 Days Free Trial Spoken English Classes",
+        description:
+          "Attend 10 full live classes completely free with zero advance payment and zero upfront commitment. Experience Mani Sir's teaching personally before deciding.",
+        price: "0",
+        priceCurrency: "INR",
+        availability: "https://schema.org/InStock",
+      },
     ],
     hasMap: LINKS.googleMaps,
     founder: {

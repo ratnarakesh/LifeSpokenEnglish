@@ -28,14 +28,15 @@ export async function onRequestPost(context: EventContext): Promise<Response> {
         { ok: true },
         {
           headers: {
-            "Set-Cookie": `${ADMIN_COOKIE_NAME}=; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0`,
+            "Set-Cookie": `${ADMIN_COOKIE_NAME}=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`,
           },
         },
       );
     }
 
-    const expected = context.env.ADMIN_PASSCODE || "7337";
-    if (!body.passcode || body.passcode !== expected) {
+    const expected = (context.env.ADMIN_PASSCODE || "7337").trim();
+    const provided = (body.passcode || "").trim();
+    if (!provided || provided !== expected) {
       return jsonResponse({ error: "Invalid passcode" }, { status: 401 });
     }
 
@@ -46,7 +47,7 @@ export async function onRequestPost(context: EventContext): Promise<Response> {
       { ok: true },
       {
         headers: {
-          "Set-Cookie": `${ADMIN_COOKIE_NAME}=${token}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=604800`,
+          "Set-Cookie": `${ADMIN_COOKIE_NAME}=${token}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=604800`,
         },
       },
     );

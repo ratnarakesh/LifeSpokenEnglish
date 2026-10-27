@@ -3,7 +3,7 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import { SiteShell } from "@/components/layout/SiteShell";
-import { HOME_DESCRIPTION, HOME_TITLE, KEYWORDS, TITLE_SUFFIX, rootSocial } from "@/lib/seo";
+import { EXTENDED_KEYWORDS, HOME_DESCRIPTION, HOME_TITLE, TITLE_SUFFIX, rootSocial } from "@/lib/seo";
 import { SITE, plainText } from "@/lib/site";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -20,12 +20,18 @@ export const metadata: Metadata = {
   authors: [{ name: `${SITE.founder} (${plainText(SITE.founderAlias)})` }],
   creator: SITE.founder,
   publisher: SITE.name,
-  keywords: KEYWORDS,
+  keywords: EXTENDED_KEYWORDS,
   category: "education",
   ...rootSocial,
   manifest: "/manifest.json",
   appleWebApp: { capable: true, title: "LIFE English", statusBarStyle: "black" },
-  other: { "apple-mobile-web-app-capable": "yes" },
+  other: {
+    "apple-mobile-web-app-capable": "yes",
+    "geo.region": "IN-AP",
+    "geo.placename": "Madhurawada, Visakhapatnam",
+    "geo.position": "17.8185;83.3532",
+    ICBM: "17.8185, 83.3532",
+  },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 } },
   formatDetection: { telephone: true },
 };
