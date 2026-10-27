@@ -192,3 +192,119 @@ export function FaqJsonLd() {
     />
   );
 }
+
+/**
+ * Top-level Course & CourseInstance schema for Google's Course rich results.
+ * Emits separate Course entities for Basic, Professional, and Advanced tracks
+ * with onsite (Madhurawada) and interactive online batch modes.
+ */
+export function CoursesJsonLd() {
+  const founder = getFounderProfile();
+  const founderPortrait = founder.portraitSrc.startsWith("http")
+    ? founder.portraitSrc
+    : `${SITE.url}${founder.portraitSrc}`;
+
+  const instructor = {
+    "@type": "Person",
+    name: SITE.founder,
+    alternateName: plainText(SITE.founderAlias),
+    jobTitle: "Founder & Lead Trainer",
+    image: founderPortrait,
+    url: `${SITE.url}/about`,
+  };
+
+  const provider = {
+    "@type": "EducationalOrganization",
+    name: SITE.name,
+    sameAs: SITE.url,
+    url: SITE.url,
+  };
+
+  const campusLocation = {
+    "@type": "Place",
+    name: "LIFE Spoken English Madhurawada Campus",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: `${ADDRESS.building}, ${ADDRESS.street}`,
+      addressLocality: `${ADDRESS.locality}, ${ADDRESS.city}`,
+      addressRegion: ADDRESS.region,
+      postalCode: ADDRESS.postalCode,
+      addressCountry: ADDRESS.country,
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: GEO.latitude,
+      longitude: GEO.longitude,
+    },
+  };
+
+  return (
+    <>
+      {COURSES.map((course) => {
+        const courseId = `${SITE.url}/#course-${course.id}`;
+        const data = {
+          "@context": "https://schema.org",
+          "@type": "Course",
+          "@id": courseId,
+          name: `${course.name} - Spoken English & Communication Skills`,
+          description: `${course.tagline} Target audience: ${course.audience} Key topics: ${course.focus.join(", ")}. Includes 10 full days of free demo classes.`,
+          url: `${SITE.url}/#courses`,
+          provider,
+          inLanguage: ["en", "te"],
+          educationalLevel:
+            course.id === "basic"
+              ? "Beginner"
+              : course.id === "professional"
+                ? "Intermediate"
+                : "Advanced",
+          about: [
+            "Spoken English",
+            "English Fluency",
+            "Public Speaking",
+            "Stage Fear Removal",
+            "Soft Skills Training",
+          ],
+          teaches: course.focus,
+          hasCourseInstance: [
+            {
+              "@type": "CourseInstance",
+              name: `${course.name} - Classroom Live Batch (Madhurawada, Vizag)`,
+              courseMode: "onsite",
+              courseWorkload: course.duration,
+              location: campusLocation,
+              instructor,
+              inLanguage: ["en", "te"],
+              offers: {
+                "@type": "Offer",
+                name: "10 Days Free Demo Classes",
+                description: "Attend 10 full live classes completely free with zero advance payment and zero upfront commitment.",
+                price: "0",
+                priceCurrency: "INR",
+                availability: "https://schema.org/InStock",
+                url: `${SITE.url}/#enroll`,
+              },
+            },
+            {
+              "@type": "CourseInstance",
+              name: `${course.name} - Online Live Batch (Interactive)`,
+              courseMode: "online",
+              courseWorkload: course.duration,
+              instructor,
+              inLanguage: ["en", "te"],
+              offers: {
+                "@type": "Offer",
+                name: "10 Days Free Demo Classes",
+                description: "Attend 10 full live classes completely free with zero advance payment and zero upfront commitment.",
+                price: "0",
+                priceCurrency: "INR",
+                availability: "https://schema.org/InStock",
+                url: `${SITE.url}/#enroll`,
+              },
+            },
+          ],
+        };
+        return <LdScript key={course.id} data={data} />;
+      })}
+    </>
+  );
+}

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { FaqJsonLd, JsonLd } from "@/components/JsonLd";
+import { CoursesJsonLd, FaqJsonLd, JsonLd } from "@/components/JsonLd";
 import { AnnouncementBanner } from "@/components/sections/AnnouncementBanner";
 import { Contact } from "@/components/sections/Contact";
 import { Courses } from "@/components/sections/Courses";
@@ -21,6 +21,7 @@ export default function Home() {
   return (
     <>
       <JsonLd />
+      <CoursesJsonLd />
       <FaqJsonLd />
       <AnnouncementBanner announcement={getAnnouncement()} />
       <Hero />
