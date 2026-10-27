@@ -802,14 +802,25 @@ export function AdminClient() {
         credentials: "include",
         headers: { "Content-Type": "application/json" },
       });
-      const data = (await res.json()) as { success?: boolean; message?: string; error?: string };
+
+      // Always try to parse JSON — deploy.ts now always returns JSON
+      let data: { success?: boolean; message?: string; error?: string } = {};
+      try {
+        data = (await res.json()) as typeof data;
+      } catch {
+        // Non-JSON response (e.g. Cloudflare 522 gateway error or HTML error page)
+        data = {
+          error: `Server returned HTTP ${res.status} with a non-JSON response. The Cloudflare Function may not be deployed yet.`,
+        };
+      }
+
       if (res.ok && data.success) {
         setPublishCountdown(60);
         setDeployStatus({
           type: "success",
           message:
             data.message ||
-            "Deployment started! Your live website will update in ~60 seconds.",
+            "Deployment triggered! Your live website will update in ~60 seconds.",
         });
         setHasPendingDeployment(false);
         if (typeof window !== "undefined") {
@@ -818,13 +829,20 @@ export function AdminClient() {
       } else {
         setDeployStatus({
           type: "error",
-          message: data.error || "Failed to trigger live deployment. Please verify CLOUDFLARE_DEPLOY_HOOK_URL.",
+          message:
+            data.error ||
+            `Deployment failed (HTTP ${res.status}). Please check Cloudflare Pages environment variables.`,
         });
       }
-    } catch {
+    } catch (networkErr: unknown) {
+      // True network failure — fetch itself threw (no internet, DNS failure, etc.)
+      const hint =
+        networkErr instanceof TypeError
+          ? "Check your internet connection or open the site in Chrome/Safari instead of an in-app browser."
+          : String(networkErr);
       setDeployStatus({
         type: "error",
-        message: "Network error triggering deployment. Please try again.",
+        message: `Network error — could not reach the server. ${hint}`,
       });
     } finally {
       setIsDeploying(false);
