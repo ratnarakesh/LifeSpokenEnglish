@@ -46,6 +46,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en-IN" className={`${jakarta.variable} antialiased`}>
       <head>
+        {/* AI crawler knowledge document — helps Perplexity, ChatGPT, Gemini, Claude discover structured info */}
+        <link rel="alternate" type="text/plain" title="AI Knowledge Document" href="/llms.txt" />
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('life-theme');if(t==='light'){document.documentElement.classList.add('light');document.documentElement.classList.remove('dark');document.documentElement.style.colorScheme='light';}else{document.documentElement.classList.add('dark');document.documentElement.classList.remove('light');document.documentElement.style.colorScheme='dark';}}catch(e){}})();`,

@@ -20,3 +20,7 @@
 /manifest.json
   Content-Type: application/manifest+json
   Cache-Control: no-cache
+
+/llms.txt
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=86400
