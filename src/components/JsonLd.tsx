@@ -154,6 +154,27 @@ export function JsonLd() {
   return <LdScript data={data} />;
 }
 
+/** Renders a BreadcrumbList schema for inner pages.
+ *  `items` should be ordered from root → current page, e.g.
+ *  [{ name: "Home", path: "/" }, { name: "About LIFE", path: "/about" }]
+ */
+export function BreadcrumbJsonLd({ items }: { items: { name: string; path: string }[] }) {
+  return (
+    <LdScript
+      data={{
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: items.map(({ name, path }, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          name,
+          item: `${SITE.url}${path}`,
+        })),
+      }}
+    />
+  );
+}
+
 export function FaqJsonLd() {
   const faqItems = getFaqItems();
   return (

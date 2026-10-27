@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo";
 import { Camera } from "lucide-react";
 import Link from "next/link";
+import { BreadcrumbJsonLd } from "@/components/JsonLd";
 import { GalleryGrid } from "@/components/gallery/GalleryGrid";
 import { InstagramIcon, WhatsAppIcon, YouTubeIcon } from "@/components/ui/BrandIcons";
 import { Reveal } from "@/components/ui/Reveal";
@@ -17,9 +18,15 @@ export const metadata: Metadata = pageMetadata({
   path: "/gallery",
 });
 
+const BREADCRUMBS = [
+  { name: "Home", path: "/" },
+  { name: "Gallery", path: "/gallery" },
+];
+
 export default function GalleryPage() {
   return (
     <>
+      <BreadcrumbJsonLd items={BREADCRUMBS} />
       <section aria-labelledby="gallery-title" className="relative pt-10 pb-20 sm:pt-16 sm:pb-28">
         <div className="pointer-events-none absolute inset-0 -z-10 bg-grid" aria-hidden="true" />
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

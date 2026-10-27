@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo";
+import { BreadcrumbJsonLd } from "@/components/JsonLd";
 import { LogoStory } from "@/components/story/LogoStory";
 import { MeetManiSir } from "@/components/story/MeetManiSir";
 import { StoryFinale } from "@/components/story/StoryFinale";
@@ -18,9 +19,15 @@ export function generateMetadata(): Metadata {
   });
 }
 
+const BREADCRUMBS = [
+  { name: "Home", path: "/" },
+  { name: "About LIFE & Mani Sir", path: "/about" },
+];
+
 export default function AboutPage() {
   return (
     <>
+      <BreadcrumbJsonLd items={BREADCRUMBS} />
       <MeetManiSir />
       <StoryMeaning />
       <LogoStory />
